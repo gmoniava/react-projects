@@ -30,6 +30,7 @@ export default function App() {
                 display: i === index ? "inline" : "none",
               }}
             >
+              {/* This is the span which appears */}
               <span className={i === index ? "active" : ""}>
                 {names[index]}{" "}
               </span>
