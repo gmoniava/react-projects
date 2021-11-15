@@ -1,3 +1,4 @@
 # react-projects
 
-Set of personal projects in react
+Contains set of relatively small react apps.
+
