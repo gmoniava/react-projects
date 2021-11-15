@@ -1,4 +1,3 @@
 # react-projects
 
-Contains set of relatively small react apps.
-
+Small react apps for learning purposes.
