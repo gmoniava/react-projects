@@ -1,9 +1,9 @@
 import React from "react";
 import "./index.css";
 
-// Imitates animation from stackoverflow web page
+// Imitates animation from stackoverflow web page.
 
-let names = ["John", "Alec Tirk baldwin", "Johnathan Cena"];
+let names = ["John", "Alec baldwin", "Some long name"];
 
 export default function App() {
   let [index, setIndex] = React.useState(0);
