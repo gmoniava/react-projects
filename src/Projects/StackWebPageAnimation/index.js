@@ -16,10 +16,7 @@ export default function App() {
 
   return (
     <div>
-      <div
-        className="parent"
-        style={{ marginTop: 20, fontSize: 22, padding: 0 }}
-      >
+      <div className="parent" style={{ marginTop: 20, fontSize: 22 }}>
         Hello{" "}
         {names.map((x, i) => {
           return (
