@@ -1,4 +1,4 @@
-ul {
+.dropdownmenu ul {
   background: darkorange;
   list-style: none;
   display: flex;
@@ -6,37 +6,37 @@ ul {
   padding: 0;
 }
 
-li {
+.dropdownmenu li {
   color: #fff;
   background: darkorange;
   padding: 10px;
   position: relative;
   width: 100px;
 }
-li a {
+.dropdownmenu li a {
   color: #fff;
   text-decoration: none;
   font-size: 20px;
 }
 
-li ul {
+.dropdownmenu li ul {
   display: none;
 }
 
 /* Second level menu */
-ul li:hover > ul {
+.dropdownmenu ul li:hover > ul {
   display: block;
   position: absolute;
   left: 0;
   top: 100%;
 }
 
-li:hover {
+.dropdownmenu li:hover {
   background-color: lightgray;
 }
 
 /* Third level menu */
-ul li:hover ul li:hover > ul {
+.dropdownmenu ul li:hover ul li:hover > ul {
   display: block;
   position: absolute;
   left: 100%;

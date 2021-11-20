@@ -4,7 +4,7 @@ import { DropDownMenu, StackOverflowAnimation } from "./Projects";
 function App() {
   return (
     <div>
-      <DropDownMenu />
+      <StackOverflowAnimation />
     </div>
   );
 }

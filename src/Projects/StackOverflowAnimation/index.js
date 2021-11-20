@@ -15,7 +15,7 @@ export default function App() {
   }, []);
 
   return (
-    <div>
+    <div className="stackoverflowanimation">
       <div className="parent" style={{ marginTop: 20, fontSize: 22 }}>
         Hello{" "}
         {names.map((x, i) => {
@@ -27,17 +27,15 @@ export default function App() {
                 display: i === index ? "inline" : "none",
               }}
             >
-              {/* This is the span which appears */}
-              <span className={i === index ? "active" : ""}>
-                {names[index]}{" "}
-              </span>
-              {/* This other span is to cause width changes */}
+              <span className={"active"}>{x} </span>
+              {/* Because the above span element is absolutely positioned, we use 
+              this fake element to make the parent span compute width correctly. */}
               <span
                 style={{
                   visibility: "hidden",
                 }}
               >
-                {names[index]}{" "}
+                {x}{" "}
               </span>
             </span>
           );

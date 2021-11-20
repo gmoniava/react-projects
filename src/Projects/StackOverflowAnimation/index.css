@@ -1,8 +1,8 @@
-.parent {
+.stackoverflowanimation .parent {
   position: relative;
 }
 
-.active {
+.stackoverflowanimation .active {
   position: absolute;
   animation: fadein 1s linear;
 }

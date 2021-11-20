@@ -1,0 +1,14 @@
+.stackoverflowanimation2 .active {
+  animation: fadein 1s linear;
+}
+
+@keyframes fadein {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
