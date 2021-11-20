@@ -1,9 +1,10 @@
 import "./App.css";
-import StackWebPageAnimation from "./Projects/StackWebPageAnimation";
+import { DropDownMenu, StackOverflowAnimation } from "./Projects";
+
 function App() {
   return (
     <div>
-      <StackWebPageAnimation />
+      <DropDownMenu />
     </div>
   );
 }
