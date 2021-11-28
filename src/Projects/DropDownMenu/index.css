@@ -1,9 +1,12 @@
 .dropdownmenu ul {
-  background: darkorange;
   list-style: none;
   display: flex;
   margin: 0;
   padding: 0;
+}
+
+.dropdownmenu .open ul {
+  flex-direction: column;
 }
 
 .dropdownmenu li {
@@ -23,20 +26,30 @@
   display: none;
 }
 
-/* Second level menu */
-.dropdownmenu ul li:hover > ul {
+/*
+ * Second level menu 
+ * We use :not selector because on mobile menu we don't want sub menus
+ */
+.dropdownmenu nav:not(.open) ul li:hover > ul {
   display: block;
   position: absolute;
   left: 0;
   top: 100%;
 }
 
-.dropdownmenu li:hover {
+/*
+ * Because on mobile we couldn't fit menu items and close btn properly
+ * and with bg color looks ugly.
+ */
+.dropdownmenu nav:not(.open) li:hover {
   background-color: rgb(145, 77, 77);
 }
 
-/* Third level menu */
-.dropdownmenu ul li ul li:hover > ul {
+/*
+ * Third level menu 
+ * We use :not selector because on mobile menu we don't want sub menus
+ */
+.dropdownmenu nav:not(.open) ul li ul li:hover > ul {
   display: block;
   position: absolute;
   left: 100%;
