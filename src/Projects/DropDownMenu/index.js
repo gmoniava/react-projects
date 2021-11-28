@@ -11,7 +11,7 @@ export default function App() {
           </li>
           <li>
             <a href="/#">Two</a>
-            <ul class="dropdown">
+            <ul>
               <li>
                 <a href="/#">Sub-1</a>
               </li>
@@ -22,7 +22,7 @@ export default function App() {
                 >
                   Sub-2 <span>&#8250; </span>
                 </a>
-                <ul class="dropdown">
+                <ul>
                   <li>
                     <a href="/#">Sub-2-1</a>
                   </li>

@@ -32,11 +32,11 @@
 }
 
 .dropdownmenu li:hover {
-  background-color: lightgray;
+  background-color: rgb(145, 77, 77);
 }
 
 /* Third level menu */
-.dropdownmenu ul li:hover ul li:hover > ul {
+.dropdownmenu ul li ul li:hover > ul {
   display: block;
   position: absolute;
   left: 100%;
