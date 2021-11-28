@@ -11,7 +11,7 @@ export default function DropDownMenu() {
   return (
     <div className="dropdownmenu">
       <nav
-        // Makes sense to have mobile menu open only on mobile screen and when menu is in open state
+        // Mobile menu should be open only on mobile screen and when the menu is in open state
         className={isMenuOpen && isMobile ? "open" : ""}
         role="navigation"
         style={{
