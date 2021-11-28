@@ -8,24 +8,32 @@ import { useMediaQuery } from "react-responsive";
 export default function DropDownMenu() {
   const isMobile = useMediaQuery({ query: "(max-width: 624px)" });
   let [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    // If someone moved to larger screen close the mobile menu
+    if (!isMobile) {
+      setIsMenuOpen(false);
+    }
+  }, [isMobile]);
+
   return (
     <div className="dropdownmenu">
       <nav
-        // Mobile menu should be open only on mobile screen and when the menu is in open state
-        className={isMenuOpen && isMobile ? "open" : ""}
+        className={isMenuOpen ? "open" : ""}
         role="navigation"
         style={{
+          height: 50,
+          position: "relative",
           backgroundColor: "darkorange",
-          display: "flex",
-          alignItems: "center",
         }}
       >
         <ul
           style={{
-            flex: 1,
+            position: "relative",
+            top: isMobile ? 50 : 0,
             minWidth: 0,
-            // Menu items are hiddden only when we are on mobile and the menu is in closed state
-            visibility: isMobile && !isMenuOpen ? "hidden" : "",
+            // If we are on mobile screen and the mobile menu is closed, menu items should be hidden
+            display: isMobile && !isMenuOpen ? "none" : "",
           }}
         >
           <li>
@@ -65,7 +73,17 @@ export default function DropDownMenu() {
             <a href="/#">Three</a>
           </li>
         </ul>
-        <div style={{ cursor: "pointer", marginRight: 5 }}>
+        {/* Toggle menu btn */}
+        <div
+          style={{
+            cursor: "pointer",
+            position: "absolute",
+            right: 5,
+            marginRight: 5,
+            top: "50%",
+            transform: "translateY(-50%)",
+          }}
+        >
           {isMobile &&
             (isMenuOpen ? (
               <AiOutlineClose

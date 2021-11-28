@@ -7,17 +7,28 @@
 
 .dropdownmenu .open ul {
   flex-direction: column;
+  width: 100%;
+}
+
+.dropdownmenu .open li {
+  width: 100%;
 }
 
 .dropdownmenu li {
   color: #fff;
-  background: darkorange;
-  padding: 10px;
   position: relative;
+  background: darkorange;
+  box-sizing: border-box;
+  height: 50px;
+  padding: 10px;
   width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .dropdownmenu li a {
   color: #fff;
+
   text-decoration: none;
   font-size: 20px;
 }
@@ -41,7 +52,7 @@
  * Because on mobile we couldn't fit menu items and close btn properly
  * and with bg color looks ugly.
  */
-.dropdownmenu nav:not(.open) li:hover {
+.dropdownmenu li:hover {
   background-color: rgb(145, 77, 77);
 }
 
