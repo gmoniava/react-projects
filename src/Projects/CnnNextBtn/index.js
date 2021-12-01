@@ -50,6 +50,7 @@ export default function App() {
           }}
         >
           <img
+            alt=""
             style={{ height: 50, width: 50, objectFit: "contain" }}
             src="https://st2.depositphotos.com/7036298/10694/i/600/depositphotos_106948346-stock-photo-ripe-red-apple-with-green.jpg"
           />
