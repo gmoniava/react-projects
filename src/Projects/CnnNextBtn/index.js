@@ -51,7 +51,7 @@ export default function App() {
         >
           <img
             alt=""
-            style={{ height: 50, width: 50, objectFit: "contain" }}
+            style={{ height: 50, width: 50, objectFit: "cover" }}
             src="https://st2.depositphotos.com/7036298/10694/i/600/depositphotos_106948346-stock-photo-ripe-red-apple-with-green.jpg"
           />
           This is next article
