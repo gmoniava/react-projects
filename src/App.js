@@ -1,10 +1,10 @@
 import "./App.css";
-import { DropDownMenu, StackOverflowAnimation } from "./Projects";
+import { DropDownMenu, CnnNextBtn } from "./Projects";
 
 function App() {
   return (
     <div>
-      <DropDownMenu />
+      <CnnNextBtn />
     </div>
   );
 }
