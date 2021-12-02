@@ -20,7 +20,6 @@ export default function App() {
       <div
         style={{
           display: "flex",
-          marginTop: 20,
           fontSize: 22,
         }}
       >

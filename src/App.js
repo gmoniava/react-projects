@@ -1,10 +1,16 @@
 import "./App.css";
-import { DropDownMenu, CnnNextBtn } from "./Projects";
+import {
+  DropDownMenu,
+  CnnNextBtn,
+  StackOverflowAnimation2,
+  StackOverflowAnimation,
+} from "./Projects";
 
 function App() {
   return (
-    <div>
-      <CnnNextBtn />
+    <div style={{}}>
+      {" "}
+      <CnnNextBtn />{" "}
     </div>
   );
 }

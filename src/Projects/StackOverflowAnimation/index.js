@@ -16,7 +16,7 @@ export default function App() {
 
   return (
     <div className="stackoverflowanimation">
-      <div className="parent" style={{ marginTop: 20, fontSize: 22 }}>
+      <div className="parent" style={{ fontSize: 22 }}>
         Hello{" "}
         {names.map((x, i) => {
           return (

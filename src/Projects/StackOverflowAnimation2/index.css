@@ -1,3 +1,6 @@
+.stackoverflowanimation2 {
+  padding: 20px;
+}
 .stackoverflowanimation2 .active {
   animation: fadein 1s linear;
 }
