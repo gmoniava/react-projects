@@ -1,3 +1,3 @@
 # react-projects
 
-Set of relatively small react projects implemented as components. See the `Projects` folder.
+Set of react projects implemented as separate components, mainly for learning purposes. See the `Projects` folder.
