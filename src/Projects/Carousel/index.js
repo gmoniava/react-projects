@@ -2,6 +2,19 @@ import React from "react";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import { useResizeDetector } from "react-resize-detector";
 
+let arrowStyle = {
+  background: "white",
+  border: "1px solid lightgray",
+  borderRadius: "20%",
+  cursor: "pointer",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  height: 30,
+  width: 30,
+  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+};
+
 export default function Carousel(props) {
   let [count, setCount] = React.useState(0);
   let [relativeCords, setRelativeCords] = React.useState({});
@@ -44,8 +57,13 @@ export default function Carousel(props) {
 
   return (
     <div className="carousel" style={{ padding: 50 }}>
-      <div style={{ paddingLeft: 50, position: "relative", paddingRight: 50 }}>
-        <h1>{props.title}</h1>
+      <div
+        style={{
+          paddingLeft: 50,
+          position: "relative",
+          paddingRight: 50,
+        }}
+      >
         <div
           ref={ref}
           style={{
@@ -62,25 +80,25 @@ export default function Carousel(props) {
               transform: `translateX(${-count * 100}px)`,
             }}
           >
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((x) => {
+            {props.items.map((x) => {
               return (
                 <div
+                  key={x.id}
                   style={{
                     padding: 5,
                     display: "inline-block",
                     width: 150,
+                    height: 150,
                     marginLeft: 5,
                     marginRight: 5,
                     border: "1px solid lightgray",
                     borderRadius: 10,
+                    overflow: "auto",
+                    whiteSpace: "normal",
                   }}
                 >
-                  <h1>Item</h1>
-                  <p>Some details</p>
-                  <p>Some details</p>
-                  <p>Some details</p>
-                  <p>Some details</p>
-                  <p>Some details</p>
+                  <h1>{x.title}</h1>
+                  <p>{x.body}</p>
                 </div>
               );
             })}
@@ -88,16 +106,7 @@ export default function Carousel(props) {
         </div>
         <button
           style={{
-            background: "white",
-            border: "1px solid lightgray",
-            borderRadius: "20%",
-            cursor: "pointer",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: 30,
-            width: 30,
-            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+            ...arrowStyle,
             position: "absolute",
             left: 0,
             top: "50%",
@@ -114,17 +123,7 @@ export default function Carousel(props) {
         </button>
         <button
           style={{
-            background: "white",
-            border: "1px solid lightgray",
-            borderRadius: "20%",
-            cursor: "pointer",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: 30,
-            width: 30,
-            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-
+            ...arrowStyle,
             position: "absolute",
             right: 0,
             top: "50%",
