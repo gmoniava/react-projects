@@ -2,6 +2,7 @@ import DropDownMenu from "./DropDownMenu";
 import StackOverflowAnimation from "./StackOverflowAnimation";
 import StackOverflowAnimation2 from "./StackOverflowAnimation2";
 import CnnNextBtn from "./CnnNextBtn";
+import Carousel from "./Carousel";
 
 // To have single import for all components
 export {
@@ -9,4 +10,5 @@ export {
   StackOverflowAnimation,
   CnnNextBtn,
   StackOverflowAnimation2,
+  Carousel,
 };
