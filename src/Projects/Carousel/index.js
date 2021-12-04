@@ -17,8 +17,11 @@ let arrowStyle = {
 
 export default function Carousel(props) {
   let [count, setCount] = React.useState(0);
-  let [relativeCords, setRelativeCords] = React.useState({});
   let innerContainer = React.useRef();
+  
+  // We use these coordinates to know if we should show left/right arrows or not
+  let [relativeCords, setRelativeCords] = React.useState({});
+  
   // We use this variable because during transition if user clicks multiple times the arrow buttons, coordinates are not computed correctly anymore
   let [transitionBlock, setTransitionBlock] = React.useState(false);
 
