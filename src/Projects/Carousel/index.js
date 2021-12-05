@@ -15,13 +15,37 @@ let arrowStyle = {
   boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
 };
 
-export default function Carousel(props) {
+const defaultItems = [
+  { id: 1, title: "product", body: "good sneakers" },
+  { id: 2, title: "product", body: "This model is also good" },
+  {
+    id: 3,
+    title: "product",
+    body: "Lorem ipsum dolor sit amet, consectetur",
+  },
+  {
+    id: 4,
+    title: "product",
+    body: "Lorem ipsum dolor sit amet, consectetur",
+  },
+  {
+    id: 5,
+    title: "product",
+    body: "Lorem ipsum dolor sit amet, consectetur",
+  },
+  {
+    id: 6,
+    title: "product",
+    body: "Lorem ipsum dolor sit amet, consectetur",
+  },
+];
+export default function Carousel({ items = defaultItems }) {
   let [count, setCount] = React.useState(0);
   let innerContainer = React.useRef();
-  
+
   // We use these coordinates to know if we should show left/right arrows or not
   let [relativeCords, setRelativeCords] = React.useState({});
-  
+
   // We use this variable because during transition if user clicks multiple times the arrow buttons, coordinates are not computed correctly anymore
   let [transitionBlock, setTransitionBlock] = React.useState(false);
 
@@ -83,7 +107,7 @@ export default function Carousel(props) {
               transform: `translateX(${-count * 100}px)`,
             }}
           >
-            {props.items.map((x) => {
+            {items.map((x) => {
               return (
                 <div
                   key={x.id}
