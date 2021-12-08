@@ -3,15 +3,14 @@ import {
   // CnnNextBtn,
   // StackOverflowAnimation2,
   // StackOverflowAnimation,
-  Carousel,
-  DropDownMenu,
+  TreeList,
 } from "./Projects";
 
 function App() {
   return (
     <div style={{}}>
       {" "}
-      <DropDownMenu />{" "}
+      <TreeList />{" "}
     </div>
   );
 }
