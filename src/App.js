@@ -2,7 +2,7 @@ import "./App.css";
 import {
   // CnnNextBtn,
   // StackOverflowAnimation2,
-  // StackOverflowAnimation,
+  StackOverflowAnimation,
   TreeList,
 } from "./Projects";
 
@@ -10,7 +10,7 @@ function App() {
   return (
     <div style={{}}>
       {" "}
-      <TreeList />{" "}
+      <StackOverflowAnimation />{" "}
     </div>
   );
 }

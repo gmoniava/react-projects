@@ -16,28 +16,33 @@ export default function App() {
 
   return (
     <div className="stackoverflowanimation">
-      <div className="parent" style={{ fontSize: 22 }}>
+      <div style={{ fontSize: 22, position: "relative" }}>
         Hello{" "}
         {names.map((x, i) => {
           return (
-            <span
-              style={{
-                color: "orange",
-                fontWeight: "bold",
-                display: i === index ? "inline" : "none",
-              }}
-            >
-              <span className={"active"}>{x} </span>
-              {/* Because the above span element is absolutely positioned, we use 
-              this fake element to make the parent span compute width correctly. */}
+            <React.Fragment key={i}>
               <span
+                className={"active"}
                 style={{
-                  visibility: "hidden",
+                  color: "orange",
+                  fontWeight: "bold",
+                  display: i === index ? "inline" : "none",
                 }}
               >
-                {x}{" "}
+                {x}
               </span>
-            </span>
+              {/* Because the above span element is absolutely positioned, we use 
+              this fake element to let the text width appear correctly. */}
+              <span
+                style={{
+                  display: i === index ? "inline" : "none",
+                  visibility: "hidden",
+                  margin: "0 5px 0 5px",
+                }}
+              >
+                {x}
+              </span>
+            </React.Fragment>
           );
         })}
         welcome here

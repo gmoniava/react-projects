@@ -1,9 +1,7 @@
 .stackoverflowanimation {
   padding: 20px;
 }
-.stackoverflowanimation .parent {
-  position: relative;
-}
+ 
 
 .stackoverflowanimation .active {
   position: absolute;
