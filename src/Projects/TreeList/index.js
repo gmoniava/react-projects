@@ -10,7 +10,7 @@ import {
 // Allows you to navigate through tree hierarchy showing only one list at a time
 
 let defaultData = {
-  name: "root",
+  name: "Root dir",
   children: [
     {
       name: "item1",
@@ -47,14 +47,13 @@ let defaultData = {
   ],
 };
 
-export default function TreeList({ data = defaultData, width }) {
+export default function TreeList({ data = defaultData, showPath }) {
   let [parents, setParents] = React.useState([]);
   let [currentNode, setCurrentNode] = React.useState(data);
   return (
     <div className="navigatetree" style={{ padding: 20 }}>
       <div
         style={{
-          width: width || 400,
           borderRadius: 10,
           padding: 20,
         }}
@@ -74,6 +73,20 @@ export default function TreeList({ data = defaultData, width }) {
             setParents(parents.slice(0, parents.length - 1));
           }}
         />
+        {showPath && (
+          <div
+            style={{
+              padding: 5,
+              color: "gray",
+              fontSize: 12,
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+            }}
+          >
+            {parents && [...parents, currentNode].map((x) => x.name).join("/")}
+          </div>
+        )}
         {currentNode.children.map((x) => {
           return (
             <div
