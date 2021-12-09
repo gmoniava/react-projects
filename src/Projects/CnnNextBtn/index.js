@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-import { AiOutlineArrowRight } from "react-icons/ai";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 // Immitates next article arrow from CNN web site
 
@@ -35,7 +35,7 @@ export default function App() {
             right: 0,
           }}
         >
-          <AiOutlineArrowRight style={{}} />
+          <ArrowLeftOutlined />
         </div>
         {/* This div is for hidden content */}
         <div

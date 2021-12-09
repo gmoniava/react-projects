@@ -1,23 +1,24 @@
 import React from "react";
+
 import {
-  AiOutlineArrowLeft,
-  AiOutlineFolder,
-  AiOutlineFileWord,
-  AiOutlineGoogle,
-} from "react-icons/ai";
+  ArrowLeftOutlined,
+  FolderOutlined,
+  FileWordOutlined,
+  GoogleOutlined,
+} from "@ant-design/icons";
 
 // Allows you to navigate through tree hierarchy showing only one list at a time
 
-let data = {
+let defaultData = {
   name: "root",
   children: [
     {
       name: "item1",
-      icon: <AiOutlineFolder />,
+      icon: <FolderOutlined />,
       children: [
         {
           name: "item 1.1",
-          icon: <AiOutlineFolder />,
+          icon: <FolderOutlined />,
 
           children: [
             {
@@ -39,37 +40,41 @@ let data = {
         },
       ],
     },
-    { name: "item2", children: [], icon: <AiOutlineFileWord /> },
-    { name: "item3", children: [], icon: <AiOutlineGoogle /> },
+    { name: "item2", children: [], icon: <FileWordOutlined /> },
+    { name: "item3", children: [], icon: <GoogleOutlined /> },
 
     { name: "item4", children: [] },
   ],
 };
 
-export default function TreeList() {
+export default function TreeList({ data = defaultData, width }) {
   let [parents, setParents] = React.useState([]);
-  let [currentDir, setCurrentDir] = React.useState(data);
+  let [currentNode, setCurrentNode] = React.useState(data);
   return (
     <div className="navigatetree" style={{ padding: 20 }}>
       <div
         style={{
-          width: 500,
+          width: width || 400,
           borderRadius: 10,
           padding: 20,
         }}
       >
-        <AiOutlineArrowLeft
+        <ArrowLeftOutlined
           style={{
             cursor: "pointer",
+            marginBottom: 5,
+            border: "1px solid lightgray",
+            borderRadius: "50%",
+            padding: 5,
             color: parents.length === 0 ? "lightgray" : "black",
           }}
           onClick={() => {
             if (parents.length === 0) return;
-            setCurrentDir(parents[parents.length - 1]);
+            setCurrentNode(parents[parents.length - 1]);
             setParents(parents.slice(0, parents.length - 1));
           }}
         />
-        {currentDir.children.map((x) => {
+        {currentNode.children.map((x) => {
           return (
             <div
               style={{
@@ -82,15 +87,15 @@ export default function TreeList() {
               }}
               onClick={(e) => {
                 if (x.children && x.children.length) {
-                  setParents([...parents, currentDir]);
-                  setCurrentDir(x);
+                  setParents([...parents, currentNode]);
+                  setCurrentNode(x);
                 }
                 x.onClick && x.onClick(e);
               }}
             >
               {" "}
-              {x.icon}
-              {x.name}
+              <div style={{ marginRight: 5 }}> {x.icon} </div>
+              <div> {x.name} </div>
             </div>
           );
         })}

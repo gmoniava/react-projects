@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+import { MenuOutlined, CloseOutlined } from "@ant-design/icons";
 import { useMediaQuery } from "react-responsive";
 
 // Responsive dropdown menu
@@ -46,10 +46,7 @@ export default function DropDownMenu() {
                 <a href="/#">Sub-1</a>
               </li>
               <li>
-                <a
-                  href="/#"
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
+                <a href="/#" style={{}}>
                   Sub-2 <span>&#8250; </span>
                 </a>
                 <ul>
@@ -73,7 +70,7 @@ export default function DropDownMenu() {
             <a href="/#">Three</a>
           </li>
         </ul>
-        {/* Toggle menu btn */}
+        {/* Toggle menu btn, shows up only on mobile */}
         <div
           style={{
             cursor: "pointer",
@@ -86,13 +83,13 @@ export default function DropDownMenu() {
         >
           {isMobile &&
             (isMenuOpen ? (
-              <AiOutlineClose
+              <CloseOutlined
                 onClick={() => {
                   setIsMenuOpen(false);
                 }}
               />
             ) : (
-              <AiOutlineMenu
+              <MenuOutlined
                 onClick={() => {
                   setIsMenuOpen(true);
                 }}

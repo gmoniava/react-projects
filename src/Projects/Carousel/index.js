@@ -1,6 +1,6 @@
 import React from "react";
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import { useResizeDetector } from "react-resize-detector";
+import { ArrowRightOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 
 let arrowStyle = {
   background: "white",
@@ -146,7 +146,7 @@ export default function Carousel({ items = defaultItems }) {
             setTransitionBlock(true);
           }}
         >
-          <AiOutlineArrowLeft />
+          <ArrowLeftOutlined />
         </button>
         <button
           style={{
@@ -163,7 +163,7 @@ export default function Carousel({ items = defaultItems }) {
             setTransitionBlock(true);
           }}
         >
-          <AiOutlineArrowRight />
+          <ArrowRightOutlined />
         </button>
       </div>
     </div>
