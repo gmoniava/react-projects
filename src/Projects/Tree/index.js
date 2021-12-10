@@ -11,16 +11,66 @@ import { CaretDownFilled, CaretRightFilled } from "@ant-design/icons";
 //   using checkedNodes prop, and also handle onCheckChange.
 //
 
+let defaultTree = [
+  {
+    name: "item1",
+    id: 1,
+    children: [
+      {
+        name: "item 1.1",
+        id: 33,
+        children: [
+          {
+            id: 22,
+            name: "item rrr",
+            children: [],
+          },
+          {
+            id: 12,
+            name: "Barack obama",
+            children: [
+              {
+                id: 99,
+                name: "Ozgun",
+                children: [],
+              },
+              {
+                id: 991,
+                name: "Ozgun2",
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 32,
+        name: "Thanos",
+        children: [],
+      },
+      {
+        id: 3132,
+        name: "Thanos2",
+        children: [],
+      },
+    ],
+  },
+  { name: "kano", id: 2, children: [] },
+  { name: "item3", id: 3, children: [] },
+  { name: "item4", id: 4, children: [] },
+];
+
 let Node = (props) => {
-  let [isOpen, setIsOpen] = React.useState(false);
   let isChecked = props.checkedNodes?.find((id) => id === props.id);
+  let isExpanded = props.expandedNodes?.find((id) => id === props.id);
+
   return (
     <div>
       <div
         className={props.wasExpanded && "opened-node"}
         style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
         onClick={() => {
-          setIsOpen(!isOpen);
+          props.onExpand(props.id, !isExpanded);
         }}
       >
         {/* For expand/collapse button */}
@@ -34,7 +84,7 @@ let Node = (props) => {
         >
           {!!props.children &&
             !!props.children.length &&
-            (isOpen ? <CaretDownFilled /> : <CaretRightFilled />)}
+            (isExpanded ? <CaretDownFilled /> : <CaretRightFilled />)}
         </div>
         {/* For checkbox */}
         {props.checkable && (
@@ -54,38 +104,115 @@ let Node = (props) => {
         {/* Here goes node title */}
         <div style={{}}> {props.name}</div>
       </div>
-      {props.children && isOpen && (
+      {props.children && isExpanded && (
         <div style={{ marginLeft: 20 }}>
           {props.children.map((x) => (
-            <Node {...props} {...x} wasExpanded />
+            <Node key={x.id} {...props} {...x} wasExpanded />
           ))}
         </div>
       )}
     </div>
   );
 };
+let filterTree = (word, treeData) => {
+  return treeData.filter((x) => {
+    if (x.children && x.children.length) {
+      let filterChildren = filterTree(word, x.children);
+      if (filterChildren.length > 0) {
+        x.children = filterChildren;
+        return true;
+      }
+      return x.name.includes(word);
+    } else return x.name.includes(word);
+  });
+};
+
+let treeToList = (treeData, list) => {
+  treeData.forEach((x) => {
+    list.push(x);
+    if (x.children) {
+      treeToList(x.children, list);
+    }
+  });
+};
+
+let addOrRemoveFromArray = (id, value, array) => {
+  let isThere = array.find((y) => y === id);
+  let result;
+
+  if (value && !isThere) {
+    result = [...array, id];
+  } else if (!value && isThere) {
+    result = array.filter((y) => y !== id);
+  }
+  return result;
+};
 
 export default function Tree({
-  data,
+  data = defaultTree,
   checkable,
+  filterable = true,
   checkedNodes = [],
+  style,
   onCheckChange,
 }) {
+  let [filter, setFilter] = React.useState("");
+  let [expandedNodes, setExpandedNodes] = React.useState([]);
+
+  data = React.useMemo(() => {
+    let list = [];
+    if (!filterable) return data;
+    if (!filter) {
+      setExpandedNodes([]);
+      return data;
+    }
+    let clone = JSON.parse(JSON.stringify(data));
+
+    // Filter the tree
+    let filterResult = filterTree(filter, clone);
+
+    // Set nodes which were found as expaned
+    treeToList(filterResult, list);
+    setExpandedNodes([
+      ...new Set([
+        ...list.filter((x) => x.children && x.children.length).map((x) => x.id),
+      ]),
+    ]);
+
+    // Return filtered tree
+    return filterResult;
+  }, [filter, data, filterable]);
   return (
-    <div className="tree" style={{ padding: 20 }}>
+    <div className="tree" style={{ padding: 20, ...style }}>
+      {filterable && (
+        <div>
+          <input
+            placeholder="Filter value"
+            style={{
+              height: 20,
+              border: "1px solid lightgray",
+              borderRadius: 5,
+              marginBottom: 5,
+            }}
+            value={filter}
+            onChange={(e) => {
+              setFilter(e.target.value);
+            }}
+          />
+        </div>
+      )}
       {data.map((x) => (
         <Node
+          key={x.id}
           {...x}
+          expandedNodes={expandedNodes}
+          onExpand={(id, value) => {
+            let result = addOrRemoveFromArray(id, value, expandedNodes);
+            setExpandedNodes(result);
+          }}
           checkedNodes={checkedNodes}
           onCheck={(id, value) => {
-            let isThere = checkedNodes.find((y) => y === id);
-            let result;
-
-            if (value && !isThere) {
-              result = [...checkedNodes, id];
-            } else if (!value && isThere) {
-              result = checkedNodes.filter((y) => y !== id);
-            }
+            let result = addOrRemoveFromArray(id, value, checkedNodes);
             onCheckChange && onCheckChange(result);
           }}
           checkable={checkable}
