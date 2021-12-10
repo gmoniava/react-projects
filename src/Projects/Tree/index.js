@@ -171,13 +171,11 @@ export default function Tree({
     // Filter the tree
     let filterResult = filterTree(filter, clone);
 
-    // Set nodes which were found as expaned
+    // Set nodes which were found as expanded
     treeToList(filterResult, list);
-    setExpandedNodes([
-      ...new Set([
-        ...list.filter((x) => x.children && x.children.length).map((x) => x.id),
-      ]),
-    ]);
+    setExpandedNodes(
+      list.filter((x) => x.children && x.children.length).map((x) => x.id)
+    );
 
     // Return filtered tree
     return filterResult;
