@@ -1,0 +1,12 @@
+.tree .opened-node {
+  animation: appear 1s linear;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

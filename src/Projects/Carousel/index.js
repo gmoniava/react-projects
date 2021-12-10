@@ -2,6 +2,11 @@ import React from "react";
 import { useResizeDetector } from "react-resize-detector";
 import { ArrowRightOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 
+///
+//
+// Carousel component
+//
+
 let arrowStyle = {
   background: "white",
   border: "1px solid lightgray",

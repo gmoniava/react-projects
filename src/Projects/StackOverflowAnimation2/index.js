@@ -1,9 +1,11 @@
 import React from "react";
 import "./index.css";
 
+///
+//
 // Imitates animation from stackoverflow web page.
 // Uses transform for animations unlike the other project.
-
+//
 let names = ["Nick", "David", "Some long name"];
 
 export default function App() {
