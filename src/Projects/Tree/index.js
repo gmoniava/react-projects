@@ -6,7 +6,7 @@ import { CaretDownFilled, CaretRightFilled } from "@ant-design/icons";
 //
 // Tree component
 //
-// Props:
+// Props
 //  checkable: supports checking of nodes. But then you must supply ids of checked nodes
 //   using checkedNodes prop, and also handle onCheckChange.
 //

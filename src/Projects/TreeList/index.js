@@ -11,50 +11,56 @@ import {
 //
 // Allows you to navigate through tree hierarchy showing only one list at a time
 //
+// Props
+//  initialData: data organized in tree like structure
+//
 
-let defaultData = {
-  name: "Root dir",
-  children: [
-    {
-      name: "item1",
-      icon: <FolderOutlined />,
-      children: [
-        {
-          name: "item 1.1",
-          icon: <FolderOutlined />,
+let defaultData = [
+  {
+    name: "item1",
+    icon: <FolderOutlined />,
+    children: [
+      {
+        name: "item 1.1",
+        icon: <FolderOutlined />,
 
-          children: [
-            {
-              name: "item 1.1.1",
-              children: [],
-            },
-            {
-              name: "item 1.1.2",
-              children: [],
-            },
-          ],
-        },
-        {
-          name: "item 1.2",
-          onClick: () => {
-            console.log("Item 1.2");
+        children: [
+          {
+            name: "item 1.1.1",
+            children: [],
           },
-          children: [],
+          {
+            name: "item 1.1.2",
+            children: [],
+          },
+        ],
+      },
+      {
+        name: "item 1.2",
+        onClick: () => {
+          console.log("Item 1.2");
         },
-      ],
-    },
-    { name: "item2", children: [], icon: <FileWordOutlined /> },
-    { name: "item3", children: [], icon: <GoogleOutlined /> },
+        children: [],
+      },
+    ],
+  },
+  { name: "item2", children: [], icon: <FileWordOutlined /> },
+  { name: "item3", children: [], icon: <GoogleOutlined /> },
 
-    { name: "item4", children: [] },
-  ],
-};
+  { name: "item4", children: [] },
+];
 
-export default function TreeList({ data = defaultData, showPath }) {
+export default function TreeList({
+  initialData = defaultData,
+  showPath,
+  style,
+}) {
   let [parents, setParents] = React.useState([]);
-  let [currentNode, setCurrentNode] = React.useState(data);
+  let [currentNode, setCurrentNode] = React.useState({
+    children: initialData,
+  });
   return (
-    <div className="navigatetree" style={{ padding: 20 }}>
+    <div className="listtree" style={{ padding: 20, ...style }}>
       <div
         style={{
           borderRadius: 10,
