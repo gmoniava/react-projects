@@ -45,7 +45,7 @@ let defaultTree = [
       },
       {
         id: 32,
-        name: "Thanos",
+        name: "Thanf gdfdfdf gdf df gdf gdfgdf gos",
         children: [],
       },
       {
@@ -77,6 +77,7 @@ let Node = (props) => {
         <div
           style={{
             width: 20,
+            flexShrink: 0,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -102,7 +103,7 @@ let Node = (props) => {
           </div>
         )}
         {/* Here goes node title */}
-        <div style={{}}> {props.name}</div>
+        <div style={{ padding: 2 }}> {props.name}</div>
       </div>
       {props.children && isExpanded && (
         <div style={{ marginLeft: 20 }}>
@@ -123,7 +124,8 @@ let filterTree = (word, treeData) => {
         return true;
       }
       return x.name.includes(word);
-    } else return x.name.includes(word);
+    }
+    return x.name.includes(word);
   });
 };
 
@@ -137,12 +139,11 @@ let treeToList = (treeData, list) => {
 };
 
 let addOrRemoveFromArray = (id, value, array) => {
-  let isThere = array.find((y) => y === id);
   let result;
 
-  if (value && !isThere) {
+  if (value) {
     result = [...array, id];
-  } else if (!value && isThere) {
+  } else {
     result = array.filter((y) => y !== id);
   }
   return result;
@@ -151,8 +152,8 @@ let addOrRemoveFromArray = (id, value, array) => {
 export default function Tree({
   data = defaultTree,
   checkable,
-  filterable = true,
-  checkedNodes = [],
+  filterable,
+  checkedNodes,
   style,
   onCheckChange,
 }) {
@@ -180,6 +181,12 @@ export default function Tree({
     // Return filtered tree
     return filterResult;
   }, [filter, data, filterable]);
+
+  if (checkable && (!onCheckChange || checkedNodes === undefined)) {
+    console.warn("Checkable tree must be used in controlled mode.");
+    return null;
+  }
+
   return (
     <div className="tree" style={{ padding: 20, ...style }}>
       {filterable && (

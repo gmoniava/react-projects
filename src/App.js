@@ -11,11 +11,15 @@ import React from "react";
 
 function App() {
   let [checked, setChecked] = React.useState([]);
-
   return (
     <div style={{}}>
       {" "}
-      <Tree checkedNodes={checked} checkable onCheckChange={setChecked} />{" "}
+      <Tree
+        checkedNodes={checked}
+        filterable
+        checkable
+        onCheckChange={setChecked}
+      />{" "}
     </div>
   );
 }
