@@ -33,7 +33,7 @@ export default function DropDownMenu() {
             position: "relative",
             top: isMobile ? 50 : 0,
             minWidth: 0,
-            // If we are on mobile screen and the mobile menu is closed, menu items should be hidden
+            // Menu items are hidden only when we are on mobile and menu is closed
             display: isMobile && !isMenuOpen ? "none" : "",
           }}
         >
