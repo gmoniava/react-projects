@@ -1,10 +1,12 @@
 import React from "react";
 import "./index.css";
+
 ///
 //
 // Imitates animation from stackoverflow web page.
+// Uses transform for animations unlike the other project.
 //
-let names = ["John", "Alec baldwin", "Some long name"];
+let names = ["Nick", "David", "Some long name"];
 
 export default function App() {
   let [index, setIndex] = React.useState(0);
@@ -17,33 +19,28 @@ export default function App() {
 
   return (
     <div className="stackoverflowanimation">
-      <div style={{ fontSize: 22, position: "relative" }}>
-        Hello{" "}
+      <div
+        style={{
+          display: "flex",
+          fontSize: 22,
+        }}
+      >
+        Hello
         {names.map((x, i) => {
+          // We use transform for animation, it doesn't remove the element
+          // from document flow, so the width is properly calculated for this element.
           return (
-            <React.Fragment key={i}>
-              <span
-                className={"active"}
-                style={{
-                  color: "orange",
-                  fontWeight: "bold",
-                  display: i === index ? "inline" : "none",
-                }}
-              >
-                {x}
-              </span>
-              {/* Because the above span element is absolutely positioned, we use 
-              this fake element to let the text width appear correctly. */}
-              <span
-                style={{
-                  display: i === index ? "inline" : "none",
-                  visibility: "hidden",
-                  margin: "0 5px 0 5px",
-                }}
-              >
-                {x}
-              </span>
-            </React.Fragment>
+            <div
+              className={"active"}
+              style={{
+                color: "orange",
+                margin: "0 5px 0 5px",
+                fontWeight: "bold",
+                display: i === index ? "block" : "none",
+              }}
+            >
+              {x}
+            </div>
           );
         })}
         welcome here

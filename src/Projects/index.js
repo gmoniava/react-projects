@@ -1,6 +1,5 @@
 import DropDownMenu from "./DropDownMenu";
 import StackOverflowAnimation from "./StackOverflowAnimation";
-import StackOverflowAnimation2 from "./StackOverflowAnimation2";
 import CnnNextBtn from "./CnnNextBtn";
 import Carousel from "./Carousel";
 import TreeList from "./TreeList";
@@ -13,6 +12,5 @@ export {
   CnnNextBtn,
   TreeList,
   Tree,
-  StackOverflowAnimation2,
   Carousel,
 };

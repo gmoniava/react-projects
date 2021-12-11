@@ -1,20 +1,17 @@
 .stackoverflowanimation {
   padding: 20px;
 }
- 
-
 .stackoverflowanimation .active {
-  position: absolute;
   animation: fadein 1s linear;
 }
 
 @keyframes fadein {
   from {
-    top: -30px;
+    transform: translateY(-30px);
     opacity: 0;
   }
   to {
-    top: 0px;
+    transform: translateY(0px);
     opacity: 1;
   }
 }
