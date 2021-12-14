@@ -6,20 +6,15 @@ import {
   StackOverflowAnimation,
   TreeList,
   Tree,
+  AnimatedLogin,
 } from "./Projects";
 import React from "react";
 
 function App() {
-  let [checked, setChecked] = React.useState([]);
   return (
-    <div style={{}}>
+    <div style={{ height: "100%" }}>
       {" "}
-      <Tree
-        checkedNodes={checked}
-        filterable
-        checkable
-        onCheckChange={setChecked}
-      />{" "}
+      <AnimatedLogin />{" "}
     </div>
   );
 }
