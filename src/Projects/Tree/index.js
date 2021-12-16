@@ -8,7 +8,11 @@ import { CaretDownFilled, CaretRightFilled } from "@ant-design/icons";
 //
 // Props
 //  checkable: supports checking of nodes. But then you must supply ids of checked nodes
-//   using checkedNodes prop, and also handle onCheckChange.
+//   using checkedNodes prop, and also handle onCheckChange prop.
+//  checkedNodes: array of checked nodes ids.
+//  onCheckChange: handler when a new node is checked.
+//  data: tree data
+//  filterable: to support filter of nodes or not.
 //
 
 let defaultTree = [

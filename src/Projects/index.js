@@ -5,6 +5,7 @@ import Carousel from "./Carousel";
 import TreeList from "./TreeList";
 import Tree from "./Tree";
 import AnimatedLogin from "./AnimatedLogin";
+import RippleButton from "./RippleButton";
 
 // To have single import for all components
 export {
@@ -13,6 +14,7 @@ export {
   CnnNextBtn,
   TreeList,
   Tree,
+  RippleButton,
   Carousel,
   AnimatedLogin,
 };
