@@ -1,5 +1,4 @@
 import React from "react";
-import "./index.css";
 import { useMediaQuery } from "react-responsive";
 
 ///
@@ -72,8 +71,8 @@ export default function AnimatedLogin() {
         {/* The sliding div */}
         <div
           style={{
-            left: isMobile ? 0 : page === 2 ? `calc(100% / 2)` : 0,
-            top: isMobile ? (page === 2 ? `calc(100% / 2)` : 0) : 0,
+            left: isMobile ? 0 : page === 2 ? "50%" : 0,
+            top: isMobile ? (page === 2 ? "50%" : 0) : 0,
             width: isMobile ? `calc(100% + ${2 * slidingPageOffset}px)` : "50%",
             height: isMobile
               ? "50%"
@@ -90,10 +89,10 @@ export default function AnimatedLogin() {
           {/* This div holds the login/signup pages */}
           <div
             style={{
-              left: isMobile ? 0 : page === 2 ? `calc(2*100% / -2)` : 0,
-              top: isMobile ? (page === 2 ? `calc(2*100% / -2)` : 0) : 0,
-              width: isMobile ? "100%" : "calc(2*100%)",
-              height: isMobile ? "calc(2*100%)" : "100%",
+              left: isMobile ? 0 : page === 2 ? `-100%` : 0,
+              top: isMobile ? (page === 2 ? `-100%` : 0) : 0,
+              width: isMobile ? "100%" : "200%",
+              height: isMobile ? "200%" : "100%",
               position: "absolute",
               transition: "left 1s linear, top 1s linear",
               display: "flex",
