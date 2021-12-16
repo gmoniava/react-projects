@@ -1,17 +1,19 @@
 import React from "react";
 import "./index.css";
+import { useMediaQuery } from "react-responsive";
 
 ///
 //
-// Animated login
+// Responsive animated login
 //
 
-let mainContainerHeight = 300;
+let mainContainerHeight = 400;
 let mainContainerWidth = 500;
 let slidingPageOffset = 10;
 
 export default function AnimatedLogin() {
   let [page, setPage] = React.useState(1);
+  const isMobile = useMediaQuery({ query: "(max-width: 624px)" });
 
   return (
     <div
@@ -32,6 +34,7 @@ export default function AnimatedLogin() {
           position: "relative",
           boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
           display: "flex",
+          flexDirection: isMobile ? "column" : "row",
         }}
       >
         <div
@@ -66,27 +69,35 @@ export default function AnimatedLogin() {
             Signup
           </button>
         </div>
+        {/* The sliding div */}
         <div
           style={{
-            height: mainContainerHeight + 2 * slidingPageOffset,
+            left: isMobile ? 0 : page === 2 ? `calc(100% / 2)` : 0,
+            top: isMobile ? (page === 2 ? `calc(100% / 2)` : 0) : 0,
+            width: isMobile ? `calc(100% + ${2 * slidingPageOffset}px)` : "50%",
+            height: isMobile
+              ? "50%"
+              : `calc(100% + ${2 * slidingPageOffset}px)`,
             position: "absolute",
-            transition: "left 1s linear",
-            left: page === 2 ? mainContainerWidth / 2 : 0,
-            width: "50%",
+            transition: "left 1s linear, top 1s linear",
             backgroundColor: "white",
             overflow: "hidden",
             boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-            top: -slidingPageOffset,
+            marginTop: isMobile ? 0 : -slidingPageOffset,
+            marginLeft: isMobile ? -slidingPageOffset : 0,
           }}
         >
+          {/* This div holds the login/signup pages */}
           <div
             style={{
+              left: isMobile ? 0 : page === 2 ? `calc(2*100% / -2)` : 0,
+              top: isMobile ? (page === 2 ? `calc(2*100% / -2)` : 0) : 0,
+              width: isMobile ? "100%" : "calc(2*100%)",
+              height: isMobile ? "calc(2*100%)" : "100%",
               position: "absolute",
-              left: page === 2 ? -mainContainerWidth / 2 : 0,
-              transition: "left 1s linear",
-              width: "calc(2*100%)",
-              height: "100%",
+              transition: "left 1s linear, top 1s linear",
               display: "flex",
+              flexDirection: isMobile ? "column" : "row",
             }}
           >
             <div
