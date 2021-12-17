@@ -1,0 +1,23 @@
+.expanding-searchbar .main-container .search-icon {
+  cursor: pointer;
+  font-size: 32px;
+  margin-left: 15px;
+  margin-right: 5px;
+  color: white;
+}
+
+.expanding-searchbar .main-container input:focus {
+  outline: none;
+}
+
+.expanding-searchbar .main-container .close {
+  height: 16px;
+  width: 30px;
+  color: white;
+  cursor: pointer;
+  padding-left: 15px;
+}
+
+.expanding-searchbar .main-container ::placeholder {
+  color: white;
+}

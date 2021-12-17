@@ -8,6 +8,7 @@ import {
   RippleButton,
   Tree,
   AnimatedLogin,
+  SearchBtn,
 } from "./Projects";
 import React from "react";
 
