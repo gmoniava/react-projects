@@ -1,16 +1,17 @@
 import React from "react";
 import { useMediaQuery } from "react-responsive";
-
+import "./index.css";
 ///
 //
 // Responsive animated login
 //
 
-let mainContainerHeight = 400;
-let mainContainerWidth = 500;
 let slidingPageOffset = 10;
 
-export default function AnimatedLogin() {
+export default function AnimatedLogin({
+  mainContainerHeight = 400,
+  mainContainerWidth = 500,
+}) {
   let [page, setPage] = React.useState(1);
   const isMobile = useMediaQuery({ query: "(max-width: 624px)" });
 
@@ -68,11 +69,17 @@ export default function AnimatedLogin() {
             Signup
           </button>
         </div>
-        {/* The sliding div */}
+        {/* Main sliding div */}
         <div
           style={{
-            left: isMobile ? 0 : page === 2 ? "50%" : 0,
-            top: isMobile ? (page === 2 ? "50%" : 0) : 0,
+            left:
+              isMobile || page === 1
+                ? -slidingPageOffset
+                : `calc(50% + ${slidingPageOffset}px)`,
+            top:
+              !isMobile || page === 1
+                ? -slidingPageOffset
+                : `calc(50% + ${slidingPageOffset}px)`,
             width: isMobile ? `calc(100% + ${2 * slidingPageOffset}px)` : "50%",
             height: isMobile
               ? "50%"
@@ -82,15 +89,13 @@ export default function AnimatedLogin() {
             backgroundColor: "white",
             overflow: "hidden",
             boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-            marginTop: isMobile ? 0 : -slidingPageOffset,
-            marginLeft: isMobile ? -slidingPageOffset : 0,
           }}
         >
-          {/* This div holds the login/signup pages */}
+          {/* Inner sliding div */}
           <div
             style={{
-              left: isMobile ? 0 : page === 2 ? `-100%` : 0,
-              top: isMobile ? (page === 2 ? `-100%` : 0) : 0,
+              left: isMobile || page === 1 ? 0 : `-100%`,
+              top: !isMobile || page === 1 ? 0 : `-100%`,
               width: isMobile ? "100%" : "200%",
               height: isMobile ? "200%" : "100%",
               position: "absolute",
