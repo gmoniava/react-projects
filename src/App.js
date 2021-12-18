@@ -16,7 +16,7 @@ function App() {
   return (
     <div style={{ height: "100%" }}>
       {" "}
-      <AnimatedLogin />{" "}
+      <Carousel />{" "}
     </div>
   );
 }

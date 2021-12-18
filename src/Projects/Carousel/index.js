@@ -1,25 +1,49 @@
 import React from "react";
 import { useResizeDetector } from "react-resize-detector";
 import { ArrowRightOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import styled from "styled-components";
 
 ///
 //
 // Carousel component
 //
 
-let arrowStyle = {
-  background: "white",
-  border: "1px solid lightgray",
-  borderRadius: "20%",
-  cursor: "pointer",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  height: 30,
-  width: 30,
-  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-};
-
+const DefaultCard = styled.div`
+  padding: 5px;
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  overflow: auto;
+  white-space: normal;
+`;
+const Arrow = styled.button`
+  background: lightblue;
+  border: 1px solid lightgray;
+  border-radius: 40%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+`;
+const ArrowLeft = styled(Arrow)`
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+const ArrowRight = styled(Arrow)`
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+`;
 const defaultItems = [
   { id: 1, title: "product", body: "good sneakers" },
   { id: 2, title: "product", body: "This model is also good" },
@@ -57,11 +81,10 @@ export default function Carousel({ items = defaultItems }) {
   let innerContainerRelativeCordsToParent = () => {
     let relativeLeft =
       innerContainer.current.getBoundingClientRect().left -
-      ref.current.getBoundingClientRect().left;
+      mainContainer.current.getBoundingClientRect().left;
     let relativeRight =
-      ref.current.getBoundingClientRect().right -
+      mainContainer.current.getBoundingClientRect().right -
       innerContainer.current.getBoundingClientRect().right;
-
     setRelativeCords({ relativeLeft, relativeRight });
   };
 
@@ -71,7 +94,7 @@ export default function Carousel({ items = defaultItems }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { ref } = useResizeDetector({ onResize });
+  const { ref: mainContainer } = useResizeDetector({ onResize });
 
   React.useEffect(() => {
     innerContainerRelativeCordsToParent();
@@ -86,7 +109,6 @@ export default function Carousel({ items = defaultItems }) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   return (
     <div className="carousel" style={{ padding: 50 }}>
       <div
@@ -97,16 +119,15 @@ export default function Carousel({ items = defaultItems }) {
         }}
       >
         <div
-          ref={ref}
+          ref={mainContainer}
           style={{
             overflow: "hidden",
           }}
         >
-          {/* If you have height issues with below div, see this: https://stackoverflow.com/questions/27536428/inline-block-element-height-issue */}
           <div
             ref={innerContainer}
             style={{
-              display: "inline-block",
+              display: "inline-block", // use inline-block so that width of this div is based on content
               whiteSpace: "nowrap",
               transition: "transform 0.4s linear",
               transform: `translateX(${-count * 100}px)`,
@@ -114,36 +135,15 @@ export default function Carousel({ items = defaultItems }) {
           >
             {items.map((x) => {
               return (
-                <div
-                  key={x.id}
-                  style={{
-                    padding: 5,
-                    display: "inline-block",
-                    width: 150,
-                    height: 150,
-                    marginLeft: 5,
-                    marginRight: 5,
-                    border: "1px solid lightgray",
-                    borderRadius: 10,
-                    overflow: "auto",
-                    whiteSpace: "normal",
-                  }}
-                >
+                <DefaultCard key={x.id}>
                   <h1>{x.title}</h1>
                   <p>{x.body}</p>
-                </div>
+                </DefaultCard>
               );
             })}
           </div>
         </div>
-        <button
-          style={{
-            ...arrowStyle,
-            position: "absolute",
-            left: 0,
-            top: "50%",
-            transform: "translateY(-50%)",
-          }}
+        <ArrowLeft
           disabled={relativeCords.relativeLeft >= 0}
           onClick={() => {
             if (transitionBlock) return;
@@ -152,15 +152,8 @@ export default function Carousel({ items = defaultItems }) {
           }}
         >
           <ArrowLeftOutlined />
-        </button>
-        <button
-          style={{
-            ...arrowStyle,
-            position: "absolute",
-            right: 0,
-            top: "50%",
-            transform: "translateY(-50%)",
-          }}
+        </ArrowLeft>
+        <ArrowRight
           disabled={relativeCords.relativeRight >= 0}
           onClick={() => {
             if (transitionBlock) return;
@@ -169,7 +162,7 @@ export default function Carousel({ items = defaultItems }) {
           }}
         >
           <ArrowRightOutlined />
-        </button>
+        </ArrowRight>
       </div>
     </div>
   );
