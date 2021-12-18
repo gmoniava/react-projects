@@ -1,5 +1,0 @@
-/* Need to use !important otherwise the inline styles were overriding these */
-.cnnnextbtn .next-btn:hover {
-  width: 220px !important;
-  height: 100px !important;
-}
