@@ -48,7 +48,7 @@ let HiddenContentStyled = styled.div`
 `;
 export default function App() {
   return (
-    <div className="cnnnextbtn">
+    <div>
       <MainContainerStyled>
         <LeftArrowStyled>
           <ArrowLeftOutlined />

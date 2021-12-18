@@ -110,7 +110,7 @@ export default function Carousel({ items = defaultItems }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <div className="carousel" style={{ padding: 50 }}>
+    <div style={{ padding: 50 }}>
       <div
         style={{
           paddingLeft: 50,

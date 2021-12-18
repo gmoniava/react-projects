@@ -1,42 +1,111 @@
 import React from "react";
-import "./index.css";
-import { MenuOutlined, CloseOutlined } from "@ant-design/icons";
+import { MenuOutlined, CloseOutlined, RightOutlined } from "@ant-design/icons";
 import { useMediaQuery } from "react-responsive";
+import styled, { css } from "styled-components";
+
 ///
 //
 // Responsive dropdown menu
 //
+//
+
+let MainContainerStyled = styled.nav`
+  height: 50px;
+  position: relative;
+  background-color: darkorange;
+
+  ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    position: relative;
+    background: darkorange;
+    box-sizing: border-box;
+    height: 50px;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  li:hover {
+    background-color: rgb(145, 77, 77);
+  }
+
+  li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+  }
+
+  li ul {
+    display: none;
+  }
+
+  > ul {
+    position: relative;
+    top: ${({ isMobile }) => (isMobile ? "50px" : "0")};
+    /* If we are on mobile and menu is closed, no need to show menu items */
+    display: ${({ isMenuOpen, isMobile }) =>
+      isMobile && !isMenuOpen ? "none" : ""};
+  }
+
+  ${({ isMenuOpen }) =>
+    isMenuOpen
+      ? `
+          ul {
+            flex-direction: column;
+            width: 100%;
+          }
+          li {
+            width: 100%;
+          }
+        `
+      : `
+          /* Nested menu styles */
+          ul li:hover > ul {
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 100%;
+          }
+          ul li ul li:hover > ul {
+            display: block;
+            position: absolute;
+            left: 100%;
+            top: 0;
+          }
+        `}
+`;
+
+let ToggleBtnContainerStyled = styled.div`
+  cursor: pointer;
+  position: absolute;
+  right: 5px;
+  margin-right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
 export default function DropDownMenu() {
   const isMobile = useMediaQuery({ query: "(max-width: 624px)" });
   let [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   React.useEffect(() => {
-    // If someone moved to larger screen close the mobile menu
+    // Close the menu when we are no longer on mobile
     if (!isMobile) {
       setIsMenuOpen(false);
     }
   }, [isMobile]);
 
   return (
-    <div className="dropdownmenu">
-      <nav
-        className={isMenuOpen ? "open" : ""}
-        role="navigation"
-        style={{
-          height: 50,
-          position: "relative",
-          backgroundColor: "darkorange",
-        }}
-      >
-        <ul
-          style={{
-            position: "relative",
-            top: isMobile ? 50 : 0,
-            minWidth: 0,
-            // Menu items are hidden only when we are on mobile and menu is closed
-            display: isMobile && !isMenuOpen ? "none" : "",
-          }}
-        >
+    <div>
+      <MainContainerStyled isMenuOpen={isMenuOpen} isMobile={isMobile}>
+        <ul>
           <li>
             <a href="/#">One</a>
           </li>
@@ -47,8 +116,16 @@ export default function DropDownMenu() {
                 <a href="/#">Sub-1</a>
               </li>
               <li>
-                <a href="/#" style={{}}>
-                  Sub-2 <span>&#8250; </span>
+                <a href="/#" style={{ position: "relative" }}>
+                  Sub-2{" "}
+                  <RightOutlined
+                    style={{
+                      fontSize: 10,
+                      position: "absolute",
+                      right: -20,
+                      top: 5,
+                    }}
+                  />
                 </a>
                 <ul>
                   <li>
@@ -72,16 +149,7 @@ export default function DropDownMenu() {
           </li>
         </ul>
         {/* Toggle menu btn, shows up only on mobile */}
-        <div
-          style={{
-            cursor: "pointer",
-            position: "absolute",
-            right: 5,
-            marginRight: 5,
-            top: "50%",
-            transform: "translateY(-50%)",
-          }}
-        >
+        <ToggleBtnContainerStyled>
           {isMobile &&
             (isMenuOpen ? (
               <CloseOutlined
@@ -96,8 +164,8 @@ export default function DropDownMenu() {
                 }}
               />
             ))}
-        </div>
-      </nav>
+        </ToggleBtnContainerStyled>
+      </MainContainerStyled>
     </div>
   );
 }
