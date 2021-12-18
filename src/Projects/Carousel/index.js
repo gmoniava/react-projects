@@ -78,7 +78,7 @@ export default function Carousel({ items = defaultItems }) {
   // We use this variable because during transition if user clicks multiple times the arrow buttons, coordinates are not computed correctly anymore
   let [transitionBlock, setTransitionBlock] = React.useState(false);
 
-  let innerContainerRelativeCordsToParent = () => {
+  let getRelativeCoordinatesOfInnerContainer = () => {
     let relativeLeft =
       innerContainer.current.getBoundingClientRect().left -
       mainContainer.current.getBoundingClientRect().left;
@@ -90,21 +90,21 @@ export default function Carousel({ items = defaultItems }) {
 
   const onResize = React.useCallback(() => {
     // When main container is resized we want to update relative coordinates
-    innerContainerRelativeCordsToParent();
+    getRelativeCoordinatesOfInnerContainer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { ref: mainContainer } = useResizeDetector({ onResize });
 
   React.useEffect(() => {
-    innerContainerRelativeCordsToParent();
+    getRelativeCoordinatesOfInnerContainer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
     // We need to run this also when transition ends to get fresh coordinates
     innerContainer.current.addEventListener("transitionend", () => {
-      innerContainerRelativeCordsToParent();
+      getRelativeCoordinatesOfInnerContainer();
       setTransitionBlock(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
