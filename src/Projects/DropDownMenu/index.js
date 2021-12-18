@@ -1,7 +1,7 @@
 import React from "react";
 import { MenuOutlined, CloseOutlined, RightOutlined } from "@ant-design/icons";
 import { useMediaQuery } from "react-responsive";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 ///
 //
@@ -33,7 +33,7 @@ let MainContainerStyled = styled.nav`
   }
 
   li:hover {
-    background-color: rgb(145, 77, 77);
+    background-color: #f7dd7e;
   }
 
   li a {
