@@ -44,6 +44,18 @@ const ArrowRight = styled(Arrow)`
   top: 50%;
   transform: translateY(-50%);
 `;
+
+let CarouselContainerStyled = styled.div`
+  padding: 20px 50px 0px 50px;
+  position: relative;
+`;
+let MovingContainerStyled = styled.div((props) => ({
+  display: "inline-block", //  use inline-block so that width of this div is based on content
+  whiteSpace: "nowrap",
+  transition: "transform 0.4s linear",
+  transform: `translateX(${-props.count * 100}px)`,
+}));
+
 const defaultItems = [
   { id: 1, title: "product", body: "good sneakers" },
   { id: 2, title: "product", body: "This model is also good" },
@@ -110,60 +122,44 @@ export default function Carousel({ items = defaultItems }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <div style={{ padding: 50 }}>
+    <CarouselContainerStyled>
       <div
+        ref={mainContainer}
         style={{
-          paddingLeft: 50,
-          position: "relative",
-          paddingRight: 50,
+          overflow: "hidden",
         }}
       >
-        <div
-          ref={mainContainer}
-          style={{
-            overflow: "hidden",
-          }}
-        >
-          <div
-            ref={innerContainer}
-            style={{
-              display: "inline-block", // use inline-block so that width of this div is based on content
-              whiteSpace: "nowrap",
-              transition: "transform 0.4s linear",
-              transform: `translateX(${-count * 100}px)`,
-            }}
-          >
-            {items.map((x) => {
-              return (
-                <DefaultCard key={x.id}>
-                  <h1>{x.title}</h1>
-                  <p>{x.body}</p>
-                </DefaultCard>
-              );
-            })}
-          </div>
-        </div>
-        <ArrowLeft
-          disabled={relativeCords.relativeLeft >= 0}
-          onClick={() => {
-            if (transitionBlock) return;
-            setCount(count - 1);
-            setTransitionBlock(true);
-          }}
-        >
-          <ArrowLeftOutlined />
-        </ArrowLeft>
-        <ArrowRight
-          disabled={relativeCords.relativeRight >= 0}
-          onClick={() => {
-            if (transitionBlock) return;
-            setCount(count + 1);
-            setTransitionBlock(true);
-          }}
-        >
-          <ArrowRightOutlined />
-        </ArrowRight>
+        <MovingContainerStyled count={count} ref={innerContainer}>
+          {items.map((x) => {
+            return (
+              <DefaultCard key={x.id}>
+                <h1>{x.title}</h1>
+                <p>{x.body}</p>
+              </DefaultCard>
+            );
+          })}
+        </MovingContainerStyled>
       </div>
-    </div>
+      <ArrowLeft
+        disabled={relativeCords.relativeLeft >= 0}
+        onClick={() => {
+          if (transitionBlock) return;
+          setCount(count - 1);
+          setTransitionBlock(true);
+        }}
+      >
+        <ArrowLeftOutlined />
+      </ArrowLeft>
+      <ArrowRight
+        disabled={relativeCords.relativeRight >= 0}
+        onClick={() => {
+          if (transitionBlock) return;
+          setCount(count + 1);
+          setTransitionBlock(true);
+        }}
+      >
+        <ArrowRightOutlined />
+      </ArrowRight>
+    </CarouselContainerStyled>
   );
 }

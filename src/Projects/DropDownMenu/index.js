@@ -103,69 +103,67 @@ export default function DropDownMenu() {
   }, [isMobile]);
 
   return (
-    <div>
-      <MainContainerStyled isMenuOpen={isMenuOpen} isMobile={isMobile}>
-        <ul>
-          <li>
-            <a href="/#">One</a>
-          </li>
-          <li>
-            <a href="/#">Two</a>
-            <ul>
-              <li>
-                <a href="/#">Sub-1</a>
-              </li>
-              <li>
-                <a href="/#" style={{ position: "relative" }}>
-                  Sub-2{" "}
-                  <RightOutlined
-                    style={{
-                      fontSize: 10,
-                      position: "absolute",
-                      right: -20,
-                      top: 5,
-                    }}
-                  />
-                </a>
-                <ul>
-                  <li>
-                    <a href="/#">Sub-2-1</a>
-                  </li>
-                  <li>
-                    <a href="/#">Sub-2-2</a>
-                  </li>
-                  <li>
-                    <a href="/#">Sub-2-3</a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a href="/#">Sub-3</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="/#">Three</a>
-          </li>
-        </ul>
-        {/* Toggle menu btn, shows up only on mobile */}
+    <MainContainerStyled isMenuOpen={isMenuOpen} isMobile={isMobile}>
+      <ul>
+        <li>
+          <a href="/#">One</a>
+        </li>
+        <li>
+          <a href="/#">Two</a>
+          <ul>
+            <li>
+              <a href="/#">Sub-1</a>
+            </li>
+            <li>
+              <a href="/#" style={{ position: "relative" }}>
+                Sub-2{" "}
+                <RightOutlined
+                  style={{
+                    fontSize: 10,
+                    position: "absolute",
+                    right: -20,
+                    top: 5,
+                  }}
+                />
+              </a>
+              <ul>
+                <li>
+                  <a href="/#">Sub-2-1</a>
+                </li>
+                <li>
+                  <a href="/#">Sub-2-2</a>
+                </li>
+                <li>
+                  <a href="/#">Sub-2-3</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="/#">Sub-3</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="/#">Three</a>
+        </li>
+      </ul>
+      {isMobile && (
         <ToggleBtnContainerStyled>
-          {isMobile &&
-            (isMenuOpen ? (
-              <CloseOutlined
-                onClick={() => {
-                  setIsMenuOpen(false);
-                }}
-              />
-            ) : (
-              <MenuOutlined
-                onClick={() => {
-                  setIsMenuOpen(true);
-                }}
-              />
-            ))}
+          {isMenuOpen ? (
+            <CloseOutlined
+              onClick={() => {
+                setIsMenuOpen(false);
+              }}
+            />
+          ) : (
+            <MenuOutlined
+              onClick={() => {
+                setIsMenuOpen(true);
+              }}
+            />
+          )}
         </ToggleBtnContainerStyled>
-      </MainContainerStyled>
-    </div>
+      )}
+    </MainContainerStyled>
   );
 }
