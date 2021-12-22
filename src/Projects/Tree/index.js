@@ -142,10 +142,10 @@ let treeToList = (treeData, list) => {
   });
 };
 
-let addOrRemoveFromArray = (id, value, array) => {
+let addOrRemoveFromArray = (id, add, array) => {
   let result;
 
-  if (value) {
+  if (add) {
     result = [...array, id];
   } else {
     result = array.filter((y) => y !== id);
