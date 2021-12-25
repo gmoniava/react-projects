@@ -19,24 +19,38 @@ let defaultData = [
   {
     name: "item1",
     icon: <FolderOutlined />,
+    id: 1,
     children: [
       {
         name: "item 1.1",
         icon: <FolderOutlined />,
+        id: 2,
 
         children: [
           {
             name: "item 1.1.1",
-            children: [],
+            icon: <FolderOutlined />,
+            children: [
+              {
+                name: "item 1.1.1.1",
+                children: [],
+
+                id: 21,
+              },
+            ],
+            id: 3,
           },
           {
             name: "item 1.1.2",
             children: [],
+            id: 4,
           },
         ],
       },
       {
         name: "item 1.2",
+        id: 5,
+
         onClick: () => {
           console.log("Item 1.2");
         },
@@ -44,21 +58,24 @@ let defaultData = [
       },
     ],
   },
-  { name: "item2", children: [], icon: <FileWordOutlined /> },
-  { name: "item3", children: [], icon: <GoogleOutlined /> },
+  { name: "item2", id: 6, children: [], icon: <FileWordOutlined /> },
+  { name: "item3", id: 7, children: [], icon: <GoogleOutlined /> },
 
-  { name: "item4", children: [] },
+  { name: "item4", id: 8, children: [] },
 ];
 
 export default function TreeList({
   initialData = defaultData,
-  showPath,
+  showPath = true,
   style,
 }) {
   let [parents, setParents] = React.useState([]);
   let [currentNode, setCurrentNode] = React.useState({
     children: initialData,
+    id: 0,
   });
+
+  let fullPath = [...parents, currentNode];
   return (
     <div className="listtree" style={{ padding: 20, ...style }}>
       <div
@@ -67,6 +84,7 @@ export default function TreeList({
           padding: 20,
         }}
       >
+        {/* Go back button */}
         <ArrowLeftOutlined
           style={{
             cursor: "pointer",
@@ -79,9 +97,12 @@ export default function TreeList({
           onClick={() => {
             if (parents.length === 0) return;
             setCurrentNode(parents[parents.length - 1]);
-            setParents(parents.slice(0, parents.length - 1));
+            let copy = [...parents];
+            copy.pop();
+            setParents(copy);
           }}
         />
+        {/* To show the parents */}
         {showPath && (
           <div
             style={{
@@ -93,12 +114,26 @@ export default function TreeList({
               overflow: "hidden",
             }}
           >
-            {parents && [...parents, currentNode].map((x) => x.name).join("/")}
+            {parents &&
+              fullPath.map((x) => (
+                <span
+                  key={x.id}
+                  style={{ color: "blue", cursor: "pointer" }}
+                  onClick={() => {
+                    let clickedNodeIndex = fullPath.findIndex(
+                      (y) => y.id === x.id
+                    );
+                    setParents(fullPath.slice(0, clickedNodeIndex));
+                    setCurrentNode(x);
+                  }}
+                >{`${x.name || ""}  /`}</span>
+              ))}
           </div>
         )}
         {currentNode.children.map((x) => {
           return (
             <div
+              key={x.id}
               style={{
                 padding: 10,
                 cursor: "pointer",
@@ -109,7 +144,7 @@ export default function TreeList({
               }}
               onClick={(e) => {
                 if (x.children && x.children.length) {
-                  setParents([...parents, currentNode]);
+                  setParents(fullPath);
                   setCurrentNode(x);
                 }
                 x.onClick && x.onClick(e);
