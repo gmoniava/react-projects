@@ -69,13 +69,9 @@ export default function TreeList({
   showPath = true,
   style,
 }) {
-  let [parents, setParents] = React.useState([]);
-  let [currentNode, setCurrentNode] = React.useState({
-    children: initialData,
-    id: 0,
-  });
-
-  let fullPath = [...parents, currentNode];
+  let [currentPath, setCurrentPath] = React.useState([
+    { id: 0, children: initialData },
+  ]);
   return (
     <div className="listtree" style={{ padding: 20, ...style }}>
       <div
@@ -92,14 +88,13 @@ export default function TreeList({
             border: "1px solid lightgray",
             borderRadius: "50%",
             padding: 5,
-            color: parents.length === 0 ? "lightgray" : "black",
+            color: currentPath.length - 1 === 0 ? "lightgray" : "black",
           }}
           onClick={() => {
-            if (parents.length === 0) return;
-            setCurrentNode(parents[parents.length - 1]);
-            let copy = [...parents];
+            if (currentPath.length - 1 === 0) return;
+            let copy = [...currentPath];
             copy.pop();
-            setParents(copy);
+            setCurrentPath(copy);
           }}
         />
         {/* To show the parents */}
@@ -114,23 +109,21 @@ export default function TreeList({
               overflow: "hidden",
             }}
           >
-            {parents &&
-              fullPath.map((x) => (
-                <span
-                  key={x.id}
-                  style={{ color: "blue", cursor: "pointer" }}
-                  onClick={() => {
-                    let clickedNodeIndex = fullPath.findIndex(
-                      (y) => y.id === x.id
-                    );
-                    setParents(fullPath.slice(0, clickedNodeIndex));
-                    setCurrentNode(x);
-                  }}
-                >{`${x.name || ""}  /`}</span>
-              ))}
+            {currentPath.map((x) => (
+              <span
+                key={x.id}
+                style={{ color: "blue", cursor: "pointer" }}
+                onClick={() => {
+                  let clickedNodeIndex = currentPath.findIndex(
+                    (y) => y.id === x.id
+                  );
+                  setCurrentPath(currentPath.slice(0, clickedNodeIndex + 1));
+                }}
+              >{`${x.name || ""}  /`}</span>
+            ))}
           </div>
         )}
-        {currentNode.children.map((x) => {
+        {currentPath[currentPath.length - 1].children.map((x) => {
           return (
             <div
               key={x.id}
@@ -144,8 +137,7 @@ export default function TreeList({
               }}
               onClick={(e) => {
                 if (x.children && x.children.length) {
-                  setParents(fullPath);
-                  setCurrentNode(x);
+                  setCurrentPath([...currentPath, x]);
                 }
                 x.onClick && x.onClick(e);
               }}
