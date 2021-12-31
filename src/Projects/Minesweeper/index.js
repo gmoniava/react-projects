@@ -1,5 +1,6 @@
 import React from "react";
 import { useImmer } from "use-immer";
+import bomb from "./bomb.png";
 
 // Minesweeper game
 
@@ -53,7 +54,7 @@ export default function App() {
     for (let y = 0; y < n; y++) {
       result[y] = [];
       for (let x = 0; x < m; x++) {
-        result[y][x] = { value: null, visible: false };
+        result[y][x] = { value: null, revealed: false, flagged: false };
       }
     }
 
@@ -75,7 +76,7 @@ export default function App() {
   };
 
   let reveal = (x, y, board) => {
-    board[y][x].visible = true;
+    board[y][x].revealed = true;
 
     let neighbors = getNeighbors(x, y);
 
@@ -86,7 +87,7 @@ export default function App() {
         nx >= 0 &&
         nx < board[y].length &&
         board[ny][nx].value == null &&
-        !board[ny][nx].visible
+        !board[ny][nx].revealed
       ) {
         reveal(nx, ny, board);
       }
@@ -96,7 +97,7 @@ export default function App() {
     let count = 0;
     for (let row of board)
       for (let box of row) {
-        if (box.visible) count++;
+        if (box.revealed) count++;
       }
     return count;
   };
@@ -111,18 +112,18 @@ export default function App() {
         <div key={y} style={{ display: "flex", alignItems: "center" }}>
           {row.map((boardItem, x) => {
             let handleClick = (e) => {
+              if (gameOver || userWon) return;
+
               if (e.type === "click") {
-                if (gameOver || userWon) return;
                 if (boardItem.value === null) {
                   let clone = JSON.parse(JSON.stringify(board));
                   reveal(x, y, clone);
                   setBoard(clone);
                 } else if (boardItem.value === "M") {
-                  alert("Game over");
                   setIsGameOver(true);
                 } else {
                   setBoard((ps) => {
-                    ps[y][x].visible = true;
+                    ps[y][x].revealed = true;
                   });
                 }
               } else if (e.type === "contextmenu") {
@@ -130,19 +131,35 @@ export default function App() {
                 e.preventDefault();
               }
             };
+
             return (
               <button
                 key={y.toString() + x.toString()}
                 style={{
-                  width: 24,
-                  height: 24,
-                  border: boardItem.visible ? "none" : "",
+                  width: 32,
+                  height: 32,
+                  border: boardItem.revealed ? "none" : "",
+                  padding: 0,
                 }}
                 onContextMenu={handleClick}
                 onClick={handleClick}
               >
-                {(boardItem.visible || (gameOver && boardItem.value === "M")) &&
-                  boardItem.value}
+                {(boardItem.revealed ||
+                  (gameOver && boardItem.value === "M")) &&
+                  (boardItem.value === "M" ? (
+                    <img
+                      alt=""
+                      src={bomb}
+                      style={{
+                        height: 24,
+                        position: "relative",
+                        left: 0,
+                        top: 2,
+                      }}
+                    />
+                  ) : (
+                    boardItem.value
+                  ))}
               </button>
             );
           })}
