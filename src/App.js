@@ -9,6 +9,7 @@ import {
   Tree,
   AnimatedLogin,
   SearchBtn,
+  Minesweeper,
 } from "./Projects";
 import React from "react";
 
@@ -16,7 +17,7 @@ function App() {
   return (
     <div style={{ height: "100%" }}>
       {" "}
-      <TreeList />{" "}
+      <Minesweeper />{" "}
     </div>
   );
 }

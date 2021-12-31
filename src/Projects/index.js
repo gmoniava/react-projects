@@ -7,6 +7,7 @@ import Tree from "./Tree";
 import AnimatedLogin from "./AnimatedLogin";
 import RippleButton from "./RippleButton";
 import SearchBtn from "./SearchBtn";
+import Minesweeper from "./Minesweeper";
 
 // To have single import for all components
 export {
@@ -18,5 +19,6 @@ export {
   RippleButton,
   Carousel,
   AnimatedLogin,
+  Minesweeper,
   SearchBtn,
 };
