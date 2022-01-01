@@ -179,7 +179,8 @@ export default function Snake() {
               return newHead;
             }
 
-            return bodyPart;
+            console.warn("Should not get here");
+            return null;
           } else {
             // If game was over, we don't update body coordinates anymore.
             // Also if we ate food, during that run, the rest of the body should not move, only new head is added.
