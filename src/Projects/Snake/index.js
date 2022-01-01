@@ -7,8 +7,8 @@ export default function Snake() {
     { x: 0, y: 100 },
   ]);
 
-  let direction = React.useRef();
-  let gameOver = React.useRef(false);
+  let directionRef = React.useRef();
+  let gameOverRef = React.useRef(false);
 
   React.useEffect(() => {
     document.addEventListener("keydown", function (e) {
@@ -19,70 +19,70 @@ export default function Snake() {
         40: "Down",
       };
 
-      direction.current = directions[e.keyCode];
+      directionRef.current = directions[e.keyCode];
     });
   }, []);
 
   React.useEffect(() => {
+    let gameOver = () => {
+      gameOverRef.current = true;
+      clearInterval(interval);
+    };
     let move = () => {
       setSnake((ps) => {
         return ps.map((snake, i) => {
-          if (!direction.current) return snake;
+          if (!directionRef.current) return snake;
 
           // head
           if (i === 0) {
-            if (direction.current === "Right") {
+            if (directionRef.current === "Right") {
               if (snake.x < 450) {
                 return {
                   x: snake.x + 50,
                   y: snake.y,
                 };
               } else {
-                gameOver.current = true;
-                clearInterval(interval);
+                gameOver();
                 return snake;
               }
             }
-            if (direction.current === "Down") {
+            if (directionRef.current === "Down") {
               if (snake.y < 450) {
                 return {
                   x: snake.x,
                   y: snake.y + 50,
                 };
               } else {
-                gameOver.current = true;
-                clearInterval(interval);
+                gameOver();
                 return snake;
               }
             }
-            if (direction.current === "Left") {
+            if (directionRef.current === "Left") {
               if (snake.x > 0) {
                 return {
                   x: snake.x - 50,
                   y: snake.y,
                 };
               } else {
-                gameOver.current = true;
-                clearInterval(interval);
+                gameOver();
                 return snake;
               }
             }
-            if (direction.current === "Up") {
+            if (directionRef.current === "Up") {
               if (snake.y > 0) {
                 return {
                   x: snake.x,
                   y: snake.y - 50,
                 };
               } else {
-                gameOver.current = true;
-                clearInterval(interval);
+                gameOver();
                 return snake;
               }
             }
 
             return snake;
           } else {
-            if (gameOver.current) {
+            if (gameOverRef.current) {
               return snake;
             }
             return {
