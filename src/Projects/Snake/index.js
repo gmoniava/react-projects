@@ -77,6 +77,11 @@ export default function Snake() {
     return false;
   };
 
+  let isHeadOutsideBounds = (head) => {
+    if (head.x >= 500 || head.y >= 500 || head.x < 0 || head.y < 0) return true;
+    return false;
+  };
+
   React.useEffect(() => {
     ateFood.current = false;
     let move = () => {
@@ -92,7 +97,7 @@ export default function Snake() {
                 y: bodyPart.y,
               };
 
-              if (newHead.x >= 500) {
+              if (isHeadOutsideBounds(newHead)) {
                 gameOverRef.current = true;
                 return bodyPart;
               }
@@ -115,7 +120,7 @@ export default function Snake() {
                 x: bodyPart.x,
                 y: bodyPart.y + 50,
               };
-              if (newHead.y >= 500) {
+              if (isHeadOutsideBounds(newHead)) {
                 gameOverRef.current = true;
                 return bodyPart;
               }
@@ -136,7 +141,7 @@ export default function Snake() {
                 x: bodyPart.x - 50,
                 y: bodyPart.y,
               };
-              if (newHead.x < 0) {
+              if (isHeadOutsideBounds(newHead)) {
                 gameOverRef.current = true;
                 return bodyPart;
               }
@@ -157,7 +162,7 @@ export default function Snake() {
                 x: bodyPart.x,
                 y: bodyPart.y - 50,
               };
-              if (newHead.y < 0) {
+              if (isHeadOutsideBounds(newHead)) {
                 gameOverRef.current = true;
                 return bodyPart;
               }
