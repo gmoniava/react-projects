@@ -10,6 +10,7 @@ import {
   AnimatedLogin,
   SearchBtn,
   Minesweeper,
+  Snake,
 } from "./Projects";
 import React from "react";
 
@@ -17,7 +18,7 @@ function App() {
   return (
     <div style={{ height: "100%" }}>
       {" "}
-      <Minesweeper />{" "}
+      <Snake />{" "}
     </div>
   );
 }
