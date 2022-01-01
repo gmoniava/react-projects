@@ -178,8 +178,6 @@ export default function Snake() {
               }
               return newHead;
             }
-
-            console.warn("Should not get here");
             return null;
           } else {
             // If game was over, we don't update body coordinates anymore.
