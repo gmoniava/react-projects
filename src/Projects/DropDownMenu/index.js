@@ -72,14 +72,7 @@ let MainContainerStyled = styled.nav`
             position: absolute;
             left: 0;
             top: 100%;
-          }
-          /* 3rd level nested menu styles */
-          ul li ul li:hover > ul {
-            display: block;
-            position: absolute;
-            left: 100%;
-            top: 0;
-          }
+          }        
         `}
 `;
 
@@ -118,26 +111,7 @@ export default function DropDownMenu() {
             <li>
               <a href="/#" style={{ position: "relative" }}>
                 Sub-2{" "}
-                <RightOutlined
-                  style={{
-                    fontSize: 10,
-                    position: "absolute",
-                    right: -20,
-                    top: 5,
-                  }}
-                />
               </a>
-              <ul>
-                <li>
-                  <a href="/#">Sub-2-1</a>
-                </li>
-                <li>
-                  <a href="/#">Sub-2-2</a>
-                </li>
-                <li>
-                  <a href="/#">Sub-2-3</a>
-                </li>
-              </ul>
             </li>
             <li>
               <a href="/#">Sub-3</a>
