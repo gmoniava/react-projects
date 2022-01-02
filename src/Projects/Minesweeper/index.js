@@ -97,11 +97,15 @@ export default function App() {
   };
 
   // Counts some property for all board cells
-  let countProperty = (board, propName) => {
+  let countProperty = (board, propName, countForOnlyNotRevealed) => {
     let count = 0;
     for (let row of board)
       for (let box of row) {
-        if (box[propName]) count++;
+        if (countForOnlyNotRevealed) {
+          if (box[propName] && !box.revealed) count++;
+        } else {
+          if (box[propName]) count++;
+        }
       }
     return count;
   };
@@ -141,12 +145,34 @@ export default function App() {
                 // If we get here user click right mouse btn.
 
                 // Can use maximum 10 flags
-                if (!board[y][x].flag && countProperty(board, "flag") === 10) {
+                if (
+                  !board[y][x].flag &&
+                  countProperty(board, "flag", true) === 10
+                ) {
                   return;
                 }
                 setBoard((ps) => {
                   ps[y][x].flag = !ps[y][x].flag;
                 });
+              }
+            };
+            let renderCellContent = (cell) => {
+              if (cell.revealed) {
+                return cell.value;
+              }
+
+              if (cell.flag) {
+                return (
+                  <FlagOutlined
+                    style={{
+                      color: gameOver && cell.value === "M" ? "green" : "black",
+                    }}
+                  />
+                );
+              }
+
+              if (gameOver && cell.value === "M") {
+                return <AlertOutlined style={{ color: "red" }} />;
               }
             };
             return (
@@ -161,16 +187,7 @@ export default function App() {
                 onContextMenu={handleClick}
                 onClick={handleClick}
               >
-                {(boardItem.revealed ||
-                  boardItem.flag ||
-                  (gameOver && boardItem.value === "M")) &&
-                  (boardItem.flag ? (
-                    <FlagOutlined />
-                  ) : boardItem.value === "M" ? (
-                    <AlertOutlined style={{ color: "red" }} />
-                  ) : (
-                    boardItem.value
-                  ))}
+                {renderCellContent(boardItem)}
               </button>
             );
           })}
@@ -179,12 +196,15 @@ export default function App() {
     });
   };
 
-  console.log("Render", board);
   return (
-    <div>
+    <div style={{ padding: 10 }}>
       <h1>Welcome to minesweeper</h1>
-      <div style={{ padding: 10 }}>{drawBoard(board)}</div>
-      <div style={{ color: "green" }}>{userWon && "You won"}</div>
+      <div style={{ marginBottom: 10 }}>
+        Remaining flags: {10 - countProperty(board, "flag", true)}
+      </div>
+      <div style={{}}>{drawBoard(board)}</div>
+      {userWon && <div style={{ color: "green" }}> You won </div>}
+      {gameOver && <h3 style={{ color: "red" }}> You lost :( </h3>}
     </div>
   );
 }
