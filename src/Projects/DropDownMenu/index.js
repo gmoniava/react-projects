@@ -1,5 +1,5 @@
 import React from "react";
-import { MenuOutlined, CloseOutlined, RightOutlined } from "@ant-design/icons";
+import { MenuOutlined, CloseOutlined } from "@ant-design/icons";
 import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
 
@@ -51,6 +51,7 @@ let MainContainerStyled = styled.nav`
   ${({ isMenuOpen }) =>
     isMenuOpen
       ? `
+          /* When menu is shown, we stack menu items vertically, and on full screen. */
           > ul {
             flex-direction: column;
             width: 100%;
@@ -79,6 +80,28 @@ let ToggleBtnContainerStyled = styled.div`
   margin-right: 5px;
   top: 15px;
 `;
+
+let ToggleMenuBtn = ({ isMobile, isMenuOpen, setIsMenuOpen }) => {
+  return (
+    isMobile && (
+      <ToggleBtnContainerStyled>
+        {isMenuOpen ? (
+          <CloseOutlined
+            onClick={() => {
+              setIsMenuOpen(false);
+            }}
+          />
+        ) : (
+          <MenuOutlined
+            onClick={() => {
+              setIsMenuOpen(true);
+            }}
+          />
+        )}
+      </ToggleBtnContainerStyled>
+    )
+  );
+};
 
 export default function DropDownMenu() {
   const isMobile = useMediaQuery({ query: "(max-width: 624px)" });
@@ -119,23 +142,11 @@ export default function DropDownMenu() {
           </li>
         </ul>
       )}
-      {isMobile && (
-        <ToggleBtnContainerStyled>
-          {isMenuOpen ? (
-            <CloseOutlined
-              onClick={() => {
-                setIsMenuOpen(false);
-              }}
-            />
-          ) : (
-            <MenuOutlined
-              onClick={() => {
-                setIsMenuOpen(true);
-              }}
-            />
-          )}
-        </ToggleBtnContainerStyled>
-      )}
+      <ToggleMenuBtn
+        isMobile={isMobile}
+        setIsMenuOpen={setIsMenuOpen}
+        isMenuOpen={isMenuOpen}
+      />
     </MainContainerStyled>
   );
 }
