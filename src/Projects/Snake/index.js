@@ -7,11 +7,13 @@ const POSSIBLE_SIZES = [25, 50];
 const SNAKE_SIZE = POSSIBLE_SIZES[0];
 
 export default function Snake() {
+  // Snake body, first element is the head.
   let [snake, setSnake] = React.useState([
     { x: 250, y: 100 },
     { x: 250 - SNAKE_SIZE, y: 100 },
     { x: 250 - 2 * SNAKE_SIZE, y: 100 },
   ]);
+
   let directionRef = React.useRef();
   let gameOverRef = React.useRef(false);
   let ateFood = React.useRef(false);
