@@ -13,6 +13,8 @@ let MainContainerStyled = styled.nav`
   height: 50px;
   position: relative;
   background-color: darkorange;
+  padding-top: ${({ isMobile, isMenuOpen }) =>
+    isMobile && isMenuOpen ? "50px" : "0"};
 
   ul {
     list-style: none;
@@ -46,27 +48,21 @@ let MainContainerStyled = styled.nav`
     display: none;
   }
 
-  > ul {
-    position: relative;
-    top: ${({ isMobile }) => (isMobile ? "50px" : "0")};
-    /* If we are on mobile and menu is closed, no need to show menu items */
-    display: ${({ isMenuOpen, isMobile }) =>
-      isMobile && !isMenuOpen ? "none" : ""};
-  }
-
   ${({ isMenuOpen }) =>
     isMenuOpen
       ? `
-          ul {
+          > ul {
             flex-direction: column;
             width: 100%;
+
+            li {
+             width: 100%;
+            }
           }
-          li {
-            width: 100%;
-          }
+          
         `
       : `
-          /* 2nd level nested menu styles */
+          /* 2nd level nested menu */
           ul li:hover > ul {
             display: block;
             position: absolute;
@@ -81,8 +77,7 @@ let ToggleBtnContainerStyled = styled.div`
   position: absolute;
   right: 5px;
   margin-right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 15px;
 `;
 
 export default function DropDownMenu() {
@@ -98,30 +93,32 @@ export default function DropDownMenu() {
 
   return (
     <MainContainerStyled isMenuOpen={isMenuOpen} isMobile={isMobile}>
-      <ul>
-        <li>
-          <a href="/#">One</a>
-        </li>
-        <li>
-          <a href="/#">Two</a>
-          <ul>
-            <li>
-              <a href="/#">Sub-1</a>
-            </li>
-            <li>
-              <a href="/#" style={{ position: "relative" }}>
-                Sub-2{" "}
-              </a>
-            </li>
-            <li>
-              <a href="/#">Sub-3</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <a href="/#">Three</a>
-        </li>
-      </ul>
+      {(!isMobile || isMenuOpen) && (
+        <ul>
+          <li>
+            <a href="/#">One</a>
+          </li>
+          <li>
+            <a href="/#">Two</a>
+            <ul>
+              <li>
+                <a href="/#">Sub-1</a>
+              </li>
+              <li>
+                <a href="/#" style={{ position: "relative" }}>
+                  Sub-2{" "}
+                </a>
+              </li>
+              <li>
+                <a href="/#">Sub-3</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="/#">Three</a>
+          </li>
+        </ul>
+      )}
       {isMobile && (
         <ToggleBtnContainerStyled>
           {isMenuOpen ? (
