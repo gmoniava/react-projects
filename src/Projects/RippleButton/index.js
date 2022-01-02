@@ -11,14 +11,12 @@ export default function RippleButton() {
   let btnRef = React.useRef();
   let handleClick = (e) => {
     // We must determine where was clicked on the button (in local coordinates)
-    const relativeToParentX =
-      e.clientX - btnRef.current.getBoundingClientRect().left;
-    const relativeToParentY =
-      e.clientY - btnRef.current.getBoundingClientRect().top;
+    const localX = e.clientX - btnRef.current.getBoundingClientRect().left;
+    const localY = e.clientY - btnRef.current.getBoundingClientRect().top;
 
     setRippleCoords({
-      x: relativeToParentX,
-      y: relativeToParentY,
+      x: localX,
+      y: localY,
       // Needs a new key each time (mainly for animation).
       key: ((rippleCoords?.key || 0) + 1) % 100,
     });
