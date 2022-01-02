@@ -7,7 +7,6 @@ import {
   TreeList,
   RippleButton,
   Tree,
-  AnimatedLogin,
   SearchBtn,
   Minesweeper,
   Snake,
