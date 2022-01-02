@@ -6,15 +6,14 @@ import styled from "styled-components";
 //
 // Immitates next article arrow from CNN web site
 //
-// The way this works internally, there is a parent div with small width and overflow:hidden,
-// and inside is another div, on hover width of parent div is increased
-// which gives appearing effect to the child div. Also since main div has right:0,
-// when its width is increased we have effect that div appears from right to left.
-//
 
 let MainContainerStyled = styled.div`
   position: fixed;
   right: 0px;
+  /*
+     This width will increase on hover, hence appearing effect.
+     And due to right:0, it will appear as div comes from right to left when width is changed. 
+   */
   width: 20px;
   transition: width 0.7s linear;
   height: 100px;
@@ -27,7 +26,7 @@ let MainContainerStyled = styled.div`
     width: 220px;
   }
 `;
-let LeftArrowStyled = styled.div`
+let LeftArrowContainerStyled = styled.div`
   background: lightgray;
   height: 100px;
   width: 20px;
@@ -49,9 +48,9 @@ let HiddenContentStyled = styled.div`
 export default function App() {
   return (
     <MainContainerStyled>
-      <LeftArrowStyled>
+      <LeftArrowContainerStyled>
         <ArrowLeftOutlined />
-      </LeftArrowStyled>
+      </LeftArrowContainerStyled>
       <HiddenContentStyled>
         <img
           alt=""
