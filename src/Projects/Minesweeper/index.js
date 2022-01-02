@@ -1,12 +1,13 @@
 import React from "react";
 import { useImmer } from "use-immer";
-import bomb from "./bomb.png";
+import { FlagOutlined, AlertOutlined } from "@ant-design/icons";
 
 // Minesweeper game
 
 let Y = 10;
 let X = 10;
 export default function App() {
+  // Just returns all neighbors of a cell
   let getNeighbors = (x, y) => {
     return [
       [x - 1, y],
@@ -31,6 +32,7 @@ export default function App() {
     return arr;
   };
 
+  // Assigns numbers to cells which are in proximity to mines
   let assignNumbersToCells = (board, minesCoordinates) => {
     for (let [x, y] of minesCoordinates) {
       let neighbors = getNeighbors(x, y);
@@ -54,7 +56,7 @@ export default function App() {
     for (let y = 0; y < n; y++) {
       result[y] = [];
       for (let x = 0; x < m; x++) {
-        result[y][x] = { value: null, revealed: false, flagged: false };
+        result[y][x] = { value: null, revealed: false, flag: false };
       }
     }
 
@@ -93,18 +95,20 @@ export default function App() {
       }
     }
   };
-  let revealedBoxes = (board) => {
+
+  // Counts some property for all board cells
+  let countProperty = (board, propName) => {
     let count = 0;
     for (let row of board)
       for (let box of row) {
-        if (box.revealed) count++;
+        if (box[propName]) count++;
       }
     return count;
   };
 
   let [board, setBoard] = useImmer(createBoard(Y, X));
   let [gameOver, setIsGameOver] = React.useState(false);
-  let userWon = revealedBoxes(board) === Y * X - 10;
+  let userWon = countProperty(board, "revealed") === Y * X - 10;
 
   let drawBoard = (board) => {
     return board.map((row, y) => {
@@ -115,23 +119,36 @@ export default function App() {
               if (gameOver || userWon) return;
 
               if (e.type === "click") {
+                // We can't open flagged cells
+                if (board[y][x].flag) return;
+
                 if (boardItem.value === null) {
+                  // This is empty cell, reveal it and its other empty neighbors
                   let clone = JSON.parse(JSON.stringify(board));
                   reveal(x, y, clone);
                   setBoard(clone);
                 } else if (boardItem.value === "M") {
+                  // Oops we hit a mine.
                   setIsGameOver(true);
                 } else {
+                  // We hit cell with number, just reveal that one
                   setBoard((ps) => {
                     ps[y][x].revealed = true;
                   });
                 }
               } else if (e.type === "contextmenu") {
-                console.log("Right click");
                 e.preventDefault();
+                // If we get here user click right mouse btn.
+
+                // Can use maximum 10 flags
+                if (!board[y][x].flag && countProperty(board, "flag") === 10) {
+                  return;
+                }
+                setBoard((ps) => {
+                  ps[y][x].flag = !ps[y][x].flag;
+                });
               }
             };
-
             return (
               <button
                 key={y.toString() + x.toString()}
@@ -145,18 +162,12 @@ export default function App() {
                 onClick={handleClick}
               >
                 {(boardItem.revealed ||
+                  boardItem.flag ||
                   (gameOver && boardItem.value === "M")) &&
-                  (boardItem.value === "M" ? (
-                    <img
-                      alt=""
-                      src={bomb}
-                      style={{
-                        height: 24,
-                        position: "relative",
-                        left: 0,
-                        top: 2,
-                      }}
-                    />
+                  (boardItem.flag ? (
+                    <FlagOutlined />
+                  ) : boardItem.value === "M" ? (
+                    <AlertOutlined style={{ color: "red" }} />
                   ) : (
                     boardItem.value
                   ))}
@@ -167,6 +178,8 @@ export default function App() {
       );
     });
   };
+
+  console.log("Render", board);
   return (
     <div>
       <h1>Welcome to minesweeper</h1>

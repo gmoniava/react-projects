@@ -18,7 +18,7 @@ function App() {
   return (
     <div style={{ height: "100%" }}>
       {" "}
-      <Snake />{" "}
+      <Minesweeper />{" "}
     </div>
   );
 }
