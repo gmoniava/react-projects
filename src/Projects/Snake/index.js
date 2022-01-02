@@ -2,12 +2,15 @@ import React from "react";
 
 // Classic snake game
 
+const POSSIBLE_SIZES = [25, 50];
+
+const SNAKE_SIZE = POSSIBLE_SIZES[0];
+
 export default function Snake() {
   let [snake, setSnake] = React.useState([
     { x: 250, y: 100 },
-    { x: 200, y: 100 },
-    { x: 150, y: 100 },
-    { x: 100, y: 100 },
+    { x: 250 - SNAKE_SIZE, y: 100 },
+    { x: 250 - 2 * SNAKE_SIZE, y: 100 },
   ]);
   let directionRef = React.useRef();
   let gameOverRef = React.useRef(false);
@@ -45,7 +48,7 @@ export default function Snake() {
     }
 
     let possibleCoordinates = [];
-    for (let i = 0; i <= 450; i += 50) {
+    for (let i = 0; i <= 450; i += SNAKE_SIZE) {
       possibleCoordinates.push(i);
     }
     let x = getRandomIntInclusive(0, possibleCoordinates.length - 1);
@@ -82,6 +85,16 @@ export default function Snake() {
     return false;
   };
 
+  let validityCheck = (snakeHead, snakeBody) => {
+    if (
+      isHeadOutsideBounds(snakeHead) ||
+      isCollisionWithSnake(snakeHead, snakeBody.slice(1, snakeBody.length))
+    ) {
+      return false;
+    }
+    return true;
+  };
+
   React.useEffect(() => {
     ateFood.current = false;
     let move = () => {
@@ -93,16 +106,11 @@ export default function Snake() {
           if (i === 0) {
             if (directionRef.current === "Right") {
               let newHead = {
-                x: bodyPart.x + 50,
+                x: bodyPart.x + SNAKE_SIZE,
                 y: bodyPart.y,
               };
 
-              if (isHeadOutsideBounds(newHead)) {
-                gameOverRef.current = true;
-                return bodyPart;
-              }
-
-              if (isCollisionWithSnake(newHead, snake.slice(1, snake.length))) {
+              if (!validityCheck(newHead, snake)) {
                 gameOverRef.current = true;
                 return bodyPart;
               }
@@ -118,13 +126,9 @@ export default function Snake() {
             if (directionRef.current === "Down") {
               let newHead = {
                 x: bodyPart.x,
-                y: bodyPart.y + 50,
+                y: bodyPart.y + SNAKE_SIZE,
               };
-              if (isHeadOutsideBounds(newHead)) {
-                gameOverRef.current = true;
-                return bodyPart;
-              }
-              if (isCollisionWithSnake(newHead, snake.slice(1, snake.length))) {
+              if (!validityCheck(newHead, snake)) {
                 gameOverRef.current = true;
                 return bodyPart;
               }
@@ -138,14 +142,10 @@ export default function Snake() {
             }
             if (directionRef.current === "Left") {
               let newHead = {
-                x: bodyPart.x - 50,
+                x: bodyPart.x - SNAKE_SIZE,
                 y: bodyPart.y,
               };
-              if (isHeadOutsideBounds(newHead)) {
-                gameOverRef.current = true;
-                return bodyPart;
-              }
-              if (isCollisionWithSnake(newHead, snake.slice(1, snake.length))) {
+              if (!validityCheck(newHead, snake)) {
                 gameOverRef.current = true;
                 return bodyPart;
               }
@@ -160,13 +160,9 @@ export default function Snake() {
             if (directionRef.current === "Up") {
               let newHead = {
                 x: bodyPart.x,
-                y: bodyPart.y - 50,
+                y: bodyPart.y - SNAKE_SIZE,
               };
-              if (isHeadOutsideBounds(newHead)) {
-                gameOverRef.current = true;
-                return bodyPart;
-              }
-              if (isCollisionWithSnake(newHead, snake.slice(1, snake.length))) {
+              if (!validityCheck(newHead, snake)) {
                 gameOverRef.current = true;
                 return bodyPart;
               }
@@ -193,7 +189,7 @@ export default function Snake() {
         })
       );
     };
-    if (!gameOverRef.current) setTimeout(move, 200);
+    if (!gameOverRef.current) setTimeout(move, 100);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [snake]);
@@ -217,8 +213,8 @@ export default function Snake() {
                 top: x.y,
                 left: x.x,
                 background: "gray",
-                height: 50,
-                width: 50,
+                height: SNAKE_SIZE,
+                width: SNAKE_SIZE,
               }}
             ></div>
           );
@@ -230,8 +226,8 @@ export default function Snake() {
               top: food.y,
               left: food.x,
               background: "green",
-              height: 50,
-              width: 50,
+              height: SNAKE_SIZE,
+              width: SNAKE_SIZE,
             }}
           ></div>
         )}
