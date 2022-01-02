@@ -66,13 +66,14 @@ let MainContainerStyled = styled.nav`
           }
         `
       : `
-          /* Nested menu styles */
+          /* 2nd level nested menu styles */
           ul li:hover > ul {
             display: block;
             position: absolute;
             left: 0;
             top: 100%;
           }
+          /* 3rd level nested menu styles */
           ul li ul li:hover > ul {
             display: block;
             position: absolute;
