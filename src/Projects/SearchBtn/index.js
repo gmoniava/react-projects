@@ -1,6 +1,6 @@
 import React from "react";
-import "./index.css";
 import { SearchOutlined, CloseOutlined } from "@ant-design/icons";
+import styled from "styled-components";
 
 ///
 //
@@ -11,6 +11,40 @@ import { SearchOutlined, CloseOutlined } from "@ant-design/icons";
 //  onChange: handler called when text value changes
 //
 
+let ContainerStyled = styled.div`
+  height: 64px;
+  width: ${(props) => (props.expanded ? props.width || 256 : 64)}px;
+  border-radius: 30px;
+  transition: width 0.3s linear;
+  background-color: #2985e8;
+  display: flex;
+  align-items: center;
+
+  input:focus {
+    outline: none;
+  }
+
+  input::placeholder {
+    color: white;
+  }
+`;
+
+let SearchBtnStyled = styled.div`
+  cursor: pointer;
+  font-size: 32px;
+  margin-left: 15px;
+  margin-right: 5px;
+  color: white;
+`;
+
+let CloseBtnStyled = styled.div`
+  height: 16px;
+  width: 30px;
+  color: white;
+  cursor: pointer;
+  padding-left: 15px;
+`;
+
 export default function SearchBtn(props) {
   let [expanded, setExpanded] = React.useState(false);
 
@@ -19,63 +53,38 @@ export default function SearchBtn(props) {
   }
 
   return (
-    <div className="expanding-searchbar" style={{ padding: 5 }}>
-      <div
-        className="main-container"
-        style={{
-          height: 64,
-          width: expanded ? props.width || 256 : 64,
-          borderRadius: 30,
-          transition: "width 0.3s linear",
-          backgroundColor: "#2985e8",
-          display: "flex",
-          alignItems: "center",
+    <ContainerStyled width={props.width} expanded={expanded}>
+      <SearchBtnStyled
+        onClick={() => {
+          setExpanded(!expanded);
         }}
       >
-        {/* Search icon */}
-        <div
-          className="search-icon"
+        <SearchOutlined />
+      </SearchBtnStyled>
+      {expanded && (
+        <input
+          style={{
+            color: "white",
+            flex: 1,
+            border: "none",
+            background: "#2985e8",
+            height: 30,
+            width: "100%",
+          }}
+          value={props.value}
+          placeholder="Type text"
+          onChange={(e) => props.onChange && props.onChange(e.target.value)}
+        />
+      )}
+      {expanded && (
+        <CloseBtnStyled
           onClick={() => {
-            setExpanded(!expanded);
+            props.onChange && props.onChange("");
           }}
         >
-          <SearchOutlined />
-        </div>
-        {/* Div for the input */}
-        {expanded && (
-          <div
-            className="input"
-            style={{
-              flex: 1,
-              overflow: "hidden",
-            }}
-          >
-            <input
-              style={{
-                color: "white",
-                border: "none",
-                background: "#2985e8",
-                height: 30,
-                width: "100%",
-              }}
-              value={props.value}
-              placeholder="Type text"
-              onChange={(e) => props.onChange && props.onChange(e.target.value)}
-            />
-          </div>
-        )}
-        {/* Close icon */}
-        {expanded && (
-          <div
-            className="close"
-            onClick={() => {
-              props.onChange && props.onChange("");
-            }}
-          >
-            <CloseOutlined />
-          </div>
-        )}
-      </div>
-    </div>
+          <CloseOutlined />
+        </CloseBtnStyled>
+      )}
+    </ContainerStyled>
   );
 }
