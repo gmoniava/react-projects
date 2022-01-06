@@ -14,6 +14,7 @@ import {
 //
 // Props
 //  initialData: data organized in tree like structure
+//  style: you can pass the typical style object which will be applied to main container.
 //
 
 let defaultData = [
