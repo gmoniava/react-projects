@@ -79,6 +79,29 @@ let ArrowLeftStyled = styled(ArrowLeftOutlined)`
     currentPath.length - 1 === 0 ? "lightgray" : "black"};
 `;
 
+let PathContainerStyled = styled.div`
+  padding: 5px;
+  color: gray;
+  font-size: 12;
+  text-overflow: ellipsis;
+  white-pace: nowrap;
+  overflow: hidden;
+`;
+
+let PathItemStyled = styled.span`
+  cursor: pointer;
+  color: blue;
+`;
+
+let ListItemStyled = styled.div`
+  padding: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  border: 1px solid lightgray;
+  display: flex;
+  align-items: center;
+`;
+
 export default function TreeList({
   initialData = defaultData,
   showPath = true,
@@ -98,45 +121,27 @@ export default function TreeList({
           setCurrentPath(copy);
         }}
       />
-      {/* To show the parents */}
+      {/* Show the path where we are */}
       {showPath && (
-        <div
-          style={{
-            padding: 5,
-            color: "gray",
-            fontSize: 12,
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-          }}
-        >
-          {currentPath.map((x) => (
-            <span
+        <PathContainerStyled>
+          {currentPath.map((x, i) => (
+            <PathItemStyled
               key={x.id}
-              style={{ color: "blue", cursor: "pointer" }}
               onClick={() => {
-                let clickedNodeIndex = currentPath.findIndex(
-                  (y) => y.id === x.id
-                );
-                setCurrentPath(currentPath.slice(0, clickedNodeIndex + 1));
+                setCurrentPath(currentPath.slice(0, i + 1));
               }}
-            >{`${x.name || ""}  /`}</span>
+            >{`${x.name || ""}  /`}</PathItemStyled>
           ))}
-        </div>
+        </PathContainerStyled>
       )}
-      {currentPath[currentPath.length - 1].children.map((x) => {
+      {/* We always show the contents of the last item in the path */}
+      {currentPath[currentPath.length - 1]?.children.map((x) => {
         return (
-          <div
+          <ListItemStyled
             key={x.id}
-            style={{
-              padding: 10,
-              cursor: "pointer",
-              fontSize: 20,
-              border: "1px solid lightgray",
-              display: "flex",
-              alignItems: "center",
-            }}
+            style={{}}
             onClick={(e) => {
+              // If this item has children, this means we must "step in"
               if (x.children && x.children.length) {
                 setCurrentPath([...currentPath, x]);
               }
@@ -146,7 +151,7 @@ export default function TreeList({
             {" "}
             <div style={{ marginRight: 5 }}> {x.icon} </div>
             <div> {x.name} </div>
-          </div>
+          </ListItemStyled>
         );
       })}
     </ContainerStyled>
