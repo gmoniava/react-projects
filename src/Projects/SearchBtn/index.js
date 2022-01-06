@@ -29,7 +29,7 @@ let ContainerStyled = styled.div`
   }
 `;
 
-let SearchBtnStyled = styled.div`
+let SearchBtnStyled = styled(SearchOutlined)`
   cursor: pointer;
   font-size: 32px;
   margin-left: 15px;
@@ -37,12 +37,13 @@ let SearchBtnStyled = styled.div`
   color: white;
 `;
 
-let CloseBtnStyled = styled.div`
+let CloseBtnStyled = styled(CloseOutlined)`
   height: 16px;
   width: 30px;
   color: white;
   cursor: pointer;
-  padding-left: 15px;
+  padding-left: 5px;
+  padding-right: 5px;
 `;
 
 export default function SearchBtn(props) {
@@ -58,9 +59,7 @@ export default function SearchBtn(props) {
         onClick={() => {
           setExpanded(!expanded);
         }}
-      >
-        <SearchOutlined />
-      </SearchBtnStyled>
+      />
       {expanded && (
         <input
           style={{
@@ -81,9 +80,7 @@ export default function SearchBtn(props) {
           onClick={() => {
             props.onChange && props.onChange("");
           }}
-        >
-          <CloseOutlined />
-        </CloseBtnStyled>
+        />
       )}
     </ContainerStyled>
   );
