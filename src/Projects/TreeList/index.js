@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 import {
   ArrowLeftOutlined,
@@ -64,6 +65,20 @@ let defaultData = [
   { name: "item4", id: 8, children: [] },
 ];
 
+let ContainerStyled = styled.div`
+  padding: 20px;
+`;
+
+let ArrowLeftStyled = styled(ArrowLeftOutlined)`
+  cursor: pointer;
+  margin-bottom: 5px;
+  border: 1px solid lightgray;
+  border-radius: 50%;
+  padding: 5px;
+  color: ${({ currentPath }) =>
+    currentPath.length - 1 === 0 ? "lightgray" : "black"};
+`;
+
 export default function TreeList({
   initialData = defaultData,
   showPath = true,
@@ -73,82 +88,67 @@ export default function TreeList({
     { id: 0, children: initialData },
   ]);
   return (
-    <div className="listtree" style={{ padding: 20, ...style }}>
-      <div
-        style={{
-          borderRadius: 10,
-          padding: 20,
+    <ContainerStyled style={{ ...style }}>
+      <ArrowLeftStyled
+        currentPath={currentPath}
+        onClick={() => {
+          if (currentPath.length - 1 === 0) return;
+          let copy = [...currentPath];
+          copy.pop();
+          setCurrentPath(copy);
         }}
-      >
-        {/* Go back button */}
-        <ArrowLeftOutlined
+      />
+      {/* To show the parents */}
+      {showPath && (
+        <div
           style={{
-            cursor: "pointer",
-            marginBottom: 5,
-            border: "1px solid lightgray",
-            borderRadius: "50%",
             padding: 5,
-            color: currentPath.length - 1 === 0 ? "lightgray" : "black",
+            color: "gray",
+            fontSize: 12,
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
           }}
-          onClick={() => {
-            if (currentPath.length - 1 === 0) return;
-            let copy = [...currentPath];
-            copy.pop();
-            setCurrentPath(copy);
-          }}
-        />
-        {/* To show the parents */}
-        {showPath && (
+        >
+          {currentPath.map((x) => (
+            <span
+              key={x.id}
+              style={{ color: "blue", cursor: "pointer" }}
+              onClick={() => {
+                let clickedNodeIndex = currentPath.findIndex(
+                  (y) => y.id === x.id
+                );
+                setCurrentPath(currentPath.slice(0, clickedNodeIndex + 1));
+              }}
+            >{`${x.name || ""}  /`}</span>
+          ))}
+        </div>
+      )}
+      {currentPath[currentPath.length - 1].children.map((x) => {
+        return (
           <div
+            key={x.id}
             style={{
-              padding: 5,
-              color: "gray",
-              fontSize: 12,
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
+              padding: 10,
+              cursor: "pointer",
+              fontSize: 20,
+              border: "1px solid lightgray",
+              display: "flex",
+              alignItems: "center",
+            }}
+            onClick={(e) => {
+              if (x.children && x.children.length) {
+                setCurrentPath([...currentPath, x]);
+              }
+              x.onClick && x.onClick(e);
             }}
           >
-            {currentPath.map((x) => (
-              <span
-                key={x.id}
-                style={{ color: "blue", cursor: "pointer" }}
-                onClick={() => {
-                  let clickedNodeIndex = currentPath.findIndex(
-                    (y) => y.id === x.id
-                  );
-                  setCurrentPath(currentPath.slice(0, clickedNodeIndex + 1));
-                }}
-              >{`${x.name || ""}  /`}</span>
-            ))}
+            {" "}
+            <div style={{ marginRight: 5 }}> {x.icon} </div>
+            <div> {x.name} </div>
           </div>
-        )}
-        {currentPath[currentPath.length - 1].children.map((x) => {
-          return (
-            <div
-              key={x.id}
-              style={{
-                padding: 10,
-                cursor: "pointer",
-                fontSize: 20,
-                border: "1px solid lightgray",
-                display: "flex",
-                alignItems: "center",
-              }}
-              onClick={(e) => {
-                if (x.children && x.children.length) {
-                  setCurrentPath([...currentPath, x]);
-                }
-                x.onClick && x.onClick(e);
-              }}
-            >
-              {" "}
-              <div style={{ marginRight: 5 }}> {x.icon} </div>
-              <div> {x.name} </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+        );
+      })}
+    </ContainerStyled>
   );
 }

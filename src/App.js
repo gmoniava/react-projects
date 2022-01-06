@@ -17,7 +17,7 @@ function App() {
   return (
     <div style={{ height: "100%" }}>
       {" "}
-      <DropDownMenu />{" "}
+      <TreeList style={{ width: 300 }} />{" "}
     </div>
   );
 }
