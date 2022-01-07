@@ -7,7 +7,7 @@ import styled, { keyframes } from "styled-components";
 // Imitates animation from stackoverflow web page.
 // Uses transform for animations unlike the other project.
 //
-let names = ["Nick", "David", "Some long name"];
+let names = ["Nick", "David", "John"];
 
 let MainContainerStyled = styled.div`
   display: flex;
