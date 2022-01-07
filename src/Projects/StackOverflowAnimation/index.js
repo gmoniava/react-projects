@@ -1,5 +1,6 @@
 import React from "react";
 import "./index.css";
+import styled, { keyframes } from "styled-components";
 
 ///
 //
@@ -7,6 +8,29 @@ import "./index.css";
 // Uses transform for animations unlike the other project.
 //
 let names = ["Nick", "David", "Some long name"];
+
+let MainContainerStyled = styled.div`
+  display: flex;
+  font-size: 22px;
+`;
+
+let animation = keyframes`
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+`;
+
+let AnimatedWordStyled = styled.div`
+  animation: ${animation} 1s linear;
+  color: orange;
+  margin: 0 5px 0 5px;
+  font-weight: bold;
+`;
 
 export default function App() {
   let [index, setIndex] = React.useState(0);
@@ -18,33 +42,10 @@ export default function App() {
   }, []);
 
   return (
-    <div className="stackoverflowanimation">
-      <div
-        style={{
-          display: "flex",
-          fontSize: 22,
-        }}
-      >
-        Hello
-        {names.map((x, i) => {
-          // We use transform for animation, it doesn't remove the element
-          // from document flow, so the width is properly calculated for this element.
-          return (
-            <div
-              className={"active"}
-              style={{
-                color: "orange",
-                margin: "0 5px 0 5px",
-                fontWeight: "bold",
-                display: i === index ? "block" : "none",
-              }}
-            >
-              {x}
-            </div>
-          );
-        })}
-        welcome here
-      </div>
-    </div>
+    <MainContainerStyled>
+      Hello
+      <AnimatedWordStyled key={index}>{names[index]}</AnimatedWordStyled>
+      welcome here
+    </MainContainerStyled>
   );
 }
