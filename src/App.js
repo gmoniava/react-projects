@@ -15,9 +15,9 @@ import React from "react";
 
 function App() {
   return (
-    <div style={{ height: "100%" }}>
+    <div>
       {" "}
-      <TreeList style={{ width: 300 }} />{" "}
+      <DropDownMenu />{" "}
     </div>
   );
 }
