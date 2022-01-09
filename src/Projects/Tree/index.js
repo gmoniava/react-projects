@@ -1,5 +1,4 @@
 import React from "react";
-import "./index.css";
 import { CaretDownFilled, CaretRightFilled } from "@ant-design/icons";
 
 ///
@@ -7,12 +6,12 @@ import { CaretDownFilled, CaretRightFilled } from "@ant-design/icons";
 // Tree component
 //
 // Props
-//  checkable: supports checking of nodes. But then you must supply ids of checked nodes
+//  isCheckable: supports checking of nodes. But then you must supply ids of checked nodes
 //   using checkedNodes prop, and also handle onCheckChange prop.
 //  checkedNodes: array of checked nodes ids.
-//  onCheckChange: handler when a new node is checked.
+//  onCheckChange: handler when a new node is checked. Receives array of checked nodes.
 //  data: tree data
-//  filterable: to support filter of nodes or not.
+//  isFilterable (bool): to support filter of nodes or not.
 //
 
 let defaultTree = [
@@ -31,16 +30,16 @@ let defaultTree = [
           },
           {
             id: 12,
-            name: "Barack obama",
+            name: "John Doe",
             children: [
               {
                 id: 99,
-                name: "Ozgun",
+                name: "Jack Nicholson",
                 children: [],
               },
               {
                 id: 991,
-                name: "Ozgun2",
+                name: "John Travolta",
                 children: [],
               },
             ],
@@ -49,7 +48,7 @@ let defaultTree = [
       },
       {
         id: 32,
-        name: "Thanf gdfdfdf gdf df gdf gdfgdf gos",
+        name: "Jim Carrey",
         children: [],
       },
       {
@@ -71,13 +70,11 @@ let Node = (props) => {
   return (
     <div>
       <div
-        className={props.wasExpanded && "opened-node"}
         style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
         onClick={() => {
           props.onExpand(props.id, !isExpanded);
         }}
       >
-        {/* For expand/collapse button */}
         <div
           style={{
             width: 20,
@@ -91,8 +88,7 @@ let Node = (props) => {
             !!props.children.length &&
             (isExpanded ? <CaretDownFilled /> : <CaretRightFilled />)}
         </div>
-        {/* For checkbox */}
-        {props.checkable && (
+        {props.isCheckable && (
           <div style={{ width: 20, marginRight: 5 }}>
             <input
               checked={isChecked === undefined ? false : isChecked}
@@ -106,7 +102,6 @@ let Node = (props) => {
             />
           </div>
         )}
-        {/* Here goes node title */}
         <div style={{ padding: 2 }}> {props.name}</div>
       </div>
       {props.children && isExpanded && (
@@ -142,21 +137,21 @@ let treeToList = (treeData, list) => {
   });
 };
 
-let addOrRemoveFromArray = (id, add, array) => {
+let addOrRemoveItemFromArray = (item, isAdd, array) => {
   let result;
 
-  if (add) {
-    result = [...array, id];
+  if (isAdd) {
+    result = [...array, item];
   } else {
-    result = array.filter((y) => y !== id);
+    result = array.filter((y) => y !== item);
   }
   return result;
 };
 
 export default function Tree({
   data = defaultTree,
-  checkable,
-  filterable,
+  isCheckable,
+  isFilterable,
   checkedNodes,
   style,
   onCheckChange,
@@ -166,34 +161,35 @@ export default function Tree({
 
   data = React.useMemo(() => {
     let list = [];
-    if (!filterable) return data;
+
+    if (!isFilterable) return data;
+
     if (!filter) {
       setExpandedNodes([]);
       return data;
     }
+
     let clone = JSON.parse(JSON.stringify(data));
 
-    // Filter the tree
     let filterResult = filterTree(filter, clone);
 
-    // Set nodes which were found as expanded
+    // Set remaining nodes from filter as expanded
     treeToList(filterResult, list);
     setExpandedNodes(
       list.filter((x) => x.children && x.children.length).map((x) => x.id)
     );
 
-    // Return filtered tree
     return filterResult;
-  }, [filter, data, filterable]);
+  }, [filter, data, isFilterable]);
 
-  if (checkable && (!onCheckChange || checkedNodes === undefined)) {
-    console.warn("Checkable tree must be used in controlled mode.");
-    return null;
+  if (isCheckable && (!onCheckChange || checkedNodes === undefined)) {
+    console.error("Checkable tree must be used in controlled mode.");
+    return <div>Error</div>;
   }
 
   return (
-    <div className="tree" style={{ padding: 20, ...style }}>
-      {filterable && (
+    <div style={{ padding: 20, ...style }}>
+      {isFilterable && (
         <div>
           <input
             placeholder="Filter value"
@@ -216,15 +212,15 @@ export default function Tree({
           {...x}
           expandedNodes={expandedNodes}
           onExpand={(id, value) => {
-            let result = addOrRemoveFromArray(id, value, expandedNodes);
+            let result = addOrRemoveItemFromArray(id, value, expandedNodes);
             setExpandedNodes(result);
           }}
           checkedNodes={checkedNodes}
           onCheck={(id, value) => {
-            let result = addOrRemoveFromArray(id, value, checkedNodes);
+            let result = addOrRemoveItemFromArray(id, value, checkedNodes);
             onCheckChange && onCheckChange(result);
           }}
-          checkable={checkable}
+          isCheckable={isCheckable}
         />
       ))}
     </div>
