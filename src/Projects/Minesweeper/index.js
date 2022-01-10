@@ -4,10 +4,10 @@ import { FlagOutlined, AlertOutlined } from "@ant-design/icons";
 
 // Minesweeper game
 
-let Y = 10;
-let X = 10;
+let BOARD_WIDTH = 10;
+let BOARD_HEIGHT = 10;
+
 export default function App() {
-  // Just returns all neighbors of a cell
   let getNeighbors = (x, y) => {
     return [
       [x - 1, y],
@@ -32,7 +32,6 @@ export default function App() {
     return arr;
   };
 
-  // Assigns numbers to cells which are in proximity to mines
   let assignNumbersToCells = (board, minesCoordinates) => {
     for (let [x, y] of minesCoordinates) {
       let neighbors = getNeighbors(x, y);
@@ -51,17 +50,17 @@ export default function App() {
     }
   };
 
-  let createBoard = (n, m) => {
+  let createBoard = (width, height) => {
     let result = [];
-    for (let y = 0; y < n; y++) {
+    for (let y = 0; y < height; y++) {
       result[y] = [];
-      for (let x = 0; x < m; x++) {
+      for (let x = 0; x < width; x++) {
         result[y][x] = { value: null, revealed: false, flag: false };
       }
     }
 
     let createMines = () => {
-      let mineCoordinates = generateUniqueInts(10, 0, n * m - 1).map((x) => [
+      let mineCoordinates = generateUniqueInts(10, 0, height * width - 1).map((x) => [
         x % 10,
         Math.floor(x / 10),
       ]);
@@ -88,16 +87,18 @@ export default function App() {
         ny < board.length &&
         nx >= 0 &&
         nx < board[y].length &&
-        board[ny][nx].value == null &&
         !board[ny][nx].revealed
       ) {
-        reveal(nx, ny, board);
+        if (board[ny][nx].value == null) {
+          reveal(nx, ny, board);
+        } else if (board[ny][nx].value !== "M") {
+          board[ny][nx].revealed = true;
+        }
       }
     }
   };
 
-  // Counts some property for all board cells
-  let countProperty = (board, propName, countForOnlyNotRevealed) => {
+  let countPropertyForAllCells = (board, propName, countForOnlyNotRevealed) => {
     let count = 0;
     for (let row of board)
       for (let box of row) {
@@ -110,9 +111,11 @@ export default function App() {
     return count;
   };
 
-  let [board, setBoard] = useImmer(createBoard(Y, X));
+  let [board, setBoard] = useImmer(createBoard(BOARD_WIDTH, BOARD_HEIGHT));
   let [gameOver, setIsGameOver] = React.useState(false);
-  let userWon = countProperty(board, "revealed") === Y * X - 10;
+  let userWon =
+    countPropertyForAllCells(board, "revealed") ===
+    BOARD_HEIGHT * BOARD_WIDTH - 10;
 
   let drawBoard = (board) => {
     return board.map((row, y) => {
@@ -142,12 +145,12 @@ export default function App() {
                 }
               } else if (e.type === "contextmenu") {
                 e.preventDefault();
-                // If we get here user click right mouse btn.
+                // If we get here user clicked right mouse btn.
 
                 // Can use maximum 10 flags
                 if (
                   !board[y][x].flag &&
-                  countProperty(board, "flag", true) === 10
+                  countPropertyForAllCells(board, "flag", true) === 10
                 ) {
                   return;
                 }
@@ -200,7 +203,7 @@ export default function App() {
     <div style={{ padding: 10 }}>
       <h1>Welcome to minesweeper</h1>
       <div style={{ marginBottom: 10 }}>
-        Remaining flags: {10 - countProperty(board, "flag", true)}
+        Remaining flags: {10 - countPropertyForAllCells(board, "flag", true)}
       </div>
       <div style={{}}>{drawBoard(board)}</div>
       {userWon && <div style={{ color: "green" }}> You won </div>}
