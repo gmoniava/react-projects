@@ -90,14 +90,10 @@ export default function Snake() {
   };
 
   let ignoreOppositeDirectionClicks = () => {
-    // We need such a function to ignore clicks in opposite direction.
-    // It seems we could have done this inside keydown event without
-    // using two refs, but in that case, if user clicked say "top" then
-    // "right" arrow when snake was going "left" and react didn't have
-    // time to respond to "top" arrow click,
-    // then we could potentially permit a move to opposite direction ("right")
-    // and let the snake eat itself.
-    // This way we are comparing against actually used previous direction.
+    // If we had done similar check in keydown event using single ref and new key code,
+    // we could run into problem. If user clicked say "top", then "right" arrow key
+    // while snake was going "left", and react had no time to react to "top" arrow click,
+    // we could potentially allow snake to move to opposite direction and eat itself.
 
     let directionsAndOpposites = {
       Left: "Right",
