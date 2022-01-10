@@ -60,10 +60,9 @@ export default function App() {
     }
 
     let createMines = () => {
-      let mineCoordinates = generateUniqueInts(10, 0, height * width - 1).map((x) => [
-        x % 10,
-        Math.floor(x / 10),
-      ]);
+      let mineCoordinates = generateUniqueInts(10, 0, height * width - 1).map(
+        (x) => [x % 10, Math.floor(x / 10)]
+      );
 
       mineCoordinates.forEach(([x, y]) => {
         result[y][x].value = "M";
@@ -207,7 +206,7 @@ export default function App() {
       </div>
       <div style={{}}>{drawBoard(board)}</div>
       {userWon && <div style={{ color: "green" }}> You won </div>}
-      {gameOver && <h3 style={{ color: "red" }}> You lost :( </h3>}
+      {gameOver && <h3 style={{ color: "red" }}> You lost </h3>}
     </div>
   );
 }
