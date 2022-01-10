@@ -11,7 +11,7 @@ import { CaretDownFilled, CaretRightFilled } from "@ant-design/icons";
 //  checkedNodes: array of checked nodes ids.
 //  onCheckChange: handler when a new node is checked. Receives array of checked nodes.
 //  data: tree data
-//  isFilterable (bool): to support filter of nodes or not.
+//  isFilterable: to support filter of nodes or not.
 //
 
 let defaultTree = [
