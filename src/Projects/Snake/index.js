@@ -15,6 +15,8 @@ export default function Snake() {
   ]);
 
   let directionRef = React.useRef();
+  let previousDirectionRef = React.useRef();
+
   let gameOverRef = React.useRef(false);
   let ateFood = React.useRef(false);
   let [food, setFood] = React.useState();
@@ -27,16 +29,6 @@ export default function Snake() {
         39: "Right",
         40: "Down",
       };
-
-      if (
-        (directionRef.current === "Left" &&
-          directions[e.keyCode] === "Right") ||
-        (directionRef.current === "Right" &&
-          directions[e.keyCode] === "Left") ||
-        (directionRef.current === "Up" && directions[e.keyCode] === "Down") ||
-        (directionRef.current === "Down" && directions[e.keyCode] === "Up")
-      )
-        return;
 
       directionRef.current = directions[e.keyCode];
     });
@@ -87,7 +79,7 @@ export default function Snake() {
     return false;
   };
 
-  let validityCheck = (snakeHead, snakeBody) => {
+  let isValidMove = (snakeHead, snakeBody) => {
     if (
       isHeadOutsideBounds(snakeHead) ||
       isCollisionWithSnake(snakeHead, snakeBody.slice(1, snakeBody.length))
@@ -95,6 +87,32 @@ export default function Snake() {
       return false;
     }
     return true;
+  };
+
+  let ignoreOppositeDirectionClicks = () => {
+    // We need such a function to ignore clicks in opposite direction.
+    // It seems we could have done this inside keydown event without
+    // using two refs, but in that case, if user clicked say "top" then
+    // "right" arrow when snake was going "left" and react didn't have
+    // time to respond to "top" arrow click,
+    // then we could potentially permit a move to opposite direction ("right")
+    // and let the snake eat itself.
+    // This way we are comparing against actually used previous direction.
+
+    let directionsAndOpposites = {
+      Left: "Right",
+      Right: "Left",
+      Up: "Down",
+      Down: "Up",
+    };
+
+    if (
+      directionRef.current ===
+      directionsAndOpposites[previousDirectionRef.current]
+    ) {
+      // Use previous direction
+      directionRef.current = previousDirectionRef.current;
+    }
   };
 
   React.useEffect(() => {
@@ -106,13 +124,15 @@ export default function Snake() {
 
           // First element is the head of the snake
           if (i === 0) {
+            ignoreOppositeDirectionClicks();
+
             if (directionRef.current === "Right") {
               let newHead = {
                 x: bodyPart.x + SNAKE_SIZE,
                 y: bodyPart.y,
               };
 
-              if (!validityCheck(newHead, snake)) {
+              if (!isValidMove(newHead, snake)) {
                 gameOverRef.current = true;
                 return bodyPart;
               }
@@ -122,6 +142,8 @@ export default function Snake() {
                 ateFood.current = true;
                 return [newHead, bodyPart];
               }
+
+              previousDirectionRef.current = "Right";
 
               return newHead;
             }
@@ -130,7 +152,7 @@ export default function Snake() {
                 x: bodyPart.x,
                 y: bodyPart.y + SNAKE_SIZE,
               };
-              if (!validityCheck(newHead, snake)) {
+              if (!isValidMove(newHead, snake)) {
                 gameOverRef.current = true;
                 return bodyPart;
               }
@@ -140,6 +162,8 @@ export default function Snake() {
                 ateFood.current = true;
                 return [newHead, bodyPart];
               }
+              previousDirectionRef.current = "Down";
+
               return newHead;
             }
             if (directionRef.current === "Left") {
@@ -147,7 +171,7 @@ export default function Snake() {
                 x: bodyPart.x - SNAKE_SIZE,
                 y: bodyPart.y,
               };
-              if (!validityCheck(newHead, snake)) {
+              if (!isValidMove(newHead, snake)) {
                 gameOverRef.current = true;
                 return bodyPart;
               }
@@ -157,6 +181,9 @@ export default function Snake() {
                 ateFood.current = true;
                 return [newHead, bodyPart];
               }
+
+              previousDirectionRef.current = "Left";
+
               return newHead;
             }
             if (directionRef.current === "Up") {
@@ -164,7 +191,7 @@ export default function Snake() {
                 x: bodyPart.x,
                 y: bodyPart.y - SNAKE_SIZE,
               };
-              if (!validityCheck(newHead, snake)) {
+              if (!isValidMove(newHead, snake)) {
                 gameOverRef.current = true;
                 return bodyPart;
               }
@@ -174,9 +201,12 @@ export default function Snake() {
                 ateFood.current = true;
                 return [newHead, bodyPart];
               }
+
+              previousDirectionRef.current = "Up";
+
               return newHead;
             }
-            return null;
+            return bodyPart;
           } else {
             // If game was over, we don't update body coordinates anymore.
             // Also if we ate food, during that run, the rest of the body should not move, only new head is added.
