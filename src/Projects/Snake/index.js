@@ -2,14 +2,17 @@ import React from "react";
 
 // Classic snake game
 
-const POSSIBLE_SIZES = [25, 50];
+const SNAKE_SIZE = 25;
 
-const SNAKE_SIZE = POSSIBLE_SIZES[0];
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 export default function Snake() {
-  // Snake body, first element is the head.
   let [snake, setSnake] = React.useState([
-    { x: 250, y: 100 },
+    { x: 250, y: 100 }, // first element is the head
     { x: 250 - SNAKE_SIZE, y: 100 },
     { x: 250 - 2 * SNAKE_SIZE, y: 100 },
   ]);
@@ -18,7 +21,6 @@ export default function Snake() {
   let previousDirectionRef = React.useRef();
 
   let gameOverRef = React.useRef(false);
-  let ateFood = React.useRef(false);
   let [food, setFood] = React.useState();
 
   React.useEffect(() => {
@@ -35,12 +37,6 @@ export default function Snake() {
   }, []);
 
   let createFood = () => {
-    function getRandomIntInclusive(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
     let possibleCoordinates = [];
     for (let i = 0; i <= 450; i += SNAKE_SIZE) {
       possibleCoordinates.push(i);
@@ -49,7 +45,7 @@ export default function Snake() {
     let y = getRandomIntInclusive(0, possibleCoordinates.length - 1);
 
     while (
-      isCollisionWithSnake(
+      isCellCollidingWithSnake(
         { x: possibleCoordinates[x], y: possibleCoordinates[y] },
         snake
       )
@@ -65,35 +61,35 @@ export default function Snake() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  let isCollisionWithSnake = (head, rest) => {
+  let isCellCollidingWithSnake = (cell, rest) => {
     for (let body of rest) {
-      if (head.x === body.x && head.y === body.y) {
+      if (cell.x === body.x && cell.y === body.y) {
         return true;
       }
     }
     return false;
   };
 
-  let isHeadOutsideBounds = (head) => {
-    if (head.x >= 500 || head.y >= 500 || head.x < 0 || head.y < 0) return true;
+  let isCellOutsideBounds = (cell) => {
+    if (cell.x >= 500 || cell.y >= 500 || cell.x < 0 || cell.y < 0) return true;
     return false;
   };
 
   let isValidMove = (snakeHead, snakeBody) => {
     if (
-      isHeadOutsideBounds(snakeHead) ||
-      isCollisionWithSnake(snakeHead, snakeBody.slice(1, snakeBody.length))
+      isCellOutsideBounds(snakeHead) ||
+      isCellCollidingWithSnake(snakeHead, snakeBody.slice(1, snakeBody.length))
     ) {
       return false;
     }
     return true;
   };
 
-  let ignoreOppositeDirectionClicks = () => {
+  let ignoreOppositeDirectionClick = () => {
     // If we had done similar check in keydown event by comparing current direction ref and new key code,
-    // we could run into problem. If user clicked say "top", then "right" arrow key quickly
-    // while snake was going "left", and react had no time to react to "top" arrow click in useEffect,
-    // we would allow snake to move to opposite direction and eat itself.
+    // we could run into problem. If user pressed say "top" and then "right" arrow key quickly
+    // while snake was going "left", and there was no time to react to "top" click in timeout,
+    // we would allow snake to move to the opposite direction and eat itself.
 
     let directionsAndOpposites = {
       Left: "Right",
@@ -111,7 +107,7 @@ export default function Snake() {
   };
 
   React.useEffect(() => {
-    ateFood.current = false;
+    let ateFoodDuringCurrentMove = false;
     let move = () => {
       setSnake(
         snake.flatMap((bodyPart, i) => {
@@ -119,7 +115,7 @@ export default function Snake() {
 
           // First element is the head of the snake
           if (i === 0) {
-            ignoreOppositeDirectionClicks();
+            ignoreOppositeDirectionClick();
 
             if (directionRef.current === "Right") {
               let newHead = {
@@ -134,7 +130,7 @@ export default function Snake() {
 
               if (newHead.x === food?.x && newHead.y === food?.y) {
                 createFood();
-                ateFood.current = true;
+                ateFoodDuringCurrentMove = true;
                 return [newHead, bodyPart];
               }
 
@@ -154,7 +150,7 @@ export default function Snake() {
 
               if (newHead.x === food?.x && newHead.y === food?.y) {
                 createFood();
-                ateFood.current = true;
+                ateFoodDuringCurrentMove = true;
                 return [newHead, bodyPart];
               }
               previousDirectionRef.current = "Down";
@@ -173,7 +169,7 @@ export default function Snake() {
 
               if (newHead.x === food?.x && newHead.y === food?.y) {
                 createFood();
-                ateFood.current = true;
+                ateFoodDuringCurrentMove = true;
                 return [newHead, bodyPart];
               }
 
@@ -193,7 +189,7 @@ export default function Snake() {
 
               if (newHead.x === food?.x && newHead.y === food?.y) {
                 createFood();
-                ateFood.current = true;
+                ateFoodDuringCurrentMove = true;
                 return [newHead, bodyPart];
               }
 
@@ -205,7 +201,7 @@ export default function Snake() {
           } else {
             // If game was over, we don't update body coordinates anymore.
             // Also if we ate food, during that run, the rest of the body should not move, only new head is added.
-            if (gameOverRef.current || ateFood.current) {
+            if (gameOverRef.current || ateFoodDuringCurrentMove) {
               return bodyPart;
             }
             return {
