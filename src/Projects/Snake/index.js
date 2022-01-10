@@ -92,7 +92,7 @@ export default function Snake() {
   let ignoreOppositeDirectionClicks = () => {
     // If we had done similar check in keydown event using single ref and new key code,
     // we could run into problem. If user clicked say "top", then "right" arrow key
-    // while snake was going "left", and react had no time to react to "top" arrow click,
+    // while snake was going "left", and react had no time to react to "top" arrow click in useEffect,
     // we could potentially allow snake to move to opposite direction and eat itself.
 
     let directionsAndOpposites = {
