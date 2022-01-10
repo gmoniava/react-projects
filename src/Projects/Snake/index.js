@@ -106,7 +106,6 @@ export default function Snake() {
       directionRef.current ===
       directionsAndOpposites[previousDirectionRef.current]
     ) {
-      // Use previous direction
       directionRef.current = previousDirectionRef.current;
     }
   };
