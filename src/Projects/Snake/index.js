@@ -2,7 +2,7 @@ import React from "react";
 
 // Classic snake game
 
-const SNAKE_SIZE = 25;
+const SNAKE_CELL_DIMENSION = 25;
 
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
@@ -13,12 +13,11 @@ function getRandomIntInclusive(min, max) {
 export default function Snake() {
   let [snake, setSnake] = React.useState([
     { x: 250, y: 100 }, // first element is the head
-    { x: 250 - SNAKE_SIZE, y: 100 },
-    { x: 250 - 2 * SNAKE_SIZE, y: 100 },
+    { x: 250 - SNAKE_CELL_DIMENSION, y: 100 },
+    { x: 250 - 2 * SNAKE_CELL_DIMENSION, y: 100 },
   ]);
 
-  let directionRef = React.useRef();
-  let previousDirectionRef = React.useRef();
+  let directionsRef = React.useRef([]);
 
   let gameOverRef = React.useRef(false);
   let [food, setFood] = React.useState();
@@ -31,14 +30,32 @@ export default function Snake() {
         39: "Right",
         40: "Down",
       };
+      let directionsAndOpposites = {
+        Left: "Right",
+        Right: "Left",
+        Up: "Down",
+        Down: "Up",
+      };
 
-      directionRef.current = directions[e.keyCode];
+      let newDirection = directions[e.keyCode];
+
+      // Make sure user's latest move isn't to the opposite direction
+      if (
+        directionsRef.current[directionsRef.current.length - 1] ===
+        directionsAndOpposites[newDirection]
+      ) {
+        return;
+      }
+
+      // For better user experience we keep directions in array and then process one by one.
+      // Without array we had some user experience problems when user was pressing arrows very quickly.
+      directionsRef.current.push(newDirection);
     });
   }, []);
 
   let createFood = () => {
     let possibleCoordinates = [];
-    for (let i = 0; i <= 450; i += SNAKE_SIZE) {
+    for (let i = 0; i <= 450; i += SNAKE_CELL_DIMENSION) {
       possibleCoordinates.push(i);
     }
     let x = getRandomIntInclusive(0, possibleCoordinates.length - 1);
@@ -85,41 +102,28 @@ export default function Snake() {
     return true;
   };
 
-  let ignoreOppositeDirectionClick = () => {
-    // If we had done similar check in keydown event by comparing current direction ref and new key code,
-    // we could run into problem. If user pressed say "top" and then "right" arrow key quickly
-    // while snake was going "left", and there was no time to react to "top" click in timeout,
-    // we would allow snake to move to the opposite direction and eat itself.
-
-    let directionsAndOpposites = {
-      Left: "Right",
-      Right: "Left",
-      Up: "Down",
-      Down: "Up",
-    };
-
-    if (
-      directionRef.current ===
-      directionsAndOpposites[previousDirectionRef.current]
-    ) {
-      directionRef.current = previousDirectionRef.current;
-    }
-  };
-
   React.useEffect(() => {
     let ateFoodDuringCurrentMove = false;
     let move = () => {
       setSnake(
         snake.flatMap((bodyPart, i) => {
-          if (!directionRef.current) return bodyPart;
+          if (!directionsRef.current || !directionsRef.current.length)
+            return bodyPart;
 
           // First element is the head of the snake
           if (i === 0) {
-            ignoreOppositeDirectionClick();
+            let currentDirection;
 
-            if (directionRef.current === "Right") {
+            // Are there several moves pending?
+            if (directionsRef.current.length > 1) {
+              currentDirection = directionsRef.current.shift();
+            } else {
+              currentDirection = directionsRef.current[0];
+            }
+
+            if (currentDirection === "Right") {
               let newHead = {
-                x: bodyPart.x + SNAKE_SIZE,
+                x: bodyPart.x + SNAKE_CELL_DIMENSION,
                 y: bodyPart.y,
               };
 
@@ -134,14 +138,12 @@ export default function Snake() {
                 return [newHead, bodyPart];
               }
 
-              previousDirectionRef.current = "Right";
-
               return newHead;
             }
-            if (directionRef.current === "Down") {
+            if (currentDirection === "Down") {
               let newHead = {
                 x: bodyPart.x,
-                y: bodyPart.y + SNAKE_SIZE,
+                y: bodyPart.y + SNAKE_CELL_DIMENSION,
               };
               if (!isValidMove(newHead, snake)) {
                 gameOverRef.current = true;
@@ -153,13 +155,12 @@ export default function Snake() {
                 ateFoodDuringCurrentMove = true;
                 return [newHead, bodyPart];
               }
-              previousDirectionRef.current = "Down";
 
               return newHead;
             }
-            if (directionRef.current === "Left") {
+            if (currentDirection === "Left") {
               let newHead = {
-                x: bodyPart.x - SNAKE_SIZE,
+                x: bodyPart.x - SNAKE_CELL_DIMENSION,
                 y: bodyPart.y,
               };
               if (!isValidMove(newHead, snake)) {
@@ -173,14 +174,12 @@ export default function Snake() {
                 return [newHead, bodyPart];
               }
 
-              previousDirectionRef.current = "Left";
-
               return newHead;
             }
-            if (directionRef.current === "Up") {
+            if (currentDirection === "Up") {
               let newHead = {
                 x: bodyPart.x,
-                y: bodyPart.y - SNAKE_SIZE,
+                y: bodyPart.y - SNAKE_CELL_DIMENSION,
               };
               if (!isValidMove(newHead, snake)) {
                 gameOverRef.current = true;
@@ -192,8 +191,6 @@ export default function Snake() {
                 ateFoodDuringCurrentMove = true;
                 return [newHead, bodyPart];
               }
-
-              previousDirectionRef.current = "Up";
 
               return newHead;
             }
@@ -236,8 +233,8 @@ export default function Snake() {
                 top: x.y,
                 left: x.x,
                 background: "gray",
-                height: SNAKE_SIZE,
-                width: SNAKE_SIZE,
+                height: SNAKE_CELL_DIMENSION,
+                width: SNAKE_CELL_DIMENSION,
               }}
             ></div>
           );
@@ -249,8 +246,8 @@ export default function Snake() {
               top: food.y,
               left: food.x,
               background: "green",
-              height: SNAKE_SIZE,
-              width: SNAKE_SIZE,
+              height: SNAKE_CELL_DIMENSION,
+              width: SNAKE_CELL_DIMENSION,
             }}
           ></div>
         )}
