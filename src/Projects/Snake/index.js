@@ -47,8 +47,8 @@ export default function Snake() {
         return;
       }
 
-      // For better user experience we keep directions in array and then process one by one.
-      // Without array we had some user experience problems when user was pressing arrows very quickly.
+      // We store user moves in array, otherwise we were running in some problems when user pressed
+      // arrow keys very quickly, the timeout was missing processing some arrow keys.
       directionsRef.current.push(newDirection);
     });
   }, []);
