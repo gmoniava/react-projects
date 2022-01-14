@@ -82,24 +82,23 @@ let ToggleBtnContainerStyled = styled.div`
 `;
 
 let ToggleMenuBtn = ({ isMobile, isMenuOpen, setIsMenuOpen }) => {
+  if (!isMobile) return null;
   return (
-    isMobile && (
-      <ToggleBtnContainerStyled>
-        {isMenuOpen ? (
-          <CloseOutlined
-            onClick={() => {
-              setIsMenuOpen(false);
-            }}
-          />
-        ) : (
-          <MenuOutlined
-            onClick={() => {
-              setIsMenuOpen(true);
-            }}
-          />
-        )}
-      </ToggleBtnContainerStyled>
-    )
+    <ToggleBtnContainerStyled>
+      {isMenuOpen ? (
+        <CloseOutlined
+          onClick={() => {
+            setIsMenuOpen(false);
+          }}
+        />
+      ) : (
+        <MenuOutlined
+          onClick={() => {
+            setIsMenuOpen(true);
+          }}
+        />
+      )}
+    </ToggleBtnContainerStyled>
   );
 };
 
@@ -108,7 +107,6 @@ export default function DropDownMenu() {
   let [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   React.useEffect(() => {
-    // Close the menu when we are no longer on mobile
     if (!isMobile) {
       setIsMenuOpen(false);
     }
@@ -128,9 +126,7 @@ export default function DropDownMenu() {
                 <a href="/#">Sub-1</a>
               </li>
               <li>
-                <a href="/#" style={{ position: "relative" }}>
-                  Sub-2{" "}
-                </a>
+                <a href="/#">Sub-2 </a>
               </li>
               <li>
                 <a href="/#">Sub-3</a>
