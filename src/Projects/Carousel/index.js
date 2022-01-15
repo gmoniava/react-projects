@@ -7,6 +7,10 @@ import styled from "styled-components";
 //
 // Carousel component
 //
+let CarouselContainerStyled = styled.div`
+  padding: 20px 50px 0px 50px;
+  position: relative;
+`;
 
 const DefaultCard = styled.div`
   padding: 5px;
@@ -45,16 +49,12 @@ const ArrowRight = styled(Arrow)`
   transform: translateY(-50%);
 `;
 
-let CarouselContainerStyled = styled.div`
-  padding: 20px 50px 0px 50px;
-  position: relative;
+let MovingContainerStyled = styled.div`
+  display: inline-block;
+  white-space: nowrap;
+  transition: transform 0.4s linear;
+  transform: translateX(${({ count }) => -count * 100}px);
 `;
-let MovingContainerStyled = styled.div((props) => ({
-  display: "inline-block", //  use inline-block so that width of this div is based on content
-  whiteSpace: "nowrap",
-  transition: "transform 0.4s linear",
-  transform: `translateX(${-props.count * 100}px)`,
-}));
 
 const defaultItems = [
   { id: 1, title: "product", body: "good sneakers" },
@@ -82,42 +82,37 @@ const defaultItems = [
 ];
 export default function Carousel({ items = defaultItems }) {
   let [count, setCount] = React.useState(0);
-  let innerContainer = React.useRef();
-
-  // We use these coordinates to know if we should show left/right arrows or not
-  let [relativeCords, setRelativeCords] = React.useState({});
-
-  // We use this variable because during transition if user clicks multiple times the arrow buttons, coordinates are not computed correctly anymore
-  let [transitionBlock, setTransitionBlock] = React.useState(false);
-
-  let getRelativeCoordinatesOfInnerContainer = () => {
-    let relativeLeft =
-      innerContainer.current.getBoundingClientRect().left -
-      mainContainer.current.getBoundingClientRect().left;
-    let relativeRight =
-      mainContainer.current.getBoundingClientRect().right -
-      innerContainer.current.getBoundingClientRect().right;
-    setRelativeCords({ relativeLeft, relativeRight });
-  };
+  let [canScroll, setCanScroll] = React.useState({});
+  let [isTransitionStarted, setIsTransitionStarted] = React.useState(false);
+  let movingContainer = React.useRef();
 
   const onResize = React.useCallback(() => {
-    // When main container is resized we want to update relative coordinates
-    getRelativeCoordinatesOfInnerContainer();
+    canMovingContainerScroll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { ref: mainContainer } = useResizeDetector({ onResize });
 
+  let canMovingContainerScroll = () => {
+    let relativeLeft =
+      movingContainer.current.getBoundingClientRect().left -
+      mainContainer.current.getBoundingClientRect().left;
+    let relativeRight =
+      mainContainer.current.getBoundingClientRect().right -
+      movingContainer.current.getBoundingClientRect().right;
+    setCanScroll({ left: relativeLeft < 0, right: relativeRight < 0 });
+  };
+
   React.useEffect(() => {
-    getRelativeCoordinatesOfInnerContainer();
+    canMovingContainerScroll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
     // We need to run this also when transition ends to get fresh coordinates
-    innerContainer.current.addEventListener("transitionend", () => {
-      getRelativeCoordinatesOfInnerContainer();
-      setTransitionBlock(false);
+    movingContainer.current.addEventListener("transitionend", () => {
+      canMovingContainerScroll();
+      setIsTransitionStarted(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -129,7 +124,7 @@ export default function Carousel({ items = defaultItems }) {
           overflow: "hidden",
         }}
       >
-        <MovingContainerStyled count={count} ref={innerContainer}>
+        <MovingContainerStyled count={count} ref={movingContainer}>
           {items.map((x) => {
             return (
               <DefaultCard key={x.id}>
@@ -141,21 +136,21 @@ export default function Carousel({ items = defaultItems }) {
         </MovingContainerStyled>
       </div>
       <ArrowLeft
-        disabled={relativeCords.relativeLeft >= 0}
+        disabled={!canScroll.left}
         onClick={() => {
-          if (transitionBlock) return;
+          if (isTransitionStarted) return;
           setCount(count - 1);
-          setTransitionBlock(true);
+          setIsTransitionStarted(true);
         }}
       >
         <ArrowLeftOutlined />
       </ArrowLeft>
       <ArrowRight
-        disabled={relativeCords.relativeRight >= 0}
+        disabled={!canScroll.right}
         onClick={() => {
-          if (transitionBlock) return;
+          if (isTransitionStarted) return;
           setCount(count + 1);
-          setTransitionBlock(true);
+          setIsTransitionStarted(true);
         }}
       >
         <ArrowRightOutlined />
