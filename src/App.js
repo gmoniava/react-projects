@@ -17,7 +17,7 @@ function App() {
   return (
     <div>
       {" "}
-      <DropDownMenu />{" "}
+      <SearchBtn />{" "}
     </div>
   );
 }
