@@ -1,18 +1,6 @@
 import "./App.css";
-import {
-  CnnNextBtn,
-  DropDownMenu,
-  Carousel,
-  StackOverflowAnimation,
-  TreeList,
-  RippleButton,
-  Tree,
-  SearchBtn,
-  Minesweeper,
-  Snake,
-} from "./Projects";
 import React from "react";
-
+import SearchBtn from "./Projects/SearchBtn"
 function App() {
   return (
     <div>
