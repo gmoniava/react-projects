@@ -7,7 +7,7 @@ import styled from "styled-components";
 //
 // Carousel component
 //
-let CarouselContainerStyled = styled.div`
+let CarouselMainContainerStyled = styled.div`
   padding: 20px 50px 0px 50px;
   position: relative;
 `;
@@ -62,7 +62,7 @@ const defaultItems = [
   {
     id: 3,
     title: "product",
-    body: "Lorem ipsum dolor sit amet, consectetur",
+    body: "Lorem ipsum dolor sit amet   ",
   },
   {
     id: 4,
@@ -91,14 +91,14 @@ export default function Carousel({ items = defaultItems }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { ref: mainContainer } = useResizeDetector({ onResize });
+  const { ref: fixedContainer } = useResizeDetector({ onResize });
 
   let canMovingContainerScroll = () => {
     let relativeLeft =
       movingContainer.current.getBoundingClientRect().left -
-      mainContainer.current.getBoundingClientRect().left;
+      fixedContainer.current.getBoundingClientRect().left;
     let relativeRight =
-      mainContainer.current.getBoundingClientRect().right -
+      fixedContainer.current.getBoundingClientRect().right -
       movingContainer.current.getBoundingClientRect().right;
     setCanScroll({ left: relativeLeft < 0, right: relativeRight < 0 });
   };
@@ -109,7 +109,6 @@ export default function Carousel({ items = defaultItems }) {
   }, []);
 
   React.useEffect(() => {
-    // We need to run this also when transition ends to get fresh coordinates
     movingContainer.current.addEventListener("transitionend", () => {
       canMovingContainerScroll();
       setIsTransitionStarted(false);
@@ -117,9 +116,9 @@ export default function Carousel({ items = defaultItems }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <CarouselContainerStyled>
+    <CarouselMainContainerStyled>
       <div
-        ref={mainContainer}
+        ref={fixedContainer}
         style={{
           overflow: "hidden",
         }}
@@ -155,6 +154,6 @@ export default function Carousel({ items = defaultItems }) {
       >
         <ArrowRightOutlined />
       </ArrowRight>
-    </CarouselContainerStyled>
+    </CarouselMainContainerStyled>
   );
 }
