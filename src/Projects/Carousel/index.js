@@ -82,35 +82,35 @@ const defaultItems = [
 ];
 export default function Carousel({ items = defaultItems }) {
   let [count, setCount] = React.useState(0);
-  let [canScroll, setCanScroll] = React.useState({});
+  let [enableArrowBtns, setEnableArrowBtns] = React.useState({});
   let [isTransitionStarted, setIsTransitionStarted] = React.useState(false);
   let movingContainer = React.useRef();
 
   const onResize = React.useCallback(() => {
-    canMovingContainerScroll();
+    shouldEnableArrowBtns();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { ref: fixedContainer } = useResizeDetector({ onResize });
 
-  let canMovingContainerScroll = () => {
+  let shouldEnableArrowBtns = () => {
     let relativeLeft =
       movingContainer.current.getBoundingClientRect().left -
       fixedContainer.current.getBoundingClientRect().left;
     let relativeRight =
       fixedContainer.current.getBoundingClientRect().right -
       movingContainer.current.getBoundingClientRect().right;
-    setCanScroll({ left: relativeLeft < 0, right: relativeRight < 0 });
+    setEnableArrowBtns({ left: relativeLeft < 0, right: relativeRight < 0 });
   };
 
   React.useEffect(() => {
-    canMovingContainerScroll();
+    shouldEnableArrowBtns();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
     movingContainer.current.addEventListener("transitionend", () => {
-      canMovingContainerScroll();
+      shouldEnableArrowBtns();
       setIsTransitionStarted(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -135,7 +135,7 @@ export default function Carousel({ items = defaultItems }) {
         </MovingContainerStyled>
       </div>
       <ArrowLeft
-        disabled={!canScroll.left}
+        disabled={!enableArrowBtns.left}
         onClick={() => {
           if (isTransitionStarted) return;
           setCount(count - 1);
@@ -145,7 +145,7 @@ export default function Carousel({ items = defaultItems }) {
         <ArrowLeftOutlined />
       </ArrowLeft>
       <ArrowRight
-        disabled={!canScroll.right}
+        disabled={!enableArrowBtns.right}
         onClick={() => {
           if (isTransitionStarted) return;
           setCount(count + 1);
