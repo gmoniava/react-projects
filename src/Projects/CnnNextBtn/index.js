@@ -28,7 +28,7 @@ let MainContainerStyled = styled.div`
 `;
 let LeftArrowContainerStyled = styled.div`
   background: lightgray;
-  height: 100px;
+  height: 100%;
   width: 20px;
   position: absolute;
   display: flex;
