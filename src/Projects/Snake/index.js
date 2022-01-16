@@ -39,7 +39,7 @@ export default function Snake() {
 
       let newDirection = directions[e.keyCode];
 
-      // Make sure user's latest move isn't to the opposite direction
+      // Is snake trying to move to the opposite direction?
       if (
         directionsRef.current[directionsRef.current.length - 1] ===
         directionsAndOpposites[newDirection]
@@ -104,7 +104,29 @@ export default function Snake() {
 
   React.useEffect(() => {
     let ateFoodDuringCurrentMove = false;
-    let move = () => {
+
+    // Takes care of moving the head snake
+    let moveHead = (currentHead, newX, newY) => {
+      let newHead = {
+        x: newX,
+        y: newY,
+      };
+
+      if (!isValidMove(newHead, snake)) {
+        gameOverRef.current = true;
+        return currentHead;
+      }
+
+      if (newHead.x === food?.x && newHead.y === food?.y) {
+        createFood();
+        ateFoodDuringCurrentMove = true;
+        return [newHead, currentHead];
+      }
+
+      return newHead;
+    };
+
+    let moveSnake = () => {
       setSnake(
         snake.flatMap((bodyPart, i) => {
           if (!directionsRef.current || !directionsRef.current.length)
@@ -115,89 +137,27 @@ export default function Snake() {
             let currentDirection;
 
             // Are there several moves pending?
+            // If yes, we process them one by one on different rounds.
             if (directionsRef.current.length > 1) {
               currentDirection = directionsRef.current.shift();
             } else {
               currentDirection = directionsRef.current[0];
             }
 
-            if (currentDirection === "Right") {
-              let newHead = {
-                x: bodyPart.x + SNAKE_CELL_DIMENSION,
-                y: bodyPart.y,
-              };
+            // Keeps coordinates where snake head should go depending on direction.
+            let newDirectionAndCoordinateMap = {
+              Right: [bodyPart.x + SNAKE_CELL_DIMENSION, bodyPart.y],
+              Down: [bodyPart.x, bodyPart.y + SNAKE_CELL_DIMENSION],
+              Left: [bodyPart.x - SNAKE_CELL_DIMENSION, bodyPart.y],
+              Up: [bodyPart.x, bodyPart.y - SNAKE_CELL_DIMENSION],
+            };
 
-              if (!isValidMove(newHead, snake)) {
-                gameOverRef.current = true;
-                return bodyPart;
-              }
-
-              if (newHead.x === food?.x && newHead.y === food?.y) {
-                createFood();
-                ateFoodDuringCurrentMove = true;
-                return [newHead, bodyPart];
-              }
-
-              return newHead;
-            }
-            if (currentDirection === "Down") {
-              let newHead = {
-                x: bodyPart.x,
-                y: bodyPart.y + SNAKE_CELL_DIMENSION,
-              };
-              if (!isValidMove(newHead, snake)) {
-                gameOverRef.current = true;
-                return bodyPart;
-              }
-
-              if (newHead.x === food?.x && newHead.y === food?.y) {
-                createFood();
-                ateFoodDuringCurrentMove = true;
-                return [newHead, bodyPart];
-              }
-
-              return newHead;
-            }
-            if (currentDirection === "Left") {
-              let newHead = {
-                x: bodyPart.x - SNAKE_CELL_DIMENSION,
-                y: bodyPart.y,
-              };
-              if (!isValidMove(newHead, snake)) {
-                gameOverRef.current = true;
-                return bodyPart;
-              }
-
-              if (newHead.x === food?.x && newHead.y === food?.y) {
-                createFood();
-                ateFoodDuringCurrentMove = true;
-                return [newHead, bodyPart];
-              }
-
-              return newHead;
-            }
-            if (currentDirection === "Up") {
-              let newHead = {
-                x: bodyPart.x,
-                y: bodyPart.y - SNAKE_CELL_DIMENSION,
-              };
-              if (!isValidMove(newHead, snake)) {
-                gameOverRef.current = true;
-                return bodyPart;
-              }
-
-              if (newHead.x === food?.x && newHead.y === food?.y) {
-                createFood();
-                ateFoodDuringCurrentMove = true;
-                return [newHead, bodyPart];
-              }
-
-              return newHead;
-            }
-            return bodyPart;
+            return moveHead(
+              bodyPart,
+              ...newDirectionAndCoordinateMap[currentDirection]
+            );
           } else {
-            // If game was over, we don't update body coordinates anymore.
-            // Also if we ate food, during that run, the rest of the body should not move, only new head is added.
+            // If the game was over, or we ate food in this run, no need to move the snake anymore.
             if (gameOverRef.current || ateFoodDuringCurrentMove) {
               return bodyPart;
             }
@@ -209,7 +169,7 @@ export default function Snake() {
         })
       );
     };
-    if (!gameOverRef.current) setTimeout(move, 100);
+    if (!gameOverRef.current) setTimeout(moveSnake, 100);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [snake]);
