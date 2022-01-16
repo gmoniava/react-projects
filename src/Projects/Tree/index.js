@@ -177,7 +177,7 @@ export default function Tree({
 
     let filterResult = filterTree(filter, clone);
 
-    // Set remaining nodes from filter as expanded
+    // Mark the parent nodes which were found as result of filter, as expanded.
     treeToList(filterResult, list);
     setExpandedNodes(
       list.filter((x) => x.children && x.children.length).map((x) => x.id)
