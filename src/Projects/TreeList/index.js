@@ -19,7 +19,7 @@ import {
 
 let defaultData = [
   {
-    name: "item1",
+    name: "item1 test nodeA",
     icon: <FolderOutlined />,
     id: 1,
     children: [
@@ -70,23 +70,10 @@ let ContainerStyled = styled.div`
   padding: 20px;
 `;
 
-let ArrowLeftStyled = styled(ArrowLeftOutlined)`
-  cursor: pointer;
-  margin-bottom: 5px;
-  border: 1px solid lightgray;
-  border-radius: 50%;
-  padding: 5px;
-  color: ${({ currentPath }) =>
-    currentPath.length - 1 === 0 ? "lightgray" : "black"};
-`;
-
 let PathContainerStyled = styled.div`
   padding: 5px;
   color: gray;
-  font-size: 12;
-  text-overflow: ellipsis;
-  white-pace: nowrap;
-  overflow: hidden;
+  font-size: 12px;
 `;
 
 let PathItemStyled = styled.span`
@@ -112,37 +99,41 @@ export default function TreeList({
     { id: 0, children: initialData },
   ]);
   return (
-    <ContainerStyled style={{ ...style }}>
-      <ArrowLeftStyled
-        currentPath={currentPath}
-        onClick={() => {
-          if (currentPath.length - 1 === 0) return;
-          let copy = [...currentPath];
-          copy.pop();
-          setCurrentPath(copy);
-        }}
-      />
-      {/* Show the path where we are */}
-      {showPath && (
-        <PathContainerStyled>
-          {currentPath.map((x, i) => (
-            <PathItemStyled
-              key={x.id}
-              onClick={() => {
-                setCurrentPath(currentPath.slice(0, i + 1));
-              }}
-            >{`${x.name || ""}  /`}</PathItemStyled>
-          ))}
-        </PathContainerStyled>
-      )}
-      {/* We always show the contents of the last item in the path */}
+    <ContainerStyled style={{ width: 300, ...style }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <ArrowLeftOutlined
+          onClick={() => {
+            if (currentPath.length - 1 === 0) return;
+            let copy = [...currentPath];
+            copy.pop();
+            setCurrentPath(copy);
+          }}
+          style={{
+            cursor: "pointer",
+            color: currentPath.length - 1 === 0 ? "lightgray" : "black",
+          }}
+        />
+        {showPath && (
+          <PathContainerStyled>
+            {currentPath.map((x, i) => (
+              <PathItemStyled
+                key={x.id}
+                onClick={() => {
+                  setCurrentPath(currentPath.slice(0, i + 1));
+                }}
+              >{`${x.name || ""}  /`}</PathItemStyled>
+            ))}
+          </PathContainerStyled>
+        )}
+      </div>
+
+      {/* The last item in the path, is the folder where we currently are */}
       {currentPath[currentPath.length - 1]?.children.map((x) => {
         return (
           <ListItemStyled
             key={x.id}
             style={{}}
             onClick={(e) => {
-              // If this item has children, this means we must "step in"
               if (x.children && x.children.length) {
                 setCurrentPath([...currentPath, x]);
               }

@@ -6,17 +6,12 @@ import CnnNextBtn from "./Projects/CnnNextBtn";
 import RippleButton from "./Projects/RippleButton";
 import StackOverflowAnimation from "./Projects/StackOverflowAnimation";
 import Tree from "./Projects/Tree";
+import TreeList from "./Projects/TreeList";
 function App() {
-  let [checkedNodes, setCheckedNodes] = React.useState([]);
   return (
     <div>
       {" "}
-      <Tree
-        isCheckable
-        isFilterable
-        checkedNodes={checkedNodes}
-        onCheckChange={setCheckedNodes}
-      />{" "}
+      <TreeList />
     </div>
   );
 }
