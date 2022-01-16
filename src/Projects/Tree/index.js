@@ -1,5 +1,6 @@
 import React from "react";
 import { CaretDownFilled, CaretRightFilled } from "@ant-design/icons";
+import styled from "styled-components";
 
 ///
 //
@@ -63,51 +64,68 @@ let defaultTree = [
   { name: "item4", id: 4, children: [] },
 ];
 
+let ExpandIconContainerStyled = styled.div`
+  width: 20px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+let CheckBoxStyled = styled.input`
+  width: 20px;
+  margin-right: 5px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+let NodeHeaderStyled = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
+let FilterInputStyled = styled.input`
+  height: 20px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  margin-bottom: 5px;
+`;
+
 const TreeState = React.createContext({});
 
 let Node = (props) => {
   const treeState = React.useContext(TreeState);
   let isExpanded = !!treeState.expandedNodes?.find((x) => x === props.id);
   let isChecked = !!treeState.checkedNodes?.find((x) => x === props.id);
+
   return (
     <div>
-      <div
-        style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+      <NodeHeaderStyled
         onClick={() => {
           treeState.onExpandNode(props.id, !isExpanded);
         }}
       >
-        {/* Expand icon */}
-        <div
-          style={{
-            width: 20,
-            flexShrink: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <ExpandIconContainerStyled>
           {!!props.children &&
             !!props.children.length &&
             (isExpanded ? <CaretDownFilled /> : <CaretRightFilled />)}
-        </div>
-        {/* Checkbox */}
+        </ExpandIconContainerStyled>
         {treeState.isCheckable && (
-          <div style={{ width: 20, marginRight: 5 }}>
-            <input
-              checked={isChecked}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              onChange={(e) => {
-                treeState.onCheckNode(props.id, e.target.checked);
-              }}
-              type="checkbox"
-            />
-          </div>
+          <CheckBoxStyled
+            checked={isChecked}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            onChange={(e) => {
+              treeState.onCheckNode(props.id, e.target.checked);
+            }}
+            type="checkbox"
+          />
         )}
         <div style={{ padding: 2 }}> {props.name}</div>
-      </div>
+      </NodeHeaderStyled>
       {props.children && isExpanded && (
         <div style={{ marginLeft: 20 }}>
           {props.children.map((x) => (
@@ -201,23 +219,15 @@ export default function Tree({
     setExpandedNodes(result);
   };
   return (
-    <div style={{ padding: 20, ...style }}>
+    <div style={{ padding: 20, display: "inline-block", ...style }}>
       {isFilterable && (
-        <div>
-          <input
-            placeholder="Filter value"
-            style={{
-              height: 20,
-              border: "1px solid lightgray",
-              borderRadius: 5,
-              marginBottom: 5,
-            }}
-            value={filter}
-            onChange={(e) => {
-              setFilter(e.target.value);
-            }}
-          />
-        </div>
+        <FilterInputStyled
+          placeholder="Filter value"
+          value={filter}
+          onChange={(e) => {
+            setFilter(e.target.value);
+          }}
+        />
       )}
       <TreeState.Provider
         value={{
