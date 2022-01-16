@@ -103,14 +103,14 @@ export default function TreeList({
       <div style={{ display: "flex", alignItems: "center" }}>
         <ArrowLeftOutlined
           onClick={() => {
-            if (currentPath.length - 1 === 0) return;
-            let copy = [...currentPath];
-            copy.pop();
-            setCurrentPath(copy);
+            if (currentPath.length === 1) return;
+            let pathCopy = [...currentPath];
+            pathCopy.pop();
+            setCurrentPath(pathCopy);
           }}
           style={{
             cursor: "pointer",
-            color: currentPath.length - 1 === 0 ? "lightgray" : "black",
+            color: currentPath.length === 1 ? "lightgray" : "black",
           }}
         />
         {showPath && (
