@@ -1,12 +1,11 @@
 import React from "react";
-import "./index.css";
 import styled, { keyframes } from "styled-components";
 
 ///
 //
 // Imitates animation from stackoverflow web page.
-// Uses transform for animations unlike the other project.
 //
+
 let names = ["Nick", "David", "John"];
 
 let MainContainerStyled = styled.div`
@@ -36,16 +35,20 @@ export default function App() {
   let [index, setIndex] = React.useState(0);
 
   React.useEffect(() => {
-    setInterval(() => {
+    let interval = setInterval(() => {
       setIndex((ps) => (ps + 1) % 3);
     }, 2000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   return (
     <MainContainerStyled>
       Hello
       <AnimatedWordStyled key={index}>{names[index]}</AnimatedWordStyled>
-      welcome here
+      welcome.
     </MainContainerStyled>
   );
 }
