@@ -80,7 +80,7 @@ let CheckBoxStyled = styled.input`
   align-items: center;
 `;
 
-let NodeHeaderStyled = styled.div`
+let NodeStyled = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -102,7 +102,7 @@ let Node = (props) => {
 
   return (
     <div>
-      <NodeHeaderStyled
+      <NodeStyled
         onClick={() => {
           treeState.onExpandNode(props.id, !isExpanded);
         }}
@@ -125,7 +125,7 @@ let Node = (props) => {
           />
         )}
         <div style={{ padding: 2 }}> {props.name}</div>
-      </NodeHeaderStyled>
+      </NodeStyled>
       {props.children && isExpanded && (
         <div style={{ marginLeft: 20 }}>
           {props.children.map((x) => (

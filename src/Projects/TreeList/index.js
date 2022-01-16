@@ -90,6 +90,11 @@ let ListItemStyled = styled.div`
   align-items: center;
 `;
 
+let TreeListHeaderStyled = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export default function TreeList({
   initialData = defaultData,
   showPath = true,
@@ -100,7 +105,7 @@ export default function TreeList({
   ]);
   return (
     <ContainerStyled style={{ width: 300, ...style }}>
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <TreeListHeaderStyled>
         <ArrowLeftOutlined
           onClick={() => {
             if (currentPath.length === 1) return;
@@ -125,9 +130,9 @@ export default function TreeList({
             ))}
           </PathContainerStyled>
         )}
-      </div>
+      </TreeListHeaderStyled>
 
-      {/* The last item in the path, is the folder where we currently are */}
+      {/* We show contents of the last item in the path. */}
       {currentPath[currentPath.length - 1]?.children.map((x) => {
         return (
           <ListItemStyled
