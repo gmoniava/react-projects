@@ -8,7 +8,7 @@ import styled from "styled-components";
 //
 // Props
 //  isCheckable: supports checking of nodes. But then you must supply ids of checked nodes
-//   using checkedNodes prop, and also handle onCheckChange prop.
+//  using checkedNodes prop, and also handle onCheckChange prop.
 //  checkedNodes: array of checked nodes ids.
 //  onCheckChange: handler when a new node is checked. Receives array of checked nodes.
 //  data: tree data
@@ -108,7 +108,7 @@ let Node = (props) => {
         }}
       >
         <ExpandIconContainerStyled>
-          {!!props.children &&
+          {props.children &&
             !!props.children.length &&
             (isExpanded ? <CaretDownFilled /> : <CaretRightFilled />)}
         </ExpandIconContainerStyled>
@@ -178,7 +178,7 @@ export default function Tree({
   style,
   onCheckChange,
 }) {
-  let [filter, setFilter] = React.useState("");
+  let [filterKeyword, setFilterKeyword] = React.useState("");
   let [expandedNodes, setExpandedNodes] = React.useState([]);
 
   data = React.useMemo(() => {
@@ -186,14 +186,14 @@ export default function Tree({
 
     if (!isFilterable) return data;
 
-    if (!filter) {
+    if (!filterKeyword) {
       setExpandedNodes([]);
       return data;
     }
 
     let clone = JSON.parse(JSON.stringify(data));
 
-    let filterResult = filterTree(filter, clone);
+    let filterResult = filterTree(filterKeyword, clone);
 
     // Mark the parent nodes which were found as result of filter, as expanded.
     treeToList(filterResult, list);
@@ -202,30 +202,29 @@ export default function Tree({
     );
 
     return filterResult;
-  }, [filter, data, isFilterable]);
+  }, [filterKeyword, data, isFilterable]);
 
-  if (isCheckable && (!onCheckChange || checkedNodes === undefined)) {
+  if (isCheckable && (!onCheckChange || !checkedNodes)) {
     console.error("Checkable tree must be used in controlled mode.");
     return <div>Error</div>;
   }
 
   let onCheckNode = (id, value) => {
-    let result = addOrRemoveItemFromArray(id, value, checkedNodes);
-    onCheckChange && onCheckChange(result);
+    onCheckChange &&
+      onCheckChange(addOrRemoveItemFromArray(id, value, checkedNodes));
   };
 
   let onExpandNode = (id, value) => {
-    let result = addOrRemoveItemFromArray(id, value, expandedNodes);
-    setExpandedNodes(result);
+    setExpandedNodes(addOrRemoveItemFromArray(id, value, expandedNodes));
   };
   return (
     <div style={{ padding: 20, display: "inline-block", ...style }}>
       {isFilterable && (
         <FilterInputStyled
           placeholder="Filter value"
-          value={filter}
+          value={filterKeyword}
           onChange={(e) => {
-            setFilter(e.target.value);
+            setFilterKeyword(e.target.value);
           }}
         />
       )}
