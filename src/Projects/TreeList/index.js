@@ -126,7 +126,7 @@ export default function TreeList({
                 onClick={() => {
                   setCurrentPath(currentPath.slice(0, i + 1));
                 }}
-              >{`${x.name || ""}  /`}</PathItemStyled>
+              >{`${x.name || ""}/`}</PathItemStyled>
             ))}
           </PathContainerStyled>
         )}
