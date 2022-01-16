@@ -63,18 +63,21 @@ let defaultTree = [
   { name: "item4", id: 4, children: [] },
 ];
 
-let Node = (props) => {
-  let isChecked = props.checkedNodes?.find((id) => id === props.id);
-  let isExpanded = props.expandedNodes?.find((id) => id === props.id);
+const TreeState = React.createContext({});
 
+let Node = (props) => {
+  const treeState = React.useContext(TreeState);
+  let isExpanded = !!treeState.expandedNodes?.find((x) => x === props.id);
+  let isChecked = !!treeState.checkedNodes?.find((x) => x === props.id);
   return (
     <div>
       <div
         style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
         onClick={() => {
-          props.onExpand(props.id, !isExpanded);
+          treeState.onExpandNode(props.id, !isExpanded);
         }}
       >
+        {/* Expand icon */}
         <div
           style={{
             width: 20,
@@ -88,15 +91,16 @@ let Node = (props) => {
             !!props.children.length &&
             (isExpanded ? <CaretDownFilled /> : <CaretRightFilled />)}
         </div>
-        {props.isCheckable && (
+        {/* Checkbox */}
+        {treeState.isCheckable && (
           <div style={{ width: 20, marginRight: 5 }}>
             <input
-              checked={isChecked === undefined ? false : isChecked}
+              checked={isChecked}
               onClick={(e) => {
                 e.stopPropagation();
               }}
               onChange={(e) => {
-                props.onCheck(props.id, e.target.checked);
+                treeState.onCheckNode(props.id, e.target.checked);
               }}
               type="checkbox"
             />
@@ -107,7 +111,7 @@ let Node = (props) => {
       {props.children && isExpanded && (
         <div style={{ marginLeft: 20 }}>
           {props.children.map((x) => (
-            <Node key={x.id} {...props} {...x} wasExpanded />
+            <Node {...x} key={x.id} />
           ))}
         </div>
       )}
@@ -187,6 +191,15 @@ export default function Tree({
     return <div>Error</div>;
   }
 
+  let onCheckNode = (id, value) => {
+    let result = addOrRemoveItemFromArray(id, value, checkedNodes);
+    onCheckChange && onCheckChange(result);
+  };
+
+  let onExpandNode = (id, value) => {
+    let result = addOrRemoveItemFromArray(id, value, expandedNodes);
+    setExpandedNodes(result);
+  };
   return (
     <div style={{ padding: 20, ...style }}>
       {isFilterable && (
@@ -206,23 +219,19 @@ export default function Tree({
           />
         </div>
       )}
-      {data.map((x) => (
-        <Node
-          key={x.id}
-          {...x}
-          expandedNodes={expandedNodes}
-          onExpand={(id, value) => {
-            let result = addOrRemoveItemFromArray(id, value, expandedNodes);
-            setExpandedNodes(result);
-          }}
-          checkedNodes={checkedNodes}
-          onCheck={(id, value) => {
-            let result = addOrRemoveItemFromArray(id, value, checkedNodes);
-            onCheckChange && onCheckChange(result);
-          }}
-          isCheckable={isCheckable}
-        />
-      ))}
+      <TreeState.Provider
+        value={{
+          onExpandNode,
+          onCheckNode,
+          isCheckable,
+          checkedNodes,
+          expandedNodes,
+        }}
+      >
+        {data.map((x) => (
+          <Node {...x} key={x.id} />
+        ))}
+      </TreeState.Provider>
     </div>
   );
 }
