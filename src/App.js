@@ -8,7 +8,6 @@ import StackOverflowAnimation from "./Projects/StackOverflowAnimation";
 import Tree from "./Projects/Tree";
 import TreeList from "./Projects/TreeList";
 import Snake from "./Projects/Snake";
-
 function App() {
   return (
     <div>

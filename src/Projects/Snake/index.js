@@ -132,12 +132,13 @@ export default function Snake() {
           if (!directionsRef.current || !directionsRef.current.length)
             return bodyPart;
 
-          // First element is the head of the snake
+          // We process snake head, and rest of the body differently.
+          // If it is the first element, it means it is the snake head.
           if (i === 0) {
             let currentDirection;
 
             // Are there several moves pending?
-            // If yes, we process them one by one on different rounds.
+            // If yes, get the first one in current round.
             if (directionsRef.current.length > 1) {
               currentDirection = directionsRef.current.shift();
             } else {
@@ -157,7 +158,8 @@ export default function Snake() {
               ...newDirectionAndCoordinateMap[currentDirection]
             );
           } else {
-            // If the game was over, or we ate food in this run, no need to move the snake anymore.
+            // If the snake ate food in this round, we don't move it, just basically the food becomes the new head.
+            // So in that case, or if the game was over, we quit here.
             if (gameOverRef.current || ateFoodDuringCurrentMove) {
               return bodyPart;
             }
