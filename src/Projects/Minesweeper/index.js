@@ -42,7 +42,7 @@ export default function App() {
           nx >= 0 &&
           ny < board.length &&
           nx < board[ny].length &&
-          board[ny][nx].value !== "M"
+          board[ny][nx].value !== "Mine"
         ) {
           board[ny][nx].value = (board[ny][nx].value || 0) + 1;
         }
@@ -65,7 +65,7 @@ export default function App() {
       );
 
       mineCoordinates.forEach(([y, x]) => {
-        result[y][x].value = "M";
+        result[y][x].value = "Mine";
       });
       return mineCoordinates;
     };
@@ -91,7 +91,7 @@ export default function App() {
       ) {
         if (board[ny][nx].value == null) {
           reveal(ny, nx, board);
-        } else if (board[ny][nx].value !== "M") {
+        } else if (board[ny][nx].value !== "Mine") {
           board[ny][nx].revealed = true;
         }
       }
@@ -134,7 +134,7 @@ export default function App() {
                   let clone = JSON.parse(JSON.stringify(board));
                   reveal(y, x, clone);
                   setBoard(clone);
-                } else if (boardItem.value === "M") {
+                } else if (boardItem.value === "Mine") {
                   // Oops we hit a mine.
                   setIsGameOver(true);
                 } else {
@@ -168,7 +168,7 @@ export default function App() {
                   <FlagOutlined
                     style={{
                       color:
-                        (gameOver || userWon) && cell.value === "M"
+                        (gameOver || userWon) && cell.value === "Mine"
                           ? "green"
                           : "black",
                     }}
@@ -176,7 +176,7 @@ export default function App() {
                 );
               }
 
-              if (gameOver && cell.value === "M") {
+              if (gameOver && cell.value === "Mine") {
                 return <AlertOutlined style={{ color: "red" }} />;
               }
             };
