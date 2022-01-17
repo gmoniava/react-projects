@@ -86,7 +86,8 @@ export default function App() {
         ny < board.length &&
         nx >= 0 &&
         nx < board[y].length &&
-        !board[ny][nx].revealed
+        !board[ny][nx].revealed &&
+        !board[ny][nx].flag
       ) {
         if (board[ny][nx].value == null) {
           reveal(nx, ny, board);
