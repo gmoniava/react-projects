@@ -98,15 +98,11 @@ export default function App() {
     }
   };
 
-  let countPropertyForAllCells = (board, propName, countForOnlyNotRevealed) => {
+  let countPropertyForAllCells = (board, propName) => {
     let count = 0;
     for (let row of board)
       for (let box of row) {
-        if (countForOnlyNotRevealed) {
-          if (box[propName] && !box.revealed) count++;
-        } else {
-          if (box[propName]) count++;
-        }
+        if (box[propName]) count++;
       }
     return count;
   };
@@ -149,7 +145,7 @@ export default function App() {
                 // Can use maximum 10 flags
                 if (
                   !board[y][x].flag &&
-                  countPropertyForAllCells(board, "flag", true) === 10
+                  countPropertyForAllCells(board, "flag") === 10
                 ) {
                   return;
                 }
