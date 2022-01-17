@@ -145,7 +145,6 @@ export default function App() {
                 }
               } else if (e.type === "contextmenu") {
                 e.preventDefault();
-                // If we get here user clicked right mouse btn.
 
                 // Can use maximum 10 flags
                 if (
