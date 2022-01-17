@@ -105,7 +105,7 @@ export default function Snake() {
   React.useEffect(() => {
     let ateFoodDuringCurrentMove = false;
 
-    // Takes care of moving the head snake
+    // Takes care of moving the snake head
     let moveHead = (currentHead, newX, newY) => {
       let newHead = {
         x: newX,
@@ -158,7 +158,7 @@ export default function Snake() {
               ...newDirectionAndCoordinateMap[currentDirection]
             );
           } else {
-            // If the snake ate food in this round, we don't move it, just basically the food becomes the new head.
+            // If the snake ate food in this round, we don't move the body, just append the food it ate as new head.
             // So in that case, or if the game was over, we quit here.
             if (gameOverRef.current || ateFoodDuringCurrentMove) {
               return bodyPart;
