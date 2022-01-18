@@ -205,7 +205,7 @@ export default function Tree({
 
   if (isCheckable && (!onCheckChange || !checkedNodes)) {
     console.error("Checkable tree must be used in controlled mode.");
-    return <div>Error</div>;
+    return null;
   }
 
   let onCheckNode = (id, value) => {
