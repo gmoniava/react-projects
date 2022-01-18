@@ -32,7 +32,7 @@ export default function App() {
     return arr;
   };
 
-  let assignNumbersToCells = (board, minesCoordinates) => {
+  let assignNumbersToCellsNearMines = (board, minesCoordinates) => {
     for (let [y, x] of minesCoordinates) {
       let neighbors = getNeighbors(y, x);
 
@@ -51,28 +51,32 @@ export default function App() {
   };
 
   let createBoard = (width, height) => {
-    let result = [];
-    for (let y = 0; y < height; y++) {
-      result[y] = [];
-      for (let x = 0; x < width; x++) {
-        result[y][x] = { value: null, revealed: false, flag: false };
+    let initBoard = () => {
+      let board = [];
+      for (let y = 0; y < height; y++) {
+        board[y] = [];
+        for (let x = 0; x < width; x++) {
+          board[y][x] = { value: null, revealed: false, flag: false };
+        }
       }
-    }
+      return board;
+    };
 
-    let createMines = () => {
+    let createMinesOnBoard = (board) => {
       let mineCoordinates = generateUniqueInts(10, 0, height * width - 1).map(
         (x) => [Math.floor(x / 10), x % 10]
       );
 
       mineCoordinates.forEach(([y, x]) => {
-        result[y][x].value = "Mine";
+        board[y][x].value = "Mine";
       });
       return mineCoordinates;
     };
 
-    let minesCoordinates = createMines();
-    assignNumbersToCells(result, minesCoordinates);
-    return result;
+    let board = initBoard();
+    let minesCoordinates = createMinesOnBoard(board);
+    assignNumbersToCellsNearMines(board, minesCoordinates);
+    return board;
   };
 
   let reveal = (y, x, board) => {
