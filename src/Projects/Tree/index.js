@@ -26,21 +26,21 @@ let defaultTree = [
         children: [
           {
             id: 22,
-            name: "item rrr",
+            name: "item 1.1.1",
             children: [],
           },
           {
             id: 12,
-            name: "John Doe",
+            name: "item 1.1.2",
             children: [
               {
                 id: 99,
-                name: "Jack Nicholson",
+                name: "item 1.1.2.1",
                 children: [],
               },
               {
                 id: 991,
-                name: "John Travolta",
+                name: "item 1.1.2.2",
                 children: [],
               },
             ],
@@ -49,19 +49,19 @@ let defaultTree = [
       },
       {
         id: 32,
-        name: "Jim Carrey",
+        name: "item 1.2",
         children: [],
       },
       {
         id: 3132,
-        name: "Thanos2",
+        name: "item 1.3",
         children: [],
       },
     ],
   },
-  { name: "kano", id: 2, children: [] },
-  { name: "item3", id: 3, children: [] },
-  { name: "item4", id: 4, children: [] },
+  { name: "item 2", id: 2, children: [] },
+  { name: "item 3", id: 3, children: [] },
+  { name: "item 4", id: 4, children: [] },
 ];
 
 let ExpandIconContainerStyled = styled.div`
@@ -136,25 +136,29 @@ let Node = (props) => {
     </div>
   );
 };
+
 let filterTree = (word, treeData) => {
-  return treeData.filter((x) => {
+  let result = [];
+  treeData.forEach((x) => {
     if (x.children && x.children.length) {
+      let newNode = { id: x.id, name: x.name };
       let filterChildren = filterTree(word, x.children);
       if (filterChildren.length > 0) {
-        x.children = filterChildren;
-        return true;
+        newNode.children = filterChildren;
+        result.push(newNode);
+        return;
       }
-      return x.name.includes(word);
     }
-    return x.name.includes(word);
+    if (x.name.includes(word)) result.push(x);
   });
+  return result;
 };
 
-let treeToList = (treeData, list) => {
+let treeForEach = (treeData, callback) => {
   treeData.forEach((x) => {
-    list.push(x);
+    callback(x);
     if (x.children) {
-      treeToList(x.children, list);
+      treeForEach(x.children, callback);
     }
   });
 };
@@ -182,8 +186,6 @@ export default function Tree({
   let [expandedNodes, setExpandedNodes] = React.useState([]);
 
   data = React.useMemo(() => {
-    let list = [];
-
     if (!isFilterable) return data;
 
     if (!filterKeyword) {
@@ -191,14 +193,11 @@ export default function Tree({
       return data;
     }
 
-    let clone = JSON.parse(JSON.stringify(data));
-
-    let filterResult = filterTree(filterKeyword, clone);
+    let filterResult = filterTree(filterKeyword, data);
 
     // Expand the filtered nodes (the ones with children).
-    treeToList(filterResult, list);
-    setExpandedNodes(
-      list.filter((x) => x.children && x.children.length).map((x) => x.id)
+    treeForEach(filterResult, (node) =>
+      setExpandedNodes((ps) => [...ps, node.id])
     );
 
     return filterResult;
