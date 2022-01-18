@@ -153,12 +153,8 @@ export default function TreeList({
               x.onClick && x.onClick(e);
             }}
           >
-            {" "}
             <div style={{ marginRight: 5 }}>
-              {" "}
-              {!!x.children?.length
-                ? x.icon || <FolderOutlined />
-                : x.icon}{" "}
+              {!!x.children?.length ? x.icon || <FolderOutlined /> : x.icon}{" "}
             </div>
             <div> {x.name} </div>
           </ListItemStyled>
