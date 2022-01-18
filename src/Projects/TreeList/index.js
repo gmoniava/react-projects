@@ -109,9 +109,9 @@ export default function TreeList({
     children: initialData,
   });
 
-  let getPath = (node) => {
+  let getCurrentPath = (node) => {
     if (node.parent) {
-      return [...getPath(node.parent), node];
+      return [...getCurrentPath(node.parent), node];
     }
     return [node];
   };
@@ -130,7 +130,7 @@ export default function TreeList({
         />
         {showPath && (
           <PathContainerStyled>
-            {getPath(currentNode).map((x) => (
+            {getCurrentPath(currentNode).map((x) => (
               <PathItemStyled
                 key={x.id}
                 onClick={() => {
