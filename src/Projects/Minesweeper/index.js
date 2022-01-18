@@ -128,7 +128,6 @@ export default function App() {
               if (gameOver || userWon) return;
 
               if (e.type === "click") {
-                // We can't open flagged cells
                 if (board[y][x].flag) return;
 
                 if (boardItem.value === null) {
@@ -137,7 +136,6 @@ export default function App() {
                   reveal(y, x, clone);
                   setBoard(clone);
                 } else if (boardItem.value === "Mine") {
-                  // Oops we hit a mine.
                   setIsGameOver(true);
                 } else {
                   // We hit cell with number, just reveal that one
@@ -169,6 +167,7 @@ export default function App() {
                 return (
                   <FlagOutlined
                     style={{
+                      // Show the flags. Use green one if user correctly guessed it.
                       color:
                         (gameOver || userWon) && cell.value === "Mine"
                           ? "green"
@@ -178,6 +177,7 @@ export default function App() {
                 );
               }
 
+              // We show mines only when user loses.
               if (gameOver && cell.value === "Mine") {
                 return <AlertOutlined style={{ color: "red" }} />;
               }
