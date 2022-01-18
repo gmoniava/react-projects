@@ -20,7 +20,7 @@ export default function App() {
       [y + 1, x - 1],
     ];
   };
-  let generateUniqueInts = (N, minInclusive, maxInclusive) => {
+  let generateUniqueNumbers = (N, minInclusive, maxInclusive) => {
     var arr = [];
     while (arr.length < N) {
       var r =
@@ -63,9 +63,11 @@ export default function App() {
     };
 
     let createMinesOnBoard = (board) => {
-      let mineCoordinates = generateUniqueInts(10, 0, height * width - 1).map(
-        (x) => [Math.floor(x / 10), x % 10]
-      );
+      let mineCoordinates = generateUniqueNumbers(
+        10,
+        0,
+        height * width - 1
+      ).map((x) => [Math.floor(x / 10), x % 10]);
 
       mineCoordinates.forEach(([y, x]) => {
         board[y][x].value = "Mine";
