@@ -4,7 +4,6 @@ import styled from "styled-components";
 import {
   ArrowLeftOutlined,
   FolderOutlined,
-  FileWordOutlined,
   GoogleOutlined,
 } from "@ant-design/icons";
 
@@ -19,53 +18,58 @@ import {
 
 let defaultData = [
   {
-    name: "item1 test nodeA",
-    icon: <FolderOutlined />,
+    name: "item1",
     id: 1,
     children: [
       {
         name: "item 1.1",
-        icon: <FolderOutlined />,
-        id: 2,
-
+        id: 33,
         children: [
           {
+            id: 22,
             name: "item 1.1.1",
-            icon: <FolderOutlined />,
-            children: [
-              {
-                name: "item 1.1.1.1",
-                children: [],
-
-                id: 21,
-              },
-            ],
-            id: 3,
+            children: [],
           },
           {
+            id: 12,
             name: "item 1.1.2",
-            children: [],
-            id: 4,
+            children: [
+              {
+                id: 99,
+                name: "item 1.1.2.1",
+                children: [
+                  {
+                    id: 7761,
+                    name: "item 1.1.2.1.1",
+                  },
+                ],
+              },
+              {
+                id: 991,
+                name: "item 1.1.2.2",
+                children: [],
+              },
+            ],
           },
         ],
       },
       {
+        id: 32,
         name: "item 1.2",
-        id: 5,
-
-        onClick: () => {
-          console.log("Item 1.2");
-        },
+        icon: <GoogleOutlined />,
+        children: [],
+      },
+      {
+        id: 3132,
+        name: "item 1.3",
         children: [],
       },
     ],
   },
-  { name: "item2", id: 6, children: [], icon: <FileWordOutlined /> },
-  { name: "item3", id: 7, children: [], icon: <GoogleOutlined /> },
-
-  { name: "item4", id: 8, children: [] },
+  { name: "item 2", id: 2, children: [] },
+  { name: "item 3", id: 3, children: [] },
+  { name: "item 4", id: 4, children: [] },
 ];
-
 let ContainerStyled = styled.div`
   padding: 20px;
 `;
@@ -73,7 +77,7 @@ let ContainerStyled = styled.div`
 let PathContainerStyled = styled.div`
   padding: 5px;
   color: gray;
-  font-size: 12px;
+  font-size: 13px;
 `;
 
 let PathItemStyled = styled.span`
@@ -100,31 +104,37 @@ export default function TreeList({
   showPath = true,
   style,
 }) {
-  let [currentPath, setCurrentPath] = React.useState([
-    { id: 0, children: initialData },
-  ]);
+  let [currentNode, setCurrentNode] = React.useState({
+    id: "treelist-root-id-0001",
+    children: initialData,
+  });
+
+  let getPath = (node) => {
+    if (node.parent) {
+      return [...getPath(node.parent), node];
+    }
+    return [node];
+  };
+
   return (
     <ContainerStyled style={{ width: 300, ...style }}>
       <TreeListHeaderStyled>
         <ArrowLeftOutlined
           onClick={() => {
-            if (currentPath.length === 1) return;
-            let pathCopy = [...currentPath];
-            pathCopy.pop();
-            setCurrentPath(pathCopy);
+            if (currentNode.parent) setCurrentNode({ ...currentNode.parent });
           }}
           style={{
             cursor: "pointer",
-            color: currentPath.length === 1 ? "lightgray" : "black",
+            color: currentNode.parent ? "black" : "lightgray",
           }}
         />
         {showPath && (
           <PathContainerStyled>
-            {currentPath.map((x, i) => (
+            {getPath(currentNode).map((x) => (
               <PathItemStyled
                 key={x.id}
                 onClick={() => {
-                  setCurrentPath(currentPath.slice(0, i + 1));
+                  setCurrentNode(x);
                 }}
               >{`${x.name || ""}/`}</PathItemStyled>
             ))}
@@ -132,21 +142,24 @@ export default function TreeList({
         )}
       </TreeListHeaderStyled>
 
-      {/* We show contents of the last item in the path. */}
-      {currentPath[currentPath.length - 1]?.children.map((x) => {
+      {currentNode?.children.map((x) => {
         return (
           <ListItemStyled
             key={x.id}
-            style={{}}
             onClick={(e) => {
               if (x.children && x.children.length) {
-                setCurrentPath([...currentPath, x]);
+                setCurrentNode({ parent: currentNode, ...x });
               }
               x.onClick && x.onClick(e);
             }}
           >
             {" "}
-            <div style={{ marginRight: 5 }}> {x.icon} </div>
+            <div style={{ marginRight: 5 }}>
+              {" "}
+              {!!x.children?.length
+                ? x.icon || <FolderOutlined />
+                : x.icon}{" "}
+            </div>
             <div> {x.name} </div>
           </ListItemStyled>
         );
