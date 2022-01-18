@@ -53,7 +53,7 @@ let MovingContainerStyled = styled.div`
   display: inline-block;
   white-space: nowrap;
   transition: transform 0.4s linear;
-  transform: translateX(${({ count }) => -count * 100}px);
+  transform: translateX(${({ slideCount }) => -slideCount * 100}px);
 `;
 
 const defaultItems = [
@@ -81,8 +81,9 @@ const defaultItems = [
   },
 ];
 export default function Carousel({ items = defaultItems }) {
-  let [count, setCount] = React.useState(0);
+  let [slideCount, setSlideCount] = React.useState(0);
   let [enableArrowBtns, setEnableArrowBtns] = React.useState({});
+  // We use this variable to check if animation was finished or not, to prevent multiple clicks.
   let [isTransitionStarted, setIsTransitionStarted] = React.useState(false);
   let movingContainer = React.useRef();
 
@@ -123,7 +124,7 @@ export default function Carousel({ items = defaultItems }) {
           overflow: "hidden",
         }}
       >
-        <MovingContainerStyled count={count} ref={movingContainer}>
+        <MovingContainerStyled slideCount={slideCount} ref={movingContainer}>
           {items.map((x) => {
             return (
               <DefaultCard key={x.id}>
@@ -138,7 +139,7 @@ export default function Carousel({ items = defaultItems }) {
         disabled={!enableArrowBtns.left}
         onClick={() => {
           if (isTransitionStarted) return;
-          setCount(count - 1);
+          setSlideCount(slideCount - 1);
           setIsTransitionStarted(true);
         }}
       >
@@ -148,7 +149,7 @@ export default function Carousel({ items = defaultItems }) {
         disabled={!enableArrowBtns.right}
         onClick={() => {
           if (isTransitionStarted) return;
-          setCount(count + 1);
+          setSlideCount(slideCount + 1);
           setIsTransitionStarted(true);
         }}
       >
