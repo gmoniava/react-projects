@@ -99,6 +99,7 @@ export default function App() {
 
       <div
         style={{
+          padding: 10,
           marginLeft: isMenuOpen ? 200 : 0,
           transition: "margin-left 0.6s linear",
         }}
