@@ -105,8 +105,6 @@ export default function TreeList({
   style,
 }) {
   let [currentNode, setCurrentNode] = React.useState({
-    // We need a unique id for root node, because this is used as a key, when drawing full path.
-    // This value is very unlikely to collide with any of the user supplied ids of tree nodes.
     id: "treelist-root-id-001",
     children: initialData,
   });
