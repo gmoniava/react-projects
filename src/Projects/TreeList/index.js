@@ -105,6 +105,7 @@ export default function TreeList({
   style,
 }) {
   let [currentNode, setCurrentNode] = React.useState({
+    // we need id here because this is used as key
     id: "treelist-root-id-001",
     children: initialData,
   });
