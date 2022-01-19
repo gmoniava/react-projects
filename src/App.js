@@ -9,12 +9,12 @@ import Tree from "./Projects/Tree";
 import TreeList from "./Projects/TreeList";
 import Snake from "./Projects/Snake";
 import Minesweeper from "./Projects/Minesweeper";
-
+import SideMenu from "./Projects/SideMenu";
 function App() {
   return (
     <div>
       {" "}
-      <Minesweeper />
+      <SideMenu />
     </div>
   );
 }
