@@ -42,10 +42,11 @@ export default function RippleButton() {
   let btnRef = React.useRef();
 
   let handleClick = (e) => {
+    // Subtract coordinates related to viewport to obtain local coordinates
     const localX = e.clientX - btnRef.current.getBoundingClientRect().left;
     const localY = e.clientY - btnRef.current.getBoundingClientRect().top;
 
-    // Generate data for the new effect.
+    // Data for the new click effect
     setRippleCoords({
       x: localX,
       y: localY,
@@ -55,7 +56,6 @@ export default function RippleButton() {
 
   return (
     <ButtonStyled ref={btnRef} onClick={handleClick}>
-      {/* The circle with fade effect */}
       {rippleCoords && (
         <FadeInCircleStyled
           key={rippleCoords.key}
