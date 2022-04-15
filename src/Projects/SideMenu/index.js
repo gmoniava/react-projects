@@ -5,7 +5,7 @@ import { useMediaQuery } from "react-responsive";
 
 ///
 //
-// Side menu
+// Side menu, which opens during click on the menu button.
 //
 
 let NavBar = styled.nav`
@@ -57,12 +57,14 @@ export default function App() {
   return (
     <div>
       <NavBar>
+        {/* Menu Button */}
         <MenuOutlined
           onClick={() => {
             setIsMenuOpen(true);
           }}
           style={{ marginLeft: 10, cursor: "pointer" }}
         />
+        {/* This gets hidden on mobile */}
         {!isMobile && (
           <NavBarItemsContainer>
             <li>
@@ -77,6 +79,7 @@ export default function App() {
           </NavBarItemsContainer>
         )}
       </NavBar>
+      {/* Sidebar which responds to menu button clicks */}
       <SideBar isMenuOpen={isMenuOpen}>
         <CloseCircleFilled
           onClick={() => {
