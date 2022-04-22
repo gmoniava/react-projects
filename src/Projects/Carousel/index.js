@@ -8,8 +8,12 @@ import styled from "styled-components";
 // Carousel component
 //
 let CarouselMainContainerStyled = styled.div`
-  padding: 20px 50px 0px 50px;
+  padding: 5px 50px;
   position: relative;
+`;
+
+let FixedContainerStyled = styled.div`
+  overflow: hidden;
 `;
 
 const DefaultCard = styled.div`
@@ -25,7 +29,7 @@ const DefaultCard = styled.div`
   white-space: normal;
 `;
 const Arrow = styled.button`
-  background: lightblue;
+  baclground-color: white;
   border: 1px solid lightgray;
   border-radius: 40%;
   cursor: pointer;
@@ -38,13 +42,13 @@ const Arrow = styled.button`
 `;
 const ArrowLeft = styled(Arrow)`
   position: absolute;
-  left: 0;
+  left: 5px;
   top: 50%;
   transform: translateY(-50%);
 `;
 const ArrowRight = styled(Arrow)`
   position: absolute;
-  right: 0;
+  right: 5px;
   top: 50%;
   transform: translateY(-50%);
 `;
@@ -118,12 +122,7 @@ export default function Carousel({ items = defaultItems }) {
   }, []);
   return (
     <CarouselMainContainerStyled>
-      <div
-        ref={fixedContainer}
-        style={{
-          overflow: "hidden",
-        }}
-      >
+      <FixedContainerStyled ref={fixedContainer}>
         <MovingContainerStyled slideCount={slideCount} ref={movingContainer}>
           {items.map((x) => {
             return (
@@ -134,7 +133,7 @@ export default function Carousel({ items = defaultItems }) {
             );
           })}
         </MovingContainerStyled>
-      </div>
+      </FixedContainerStyled>
       <ArrowLeft
         disabled={!enableArrowBtns.left}
         onClick={() => {
