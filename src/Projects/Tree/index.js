@@ -80,7 +80,7 @@ let CheckBoxStyled = styled.input`
   align-items: center;
 `;
 
-let NodeStyled = styled.div`
+let TreeNode = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -97,24 +97,37 @@ const TreeState = React.createContext({});
 
 let Node = (props) => {
   const treeState = React.useContext(TreeState);
-  let isExpanded = !!treeState.expandedNodes?.find((x) => x === props.id);
-  let isChecked = !!treeState.checkedNodes?.find((x) => x === props.id);
+  let isCurrentNodeExpanded = !!treeState.expandedNodes?.find(
+    (x) => x === props.id
+  );
+  let isCurrentNodeChecked = !!treeState.checkedNodes?.find(
+    (x) => x === props.id
+  );
+
+  let expandOrCollapseIcon = isCurrentNodeExpanded ? (
+    <CaretDownFilled />
+  ) : (
+    <CaretRightFilled />
+  );
 
   return (
     <div>
-      <NodeStyled
+      <TreeNode
         onClick={() => {
-          treeState.onExpandNode(props.id, !isExpanded);
+          // We only set this node expanded or not if it has children.
+          if (props.children?.length) {
+            treeState.onExpandNode(props.id, !isCurrentNodeExpanded);
+          }
         }}
       >
+        {/* Draw the expand or collapse icon */}
         <ExpandIconContainerStyled>
-          {props.children &&
-            !!props.children.length &&
-            (isExpanded ? <CaretDownFilled /> : <CaretRightFilled />)}
+          {props.children && !!props.children.length && expandOrCollapseIcon}
         </ExpandIconContainerStyled>
+        {/* Draw the checkbox */}
         {treeState.isCheckable && (
           <CheckBoxStyled
-            checked={isChecked}
+            checked={isCurrentNodeChecked}
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -125,8 +138,8 @@ let Node = (props) => {
           />
         )}
         <div style={{ padding: 2 }}> {props.name}</div>
-      </NodeStyled>
-      {props.children && isExpanded && (
+      </TreeNode>
+      {props.children && isCurrentNodeExpanded && (
         <div style={{ marginLeft: 20 }}>
           {props.children.map((x) => (
             <Node {...x} key={x.id} />
@@ -208,16 +221,17 @@ export default function Tree({
     return null;
   }
 
-  let onCheckNode = (id, value) => {
+  let onCheckNode = (id, isChecked) => {
     onCheckChange &&
-      onCheckChange(addOrRemoveItemFromArray(id, value, checkedNodes));
+      onCheckChange(addOrRemoveItemFromArray(id, isChecked, checkedNodes));
   };
 
-  let onExpandNode = (id, value) => {
-    setExpandedNodes(addOrRemoveItemFromArray(id, value, expandedNodes));
+  let onExpandNode = (id, isExpanded) => {
+    setExpandedNodes(addOrRemoveItemFromArray(id, isExpanded, expandedNodes));
   };
   return (
-    <div style={{ padding: 20, display: "inline-block", ...style }}>
+    <div style={{ padding: 20, ...style }}>
+      {/* Show filter only when prop is set */}
       {isFilterable && (
         <FilterInputStyled
           placeholder="Filter value"
