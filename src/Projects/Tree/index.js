@@ -198,7 +198,7 @@ export default function Tree({
   let [filterKeyword, setFilterKeyword] = React.useState("");
   let [expandedNodes, setExpandedNodes] = React.useState([]);
 
-  data = React.useMemo(() => {
+  let filteredData = React.useMemo(() => {
     if (!isFilterable) return data;
 
     if (!filterKeyword) {
@@ -206,14 +206,12 @@ export default function Tree({
       return data;
     }
 
-    let filterResult = filterTree(filterKeyword, data);
+    let result = filterTree(filterKeyword, data);
 
-    // Expand the filtered nodes (the ones with children).
-    treeForEach(filterResult, (node) =>
-      setExpandedNodes((ps) => [...ps, node.id])
-    );
+    // Also expand the filtered nodes (the ones with children).
+    treeForEach(result, (node) => setExpandedNodes((ps) => [...ps, node.id]));
 
-    return filterResult;
+    return result;
   }, [filterKeyword, data, isFilterable]);
 
   if (isCheckable && (!onCheckChange || !checkedNodes)) {
@@ -250,7 +248,7 @@ export default function Tree({
           expandedNodes,
         }}
       >
-        {data.map((x) => (
+        {filteredData.map((x) => (
           <Node {...x} key={x.id} />
         ))}
       </TreeState.Provider>
