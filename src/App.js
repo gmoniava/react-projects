@@ -8,16 +8,9 @@ import TreeList from "./Projects/TreeList";
 import Snake from "./Projects/Snake";
 import Minesweeper from "./Projects/Minesweeper";
 function App() {
-  let [checkedNodes, setCheckedNodes] = React.useState([]);
-
   return (
     <div>
-      <Tree
-        isFilterable
-        isCheckable
-        checkedNodes={checkedNodes}
-        onCheckChange={setCheckedNodes}
-      />{" "}
+      <TreeList />{" "}
     </div>
   );
 }

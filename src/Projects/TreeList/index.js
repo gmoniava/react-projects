@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-
+import FullPath from "./FullPath";
 import {
-  ArrowLeftOutlined,
+  ArrowLeftOutlined as BackIcon,
   FolderOutlined,
   GoogleOutlined,
 } from "@ant-design/icons";
@@ -70,22 +70,11 @@ let defaultData = [
   { name: "item 3", id: 3, children: [] },
   { name: "item 4", id: 4, children: [] },
 ];
-let ContainerStyled = styled.div`
+let MainContainer = styled.div`
   padding: 20px;
 `;
 
-let PathContainerStyled = styled.div`
-  padding: 5px;
-  color: gray;
-  font-size: 13px;
-`;
-
-let PathItemStyled = styled.span`
-  cursor: pointer;
-  color: blue;
-`;
-
-let ListItemStyled = styled.div`
+let Node = styled.div`
   padding: 10px;
   cursor: pointer;
   font-size: 20px;
@@ -94,7 +83,7 @@ let ListItemStyled = styled.div`
   align-items: center;
 `;
 
-let TreeListHeaderStyled = styled.div`
+let TreeListHeader = styled.div`
   display: flex;
   align-items: center;
 `;
@@ -109,57 +98,51 @@ export default function TreeList({
     children: initialData,
   });
 
-  let getCurrentPath = (node) => {
-    if (node.parent) {
-      return [...getCurrentPath(node.parent), node];
-    }
-    return [node];
+  let goBack = () => {
+    if (currentNode.parent) setCurrentNode({ ...currentNode.parent });
   };
 
+  let nodeClick = (node, e) => {
+    if (node.children && node.children.length) {
+      setCurrentNode({ parent: currentNode, ...node });
+    }
+    node.onClick && node.onClick(e);
+  };
   return (
-    <ContainerStyled style={{ width: 300, ...style }}>
-      <TreeListHeaderStyled>
-        <ArrowLeftOutlined
-          onClick={() => {
-            if (currentNode.parent) setCurrentNode({ ...currentNode.parent });
-          }}
+    <MainContainer style={{ width: 300, ...style }}>
+      {/* The header of the component  */}
+      <TreeListHeader>
+        <BackIcon
+          onClick={goBack}
           style={{
             cursor: "pointer",
             color: currentNode.parent ? "black" : "lightgray",
           }}
         />
+        {/* Show the path where the user is */}
         {showPath && (
-          <PathContainerStyled>
-            {getCurrentPath(currentNode).map((x) => (
-              <PathItemStyled
-                key={x.id}
-                onClick={() => {
-                  setCurrentNode(x);
-                }}
-              >{`${x.name || ""}/`}</PathItemStyled>
-            ))}
-          </PathContainerStyled>
+          <FullPath currentNode={currentNode} setCurrentNode={setCurrentNode} />
         )}
-      </TreeListHeaderStyled>
+      </TreeListHeader>
 
-      {currentNode?.children.map((x) => {
+      {/* Contents */}
+      {currentNode?.children.map((node) => {
         return (
-          <ListItemStyled
-            key={x.id}
+          <Node
+            key={node.id}
             onClick={(e) => {
-              if (x.children && x.children.length) {
-                setCurrentNode({ parent: currentNode, ...x });
-              }
-              x.onClick && x.onClick(e);
+              nodeClick(node, e);
             }}
           >
             <div style={{ marginRight: 5 }}>
-              {!!x.children?.length ? x.icon || <FolderOutlined /> : x.icon}{" "}
+              {!!node.children?.length
+                ? node.icon || <FolderOutlined />
+                : node.icon}{" "}
             </div>
-            <div> {x.name} </div>
-          </ListItemStyled>
+            <div> {node.name} </div>
+          </Node>
         );
       })}
-    </ContainerStyled>
+    </MainContainer>
   );
 }
