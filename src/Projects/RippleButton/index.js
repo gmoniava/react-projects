@@ -30,8 +30,8 @@ let FadeInCircleStyled = styled.span`
   background-color: white;
   top: ${({ top }) => top}px;
   left: ${({ left }) => left}px;
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
   animation: ${fadeInAndScale} 1.5s ease-out;
