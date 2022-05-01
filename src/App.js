@@ -7,10 +7,11 @@ import Tree from "./Projects/Tree";
 import TreeList from "./Projects/TreeList";
 import Snake from "./Projects/Snake";
 import Minesweeper from "./Projects/Minesweeper";
+import RippleButton from "./Projects/RippleButton";
 function App() {
   return (
     <div>
-      <TreeList />{" "}
+      <RippleButton />{" "}
     </div>
   );
 }
