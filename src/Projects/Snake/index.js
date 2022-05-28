@@ -2,19 +2,19 @@ import React from "react";
 
 // Classic snake game
 
-const SNAKE_CELL_DIMENSION = 25;
+const SNAKE_CELL_SIDE_LENGTH = 25;
 const BOARD_WIDTH = 500;
 const BOARD_HEIGHT = 500;
 
 let generateSnakeFromRightToLeft = (startX, startY, length) => {
-  if (startX + SNAKE_CELL_DIMENSION - length * SNAKE_CELL_DIMENSION < 0)
+  if (startX + SNAKE_CELL_SIDE_LENGTH - length * SNAKE_CELL_SIDE_LENGTH < 0)
     return [];
-  if (startX > BOARD_WIDTH - SNAKE_CELL_DIMENSION) return [];
+  if (startX > BOARD_WIDTH - SNAKE_CELL_SIDE_LENGTH) return [];
 
   let snake = [];
   for (let i = 0; i < length; i++) {
     snake.push({
-      x: startX - i * SNAKE_CELL_DIMENSION,
+      x: startX - i * SNAKE_CELL_SIDE_LENGTH,
       y: startY,
     });
   }
@@ -33,15 +33,15 @@ let getValidCellCoordinates = () => {
 
   for (
     let i = 0;
-    i <= BOARD_WIDTH - SNAKE_CELL_DIMENSION;
-    i += SNAKE_CELL_DIMENSION
+    i <= BOARD_WIDTH - SNAKE_CELL_SIDE_LENGTH;
+    i += SNAKE_CELL_SIDE_LENGTH
   ) {
     validCoordinatesX.push(i);
   }
   for (
     let i = 0;
-    i <= BOARD_HEIGHT - SNAKE_CELL_DIMENSION;
-    i += SNAKE_CELL_DIMENSION
+    i <= BOARD_HEIGHT - SNAKE_CELL_SIDE_LENGTH;
+    i += SNAKE_CELL_SIDE_LENGTH
   ) {
     validCoordinatesY.push(i);
   }
@@ -149,18 +149,21 @@ export default function Snake() {
   React.useEffect(() => {
     let ateFoodDuringCurrentMove = false;
 
-    // Takes care of moving the snake head
+    // Takes care of moving the snake head to a new coordinate
     let moveHead = (currentHead, newX, newY) => {
+      // New head coordinates
       let newHead = {
         x: newX,
         y: newY,
       };
 
+      // Can we even move the head there?
       if (!isValidMove(newHead, snake)) {
         gameOverRef.current = true;
         return currentHead;
       }
 
+      // Did we maybe eat the food?
       if (newHead.x === food?.x && newHead.y === food?.y) {
         createFood();
         ateFoodDuringCurrentMove = true;
@@ -191,10 +194,10 @@ export default function Snake() {
 
             // Keeps coordinates where snake head should go depending on direction.
             let newDirectionAndCoordinateMap = {
-              Right: [bodyPart.x + SNAKE_CELL_DIMENSION, bodyPart.y],
-              Down: [bodyPart.x, bodyPart.y + SNAKE_CELL_DIMENSION],
-              Left: [bodyPart.x - SNAKE_CELL_DIMENSION, bodyPart.y],
-              Up: [bodyPart.x, bodyPart.y - SNAKE_CELL_DIMENSION],
+              Right: [bodyPart.x + SNAKE_CELL_SIDE_LENGTH, bodyPart.y],
+              Down: [bodyPart.x, bodyPart.y + SNAKE_CELL_SIDE_LENGTH],
+              Left: [bodyPart.x - SNAKE_CELL_SIDE_LENGTH, bodyPart.y],
+              Up: [bodyPart.x, bodyPart.y - SNAKE_CELL_SIDE_LENGTH],
             };
 
             return moveHead(
@@ -239,8 +242,8 @@ export default function Snake() {
                 top: x.y,
                 left: x.x,
                 background: "gray",
-                height: SNAKE_CELL_DIMENSION,
-                width: SNAKE_CELL_DIMENSION,
+                height: SNAKE_CELL_SIDE_LENGTH,
+                width: SNAKE_CELL_SIDE_LENGTH,
               }}
             ></div>
           );
@@ -252,8 +255,8 @@ export default function Snake() {
               top: food.y,
               left: food.x,
               background: "green",
-              height: SNAKE_CELL_DIMENSION,
-              width: SNAKE_CELL_DIMENSION,
+              height: SNAKE_CELL_SIDE_LENGTH,
+              width: SNAKE_CELL_SIDE_LENGTH,
             }}
           ></div>
         )}
