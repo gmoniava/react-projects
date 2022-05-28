@@ -3,6 +3,23 @@ import React from "react";
 // Classic snake game
 
 const SNAKE_CELL_DIMENSION = 25;
+const BOARD_WIDTH = 500;
+const BOARD_HEIGHT = 500;
+
+let generateSnakeFromRightToLeft = (startX, startY, length) => {
+  if (startX + SNAKE_CELL_DIMENSION - length * SNAKE_CELL_DIMENSION < 0)
+    return [];
+  if (startX > BOARD_WIDTH - SNAKE_CELL_DIMENSION) return [];
+
+  let snake = [];
+  for (let i = 0; i < length; i++) {
+    snake.push({
+      x: startX - i * SNAKE_CELL_DIMENSION,
+      y: startY,
+    });
+  }
+  return snake;
+};
 
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
@@ -10,96 +27,122 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export default function Snake() {
-  let [snake, setSnake] = React.useState([
-    { x: 250, y: 100 }, // first element is the head
-    { x: 250 - SNAKE_CELL_DIMENSION, y: 100 },
-    { x: 250 - 2 * SNAKE_CELL_DIMENSION, y: 100 },
-  ]);
+let getValidCellCoordinates = () => {
+  let validCoordinatesX = [];
+  let validCoordinatesY = [];
 
+  for (
+    let i = 0;
+    i <= BOARD_WIDTH - SNAKE_CELL_DIMENSION;
+    i += SNAKE_CELL_DIMENSION
+  ) {
+    validCoordinatesX.push(i);
+  }
+  for (
+    let i = 0;
+    i <= BOARD_HEIGHT - SNAKE_CELL_DIMENSION;
+    i += SNAKE_CELL_DIMENSION
+  ) {
+    validCoordinatesY.push(i);
+  }
+
+  return { validCoordinatesX, validCoordinatesY };
+};
+
+let VALID_CELL_COORDINATES = getValidCellCoordinates();
+export default function Snake() {
+  let [snake, setSnake] = React.useState(
+    generateSnakeFromRightToLeft(100, 100, 3)
+  );
   let directionsRef = React.useRef([]);
 
   let gameOverRef = React.useRef(false);
   let [food, setFood] = React.useState();
 
   React.useEffect(() => {
-    document.addEventListener("keydown", function (e) {
+    let storeUserClickedDirections = (e) => {
       let directions = {
         37: "Left",
         38: "Up",
         39: "Right",
         40: "Down",
       };
-      let directionsAndOpposites = {
+      let oppositeDirections = {
         Left: "Right",
         Right: "Left",
         Up: "Down",
         Down: "Up",
       };
-
       let newDirection = directions[e.keyCode];
+      let currentDirection =
+        directionsRef.current[directionsRef.current.length - 1];
 
       // Is snake trying to move to the opposite direction?
-      if (
-        directionsRef.current[directionsRef.current.length - 1] ===
-        directionsAndOpposites[newDirection]
-      ) {
+      if (currentDirection === oppositeDirections[newDirection]) {
         return;
       }
 
       // We store user moves in array, otherwise we were running in some problems when user pressed
       // arrow keys very quickly, the timeout was missing processing some arrow keys.
       directionsRef.current.push(newDirection);
-    });
+    };
+
+    document.addEventListener("keydown", storeUserClickedDirections);
   }, []);
 
   let createFood = () => {
-    let possibleCoordinates = [];
-    for (let i = 0; i <= 450; i += SNAKE_CELL_DIMENSION) {
-      possibleCoordinates.push(i);
-    }
-    let x = getRandomIntInclusive(0, possibleCoordinates.length - 1);
-    let y = getRandomIntInclusive(0, possibleCoordinates.length - 1);
+    let { validCoordinatesX, validCoordinatesY } = VALID_CELL_COORDINATES;
 
+    // Get indexes to random coordinates for both x and y
+    let xIndex = getRandomIntInclusive(0, validCoordinatesX.length - 1);
+    let yIndex = getRandomIntInclusive(0, validCoordinatesY.length - 1);
+
+    // Make sure those coordinates don't collide with the snake though, if they do regenerate
     while (
-      isCellCollidingWithSnake(
-        { x: possibleCoordinates[x], y: possibleCoordinates[y] },
+      isCellCollidingWithOtherCells(
+        {
+          x: validCoordinatesX[xIndex],
+          y: validCoordinatesY[yIndex],
+        },
         snake
       )
     ) {
-      x = getRandomIntInclusive(0, possibleCoordinates.length - 1);
-      y = getRandomIntInclusive(0, possibleCoordinates.length - 1);
+      xIndex = getRandomIntInclusive(0, validCoordinatesX.length - 1);
+      yIndex = getRandomIntInclusive(0, validCoordinatesY.length - 1);
     }
 
-    setFood({ x: possibleCoordinates[x], y: possibleCoordinates[y] });
+    // If we get here, we can place food on these coordinates
+    setFood({
+      x: validCoordinatesX[xIndex],
+      y: validCoordinatesY[yIndex],
+    });
   };
   React.useEffect(() => {
     createFood();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  let isCellCollidingWithSnake = (cell, rest) => {
-    for (let body of rest) {
-      if (cell.x === body.x && cell.y === body.y) {
-        return true;
-      }
-    }
-    return false;
+  let isCellCollidingWithOtherCells = (cell, otherCells) => {
+    return !!otherCells.find((elem) => elem.x === cell.x && elem.y === cell.y);
   };
 
   let isCellOutsideBounds = (cell) => {
-    if (cell.x >= 500 || cell.y >= 500 || cell.x < 0 || cell.y < 0) return true;
-    return false;
+    return (
+      cell.x >= BOARD_WIDTH ||
+      cell.y >= BOARD_HEIGHT ||
+      cell.x < 0 ||
+      cell.y < 0
+    );
   };
 
   let isValidMove = (snakeHead, snakeBody) => {
-    if (
-      isCellOutsideBounds(snakeHead) ||
-      isCellCollidingWithSnake(snakeHead, snakeBody.slice(1, snakeBody.length))
-    ) {
-      return false;
-    }
-    return true;
+    return (
+      !isCellOutsideBounds(snakeHead) &&
+      !isCellCollidingWithOtherCells(
+        snakeHead,
+        snakeBody.slice(1, snakeBody.length)
+      )
+    );
   };
 
   React.useEffect(() => {
@@ -181,8 +224,8 @@ export default function Snake() {
       <div
         style={{
           position: "relative",
-          height: 500,
-          width: 500,
+          height: BOARD_HEIGHT,
+          width: BOARD_WIDTH,
           border: "1px solid gray",
         }}
       >
