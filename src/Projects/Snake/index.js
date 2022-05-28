@@ -50,6 +50,7 @@ let getValidCellCoordinates = () => {
 };
 
 let VALID_CELL_COORDINATES = getValidCellCoordinates();
+
 export default function Snake() {
   let [snake, setSnake] = React.useState(
     generateSnakeFromRightToLeft(100, 100, 3)
