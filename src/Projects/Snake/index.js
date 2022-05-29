@@ -173,11 +173,21 @@ export default function Snake() {
       return newHead;
     };
 
+    let getNewCoordinates = (x, y, direction) => {
+      let newCoordinates = {
+        Right: [x + SNAKE_CELL_SIDE_LENGTH, y],
+        Down: [x, y + SNAKE_CELL_SIDE_LENGTH],
+        Left: [x - SNAKE_CELL_SIDE_LENGTH, y],
+        Up: [x, y - SNAKE_CELL_SIDE_LENGTH],
+      };
+      return newCoordinates[direction];
+    };
+
     let moveSnake = () => {
       setSnake(
-        snake.flatMap((bodyPart, i) => {
+        snake.flatMap((cell, i) => {
           if (!directionsRef.current || !directionsRef.current.length)
-            return bodyPart;
+            return cell;
 
           // We process snake head, and rest of the body differently.
           // If it is the first element, it means it is the snake head.
@@ -192,23 +202,15 @@ export default function Snake() {
               currentDirection = directionsRef.current[0];
             }
 
-            // Keeps coordinates where snake head should go depending on direction.
-            let newDirectionAndCoordinateMap = {
-              Right: [bodyPart.x + SNAKE_CELL_SIDE_LENGTH, bodyPart.y],
-              Down: [bodyPart.x, bodyPart.y + SNAKE_CELL_SIDE_LENGTH],
-              Left: [bodyPart.x - SNAKE_CELL_SIDE_LENGTH, bodyPart.y],
-              Up: [bodyPart.x, bodyPart.y - SNAKE_CELL_SIDE_LENGTH],
-            };
-
             return moveHead(
-              bodyPart,
-              ...newDirectionAndCoordinateMap[currentDirection]
+              cell,
+              ...getNewCoordinates(cell.x, cell.y, currentDirection)
             );
           } else {
             // If the snake ate food in this round, we don't move the body, just append the food it ate as new head.
             // So in that case, or if the game was over, we quit here.
             if (gameOverRef.current || ateFoodDuringCurrentMove) {
-              return bodyPart;
+              return cell;
             }
             return {
               x: snake[i - 1].x,
