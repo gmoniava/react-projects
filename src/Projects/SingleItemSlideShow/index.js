@@ -6,7 +6,7 @@ import three from "./images/3.jpg";
 
 ///
 //
-// Slide show component
+// Slide show component showing only one image at a time.
 //
 
 let defaultImages = [
