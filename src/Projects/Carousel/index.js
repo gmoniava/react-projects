@@ -30,6 +30,9 @@ const DefaultCard = styled.div`
 `;
 const Arrow = styled.button`
   baclground-color: white;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   border: 1px solid lightgray;
   border-radius: 40%;
   cursor: pointer;
@@ -41,16 +44,10 @@ const Arrow = styled.button`
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 const ArrowLeft = styled(Arrow)`
-  position: absolute;
   left: 5px;
-  top: 50%;
-  transform: translateY(-50%);
 `;
 const ArrowRight = styled(Arrow)`
-  position: absolute;
   right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
 `;
 
 let MovingContainerStyled = styled.div`
