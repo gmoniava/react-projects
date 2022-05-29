@@ -173,7 +173,7 @@ export default function Snake() {
       return newHead;
     };
 
-    let getNewCoordinates = (x, y, direction) => {
+    let getNewCoordinates = ({ x, y }, direction) => {
       let newCoordinates = {
         Right: [x + SNAKE_CELL_SIDE_LENGTH, y],
         Down: [x, y + SNAKE_CELL_SIDE_LENGTH],
@@ -202,10 +202,7 @@ export default function Snake() {
               currentDirection = directionsRef.current[0];
             }
 
-            return moveHead(
-              cell,
-              ...getNewCoordinates(cell.x, cell.y, currentDirection)
-            );
+            return moveHead(cell, ...getNewCoordinates(cell, currentDirection));
           } else {
             // If the snake ate food in this round, we don't move the body, just append the food it ate as new head.
             // So in that case, or if the game was over, we quit here.
