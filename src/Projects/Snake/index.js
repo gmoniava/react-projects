@@ -66,7 +66,7 @@ export default function Snake() {
 
   React.useEffect(() => {
     let storeUserClickedDirections = (e) => {
-      let directionCodesToNames = {
+      let directions = {
         37: "Left",
         38: "Up",
         39: "Right",
@@ -78,7 +78,7 @@ export default function Snake() {
         Up: "Down",
         Down: "Up",
       };
-      let newDirection = directionCodesToNames[e.keyCode];
+      let newDirection = directions[e.keyCode];
       let currentDirection =
         directionsRef.current[directionsRef.current.length - 1];
 
