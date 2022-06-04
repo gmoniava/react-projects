@@ -8,7 +8,7 @@ let BOARD_WIDTH = 10;
 let BOARD_HEIGHT = 10;
 
 export default function App() {
-  let getNeighbors = (y, x) => {
+  let getNeighbors = (row, col) => {
     let neighbors = [
       [0, -1],
       [-1, -1],
@@ -20,7 +20,10 @@ export default function App() {
       [1, -1],
     ];
 
-    return neighbors.map(([offsetY, offsetX]) => [y + offsetY, x + offsetX]);
+    return neighbors.map(([offsetY, offsetX]) => [
+      row + offsetY,
+      col + offsetX,
+    ]);
   };
   let generateSomeUniqueNumbers = (howMany, minInclusive, maxInclusive) => {
     var arr = [];
@@ -35,18 +38,18 @@ export default function App() {
   };
 
   let assignNumbersToCellsNearMines = (board, minesCoordinates) => {
-    for (let [y, x] of minesCoordinates) {
-      let neighbors = getNeighbors(y, x);
+    for (let [row, col] of minesCoordinates) {
+      let neighbors = getNeighbors(row, col);
 
-      for (let [ny, nx] of neighbors) {
+      for (let [nrow, ncol] of neighbors) {
         if (
-          ny >= 0 &&
-          nx >= 0 &&
-          ny < board.length &&
-          nx < board[ny].length &&
-          board[ny][nx].value !== "Mine"
+          nrow >= 0 &&
+          ncol >= 0 &&
+          nrow < board.length &&
+          ncol < board[nrow].length &&
+          board[nrow][ncol].value !== "Mine"
         ) {
-          board[ny][nx].value = (board[ny][nx].value || 0) + 1;
+          board[nrow][ncol].value = (board[nrow][ncol].value || 0) + 1;
         }
       }
     }
@@ -55,10 +58,10 @@ export default function App() {
   let createBoard = (width, height) => {
     let initBoard = () => {
       let board = [];
-      for (let y = 0; y < height; y++) {
-        board[y] = [];
-        for (let x = 0; x < width; x++) {
-          board[y][x] = { value: null, revealed: false, flag: false };
+      for (let row = 0; row < height; row++) {
+        board[row] = [];
+        for (let col = 0; col < width; col++) {
+          board[row][col] = { value: null, revealed: false, flag: false };
         }
       }
       return board;
@@ -69,10 +72,10 @@ export default function App() {
         10,
         0,
         height * width - 1
-      ).map((x) => [Math.floor(x / 10), x % 10]);
+      ).map((number) => [Math.floor(number / 10), number % 10]);
 
-      mineCoordinates.forEach(([y, x]) => {
-        board[y][x].value = "Mine";
+      mineCoordinates.forEach(([row, col]) => {
+        board[row][col].value = "Mine";
       });
       return mineCoordinates;
     };
@@ -83,24 +86,24 @@ export default function App() {
     return board;
   };
 
-  let reveal = (y, x, board) => {
-    board[y][x].revealed = true;
+  let reveal = (row, col, board) => {
+    board[row][col].revealed = true;
 
-    let neighbors = getNeighbors(y, x);
+    let neighbors = getNeighbors(row, col);
 
-    for (let [ny, nx] of neighbors) {
+    for (let [nrow, ncol] of neighbors) {
       if (
-        ny >= 0 &&
-        ny < board.length &&
-        nx >= 0 &&
-        nx < board[y].length &&
-        !board[ny][nx].revealed &&
-        !board[ny][nx].flag
+        nrow >= 0 &&
+        nrow < board.length &&
+        ncol >= 0 &&
+        ncol < board[row].length &&
+        !board[nrow][ncol].revealed &&
+        !board[nrow][ncol].flag
       ) {
-        if (board[ny][nx].value == null) {
-          reveal(ny, nx, board);
-        } else if (board[ny][nx].value !== "Mine") {
-          board[ny][nx].revealed = true;
+        if (board[nrow][ncol].value == null) {
+          reveal(nrow, ncol, board);
+        } else if (board[nrow][ncol].value !== "Mine") {
+          board[nrow][ncol].revealed = true;
         }
       }
     }
@@ -122,27 +125,27 @@ export default function App() {
     BOARD_HEIGHT * BOARD_WIDTH - 10;
 
   let drawBoard = (board) => {
-    return board.map((row, y) => {
+    return board.map((rowItems, row) => {
       return (
-        <div key={y} style={{ display: "flex", alignItems: "center" }}>
-          {row.map((boardItem, x) => {
+        <div key={row} style={{ display: "flex", alignItems: "center" }}>
+          {rowItems.map((boardItem, col) => {
             let handleClick = (e) => {
               if (gameOver || userWon) return;
 
               if (e.type === "click") {
-                if (board[y][x].flag) return;
+                if (board[row][col].flag) return;
 
                 if (boardItem.value === null) {
                   // This is empty cell, reveal it and its other empty neighbors
                   let clone = JSON.parse(JSON.stringify(board));
-                  reveal(y, x, clone);
+                  reveal(row, col, clone);
                   setBoard(clone);
                 } else if (boardItem.value === "Mine") {
                   setIsGameOver(true);
                 } else {
                   // We hit cell with number, just reveal that one
                   setBoard((ps) => {
-                    ps[y][x].revealed = true;
+                    ps[row][col].revealed = true;
                   });
                 }
               } else if (e.type === "contextmenu") {
@@ -150,13 +153,13 @@ export default function App() {
 
                 // Can use maximum 10 flags
                 if (
-                  !board[y][x].flag &&
+                  !board[row][col].flag &&
                   countPropertyForAllCells(board, "flag") === 10
                 ) {
                   return;
                 }
                 setBoard((ps) => {
-                  ps[y][x].flag = !ps[y][x].flag;
+                  ps[row][col].flag = !ps[row][col].flag;
                 });
               }
             };
@@ -186,7 +189,7 @@ export default function App() {
             };
             return (
               <button
-                key={y.toString() + x.toString()}
+                key={row.toString() + col.toString()}
                 style={{
                   width: 32,
                   height: 32,
