@@ -142,6 +142,9 @@ export default function App() {
               } else if (e.type === "contextmenu") {
                 e.preventDefault();
 
+                // We can't flag revealed cells
+                if (board[row][col].revealed) return;
+
                 // Can use maximum 10 flags
                 if (
                   !board[row][col].flag &&
@@ -198,12 +201,16 @@ export default function App() {
       );
     });
   };
-
+  console.log(
+    board,
+    countSomePropertyOnBoard(board, "flag"),
+    countSomePropertyOnBoard(board, "revealed")
+  );
   return (
     <div style={{ padding: 10 }}>
       <h1>Welcome to minesweeper</h1>
       <div style={{ marginBottom: 10 }}>
-        Remaining flags: {10 - countSomePropertyOnBoard(board, "flag", true)}
+        Remaining flags: {10 - countSomePropertyOnBoard(board, "flag")}
       </div>
       <div style={{}}>{drawBoard(board)}</div>
       {userWon && <div style={{ color: "green" }}> You won </div>}
