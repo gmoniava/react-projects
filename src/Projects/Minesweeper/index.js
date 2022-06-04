@@ -9,25 +9,27 @@ let BOARD_HEIGHT = 10;
 
 export default function App() {
   let getNeighbors = (y, x) => {
-    return [
-      [y, x - 1],
-      [y - 1, x - 1],
-      [y - 1, x],
-      [y - 1, x + 1],
-      [y, x + 1],
-      [y + 1, x + 1],
-      [y + 1, x],
-      [y + 1, x - 1],
+    let neighbors = [
+      [0, -1],
+      [-1, -1],
+      [-1, 0],
+      [-1, 1],
+      [0, 1],
+      [1, 1],
+      [1, 0],
+      [1, -1],
     ];
+
+    return neighbors.map(([offsetY, offsetX]) => [y + offsetY, x + offsetX]);
   };
-  let generateUniqueNumbers = (N, minInclusive, maxInclusive) => {
+  let generateSomeUniqueNumbers = (howMany, minInclusive, maxInclusive) => {
     var arr = [];
-    while (arr.length < N) {
-      var r =
+    while (arr.length < howMany) {
+      var rand =
         Math.floor(Math.random() * (maxInclusive - minInclusive + 1)) +
         minInclusive;
 
-      if (arr.indexOf(r) === -1) arr.push(r);
+      if (arr.indexOf(rand) === -1) arr.push(rand);
     }
     return arr;
   };
@@ -63,7 +65,7 @@ export default function App() {
     };
 
     let createMinesOnBoard = (board) => {
-      let mineCoordinates = generateUniqueNumbers(
+      let mineCoordinates = generateSomeUniqueNumbers(
         10,
         0,
         height * width - 1
