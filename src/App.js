@@ -12,7 +12,7 @@ import RippleButton from "./Projects/RippleButton";
 function App() {
   return (
     <div>
-      <SingleItemSlideShow />{" "}
+      <Snake />{" "}
     </div>
   );
 }

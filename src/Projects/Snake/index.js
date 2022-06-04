@@ -6,27 +6,33 @@ const SNAKE_CELL_SIDE_LENGTH = 25;
 const BOARD_WIDTH = 500;
 const BOARD_HEIGHT = 500;
 
-let generateSnakeFromRightToLeft = (startX, startY, length) => {
-  if (startX + SNAKE_CELL_SIDE_LENGTH - length * SNAKE_CELL_SIDE_LENGTH < 0)
-    return [];
-  if (startX > BOARD_WIDTH - SNAKE_CELL_SIDE_LENGTH) return [];
+let generateSnake = (startX, startY, length) => {
+  if (startX + length * SNAKE_CELL_SIDE_LENGTH > BOARD_WIDTH) return [];
 
   let snake = [];
+  // In our model first element in snake array should be head.
+  // But since in this method we are generating snake from left to right,
+  // it means the last element should be the head. Which means the last element
+  // should be at the beginning of the array.
   for (let i = 0; i < length; i++) {
-    snake.push({
-      x: startX - i * SNAKE_CELL_SIDE_LENGTH,
-      y: startY,
-    });
+    snake = [
+      {
+        x: startX + i * SNAKE_CELL_SIDE_LENGTH,
+        y: startY,
+      },
+    ].concat(snake);
   }
   return snake;
 };
 
 function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  let ceilMin = Math.ceil(min);
+  let floorMax = Math.floor(max);
+  return Math.floor(Math.random() * (floorMax - ceilMin + 1)) + ceilMin;
 }
 
+// We use valid cell coordinates during food generation, to know possible places
+// where we can place the food randomly.
 let getValidCellCoordinates = () => {
   let validCoordinatesX = [];
   let validCoordinatesY = [];
@@ -52,9 +58,7 @@ let getValidCellCoordinates = () => {
 let VALID_CELL_COORDINATES = getValidCellCoordinates();
 
 export default function Snake() {
-  let [snake, setSnake] = React.useState(
-    generateSnakeFromRightToLeft(100, 100, 3)
-  );
+  let [snake, setSnake] = React.useState(generateSnake(0, 0, 10));
   let directionsRef = React.useRef([]);
 
   let gameOverRef = React.useRef(false);
@@ -94,29 +98,30 @@ export default function Snake() {
   let createFood = () => {
     let { validCoordinatesX, validCoordinatesY } = VALID_CELL_COORDINATES;
 
-    // Get indexes to random coordinates for both x and y
-    let xIndex = getRandomIntInclusive(0, validCoordinatesX.length - 1);
-    let yIndex = getRandomIntInclusive(0, validCoordinatesY.length - 1);
+    let generateRandomFood = () => {
+      // We generate random indexes below which are used to obtain the coordinate from valid coordinates array
+      let x =
+        validCoordinatesX[
+          getRandomIntInclusive(0, validCoordinatesX.length - 1)
+        ];
+      let y =
+        validCoordinatesY[
+          getRandomIntInclusive(0, validCoordinatesX.length - 1)
+        ];
 
-    // Make sure those coordinates don't collide with the snake though, if they do regenerate
-    while (
-      isCellCollidingWithOtherCells(
-        {
-          x: validCoordinatesX[xIndex],
-          y: validCoordinatesY[yIndex],
-        },
-        snake
-      )
-    ) {
-      xIndex = getRandomIntInclusive(0, validCoordinatesX.length - 1);
-      yIndex = getRandomIntInclusive(0, validCoordinatesY.length - 1);
+      return {
+        x,
+        y,
+      };
+    };
+
+    let food = generateRandomFood();
+
+    while (isCellCollidingWithOtherCells(food, snake)) {
+      food = generateRandomFood();
     }
 
-    // If we get here, we can place food on these coordinates
-    setFood({
-      x: validCoordinatesX[xIndex],
-      y: validCoordinatesY[yIndex],
-    });
+    setFood(food);
   };
   React.useEffect(() => {
     createFood();
@@ -149,9 +154,7 @@ export default function Snake() {
   React.useEffect(() => {
     let ateFoodDuringCurrentMove = false;
 
-    // Takes care of moving the snake head to a new coordinate
     let moveHead = (currentHead, newX, newY) => {
-      // New head coordinates
       let newHead = {
         x: newX,
         y: newY,
