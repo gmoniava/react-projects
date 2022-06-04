@@ -6,6 +6,7 @@ import { FlagOutlined, AlertOutlined } from "@ant-design/icons";
 
 let BOARD_WIDTH = 10;
 let BOARD_HEIGHT = 10;
+let MINE_VALUE = "Mine";
 
 export default function App() {
   let getNeighbors = (row, col, board) => {
@@ -48,7 +49,7 @@ export default function App() {
       let neighbors = getNeighbors(row, col, board);
 
       for (let [nrow, ncol] of neighbors) {
-        if (board[nrow][ncol].value !== "Mine") {
+        if (board[nrow][ncol].value !== MINE_VALUE) {
           board[nrow][ncol].value = (board[nrow][ncol].value || 0) + 1;
         }
       }
@@ -75,7 +76,7 @@ export default function App() {
       ).map((number) => [Math.floor(number / 10), number % 10]);
 
       mineCoordinates.forEach(([row, col]) => {
-        board[row][col].value = "Mine";
+        board[row][col].value = MINE_VALUE;
       });
       return mineCoordinates;
     };
@@ -94,7 +95,7 @@ export default function App() {
       if (!board[nrow][ncol].revealed && !board[nrow][ncol].flag) {
         if (board[nrow][ncol].value == null) {
           reveal(nrow, ncol, board);
-        } else if (board[nrow][ncol].value !== "Mine") {
+        } else if (board[nrow][ncol].value !== MINE_VALUE) {
           board[nrow][ncol].revealed = true;
         }
       }
@@ -134,7 +135,7 @@ export default function App() {
                   let clone = JSON.parse(JSON.stringify(board));
                   reveal(row, col, clone);
                   setBoard(clone);
-                } else if (boardItem.value === "Mine") {
+                } else if (boardItem.value === MINE_VALUE) {
                   setIsGameOver(true);
                 } else {
                   // We hit cell with number, just reveal that one
@@ -168,7 +169,7 @@ export default function App() {
                     style={{
                       // Show the flags. Use green one if user correctly guessed it.
                       color:
-                        (gameOver || userWon) && cell.value === "Mine"
+                        (gameOver || userWon) && cell.value === MINE_VALUE
                           ? "green"
                           : "black",
                     }}
@@ -177,7 +178,7 @@ export default function App() {
               }
 
               // We show mines only when user loses.
-              if (gameOver && cell.value === "Mine") {
+              if (gameOver && cell.value === MINE_VALUE) {
                 return <AlertOutlined style={{ color: "red" }} />;
               }
             };
