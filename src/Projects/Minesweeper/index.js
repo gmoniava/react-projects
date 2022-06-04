@@ -8,7 +8,7 @@ let BOARD_WIDTH = 10;
 let BOARD_HEIGHT = 10;
 
 export default function App() {
-  let getNeighbors = (row, col, boardParam) => {
+  let getNeighbors = (row, col, board) => {
     let neighbors = [
       [0, -1],
       [-1, -1],
@@ -20,18 +20,15 @@ export default function App() {
       [1, -1],
     ];
 
-    let isCellWithinBounds = (row, col, boardParam) => {
+    let isCellWithinBounds = (row, col, board) => {
       return (
-        row >= 0 &&
-        col >= 0 &&
-        row < boardParam.length &&
-        col < boardParam[row].length
+        row >= 0 && col >= 0 && row < board.length && col < board[row].length
       );
     };
 
     return neighbors
       .map(([offsetY, offsetX]) => [row + offsetY, col + offsetX])
-      .filter(([row, col]) => isCellWithinBounds(row, col, boardParam));
+      .filter(([row, col]) => isCellWithinBounds(row, col, board));
   };
 
   let generateSomeUniqueNumbers = (howMany, minInclusive, maxInclusive) => {
@@ -59,7 +56,7 @@ export default function App() {
   };
 
   let createBoard = (width, height) => {
-    let initBoard = () => {
+    let initEmptyBoard = () => {
       let board = [];
       for (let row = 0; row < height; row++) {
         board[row] = [];
@@ -83,7 +80,7 @@ export default function App() {
       return mineCoordinates;
     };
 
-    let board = initBoard();
+    let board = initEmptyBoard();
     let minesCoordinates = createMinesOnBoard(board);
     assignNumbersToCellsNearMines(board, minesCoordinates);
     return board;
