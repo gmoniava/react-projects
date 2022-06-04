@@ -25,6 +25,16 @@ export default function App() {
       col + offsetX,
     ]);
   };
+
+  let isCellWithinBounds = (row, col, boardParam) => {
+    return (
+      row >= 0 &&
+      col >= 0 &&
+      row < boardParam.length &&
+      col < boardParam[row].length
+    );
+  };
+
   let generateSomeUniqueNumbers = (howMany, minInclusive, maxInclusive) => {
     var arr = [];
     while (arr.length < howMany) {
@@ -37,18 +47,13 @@ export default function App() {
     return arr;
   };
 
-  let isCellWithinBounds = (row, col) => {
-    return (
-      row >= 0 && col >= 0 && row < board.length && col < board[row].length
-    );
-  };
   let assignNumbersToCellsNearMines = (board, minesCoordinates) => {
     for (let [row, col] of minesCoordinates) {
       let neighbors = getNeighbors(row, col);
 
       for (let [nrow, ncol] of neighbors) {
         if (
-          isCellWithinBounds(nrow, ncol) &&
+          isCellWithinBounds(nrow, ncol, board) &&
           board[nrow][ncol].value !== "Mine"
         ) {
           board[nrow][ncol].value = (board[nrow][ncol].value || 0) + 1;
@@ -95,7 +100,7 @@ export default function App() {
 
     for (let [nrow, ncol] of neighbors) {
       if (
-        isCellWithinBounds(nrow, ncol) &&
+        isCellWithinBounds(nrow, ncol, board) &&
         !board[nrow][ncol].revealed &&
         !board[nrow][ncol].flag
       ) {
