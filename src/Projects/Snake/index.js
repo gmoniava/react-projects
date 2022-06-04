@@ -176,7 +176,7 @@ export default function Snake() {
       return newHead;
     };
 
-    let getNewCoordinates = ({ x, y }, direction) => {
+    let getNewCoordinatesBasedOnDirection = ({ x, y }, direction) => {
       let newCoordinates = {
         Right: [x + SNAKE_CELL_SIDE_LENGTH, y],
         Down: [x, y + SNAKE_CELL_SIDE_LENGTH],
@@ -197,15 +197,18 @@ export default function Snake() {
           if (i === 0) {
             let currentDirection;
 
-            // Are there several moves pending?
-            // If yes, get the first one in current round.
+            // Process the pending moves if there are several, or stick to the only one
             if (directionsRef.current.length > 1) {
               currentDirection = directionsRef.current.shift();
             } else {
               currentDirection = directionsRef.current[0];
             }
 
-            return moveHead(cell, ...getNewCoordinates(cell, currentDirection));
+            let [newX, newY] = getNewCoordinatesBasedOnDirection(
+              cell,
+              currentDirection
+            );
+            return moveHead(cell, newX, newY);
           } else {
             // If the snake ate food in this round, we don't move the body, just append the food it ate as new head.
             // So in that case, or if the game was over, we quit here.
