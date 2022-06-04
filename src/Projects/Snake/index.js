@@ -62,6 +62,8 @@ export default function Snake() {
   let directionsRef = React.useRef([]);
 
   let gameOverRef = React.useRef(false);
+  let isFirstRender = React.useRef(true);
+
   let [food, setFood] = React.useState();
 
   React.useEffect(() => {
@@ -124,7 +126,11 @@ export default function Snake() {
     setFood(food);
   };
   React.useEffect(() => {
-    createFood();
+    // Just to protect against double invoking effects in React 18
+    if (isFirstRender.current) {
+      createFood();
+      isFirstRender.current = false;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
