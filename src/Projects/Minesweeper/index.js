@@ -8,7 +8,7 @@ let BOARD_WIDTH = 10;
 let BOARD_HEIGHT = 10;
 
 export default function App() {
-  let getNeighbors = (row, col) => {
+  let getNeighbors = (row, col, boardParam) => {
     let neighbors = [
       [0, -1],
       [-1, -1],
@@ -20,19 +20,18 @@ export default function App() {
       [1, -1],
     ];
 
-    return neighbors.map(([offsetY, offsetX]) => [
-      row + offsetY,
-      col + offsetX,
-    ]);
-  };
+    let isCellWithinBounds = (row, col, boardParam) => {
+      return (
+        row >= 0 &&
+        col >= 0 &&
+        row < boardParam.length &&
+        col < boardParam[row].length
+      );
+    };
 
-  let isCellWithinBounds = (row, col, boardParam) => {
-    return (
-      row >= 0 &&
-      col >= 0 &&
-      row < boardParam.length &&
-      col < boardParam[row].length
-    );
+    return neighbors
+      .map(([offsetY, offsetX]) => [row + offsetY, col + offsetX])
+      .filter(([row, col]) => isCellWithinBounds(row, col, boardParam));
   };
 
   let generateSomeUniqueNumbers = (howMany, minInclusive, maxInclusive) => {
@@ -49,13 +48,10 @@ export default function App() {
 
   let assignNumbersToCellsNearMines = (board, minesCoordinates) => {
     for (let [row, col] of minesCoordinates) {
-      let neighbors = getNeighbors(row, col);
+      let neighbors = getNeighbors(row, col, board);
 
       for (let [nrow, ncol] of neighbors) {
-        if (
-          isCellWithinBounds(nrow, ncol, board) &&
-          board[nrow][ncol].value !== "Mine"
-        ) {
+        if (board[nrow][ncol].value !== "Mine") {
           board[nrow][ncol].value = (board[nrow][ncol].value || 0) + 1;
         }
       }
@@ -95,15 +91,10 @@ export default function App() {
 
   let reveal = (row, col, board) => {
     board[row][col].revealed = true;
-
-    let neighbors = getNeighbors(row, col);
+    let neighbors = getNeighbors(row, col, board);
 
     for (let [nrow, ncol] of neighbors) {
-      if (
-        isCellWithinBounds(nrow, ncol, board) &&
-        !board[nrow][ncol].revealed &&
-        !board[nrow][ncol].flag
-      ) {
+      if (!board[nrow][ncol].revealed && !board[nrow][ncol].flag) {
         if (board[nrow][ncol].value == null) {
           reveal(nrow, ncol, board);
         } else if (board[nrow][ncol].value !== "Mine") {
@@ -121,7 +112,9 @@ export default function App() {
       }
     return count;
   };
-  let [board, setBoard] = useImmer(createBoard(BOARD_WIDTH, BOARD_HEIGHT));
+  let [board, setBoard] = useImmer(() =>
+    createBoard(BOARD_WIDTH, BOARD_HEIGHT)
+  );
   let [gameOver, setIsGameOver] = React.useState(false);
 
   let userWon =
