@@ -66,7 +66,7 @@ export default function Snake() {
 
   React.useEffect(() => {
     let storeUserClickedDirections = (e) => {
-      let directions = {
+      let directionCodesToNames = {
         37: "Left",
         38: "Up",
         39: "Right",
@@ -78,12 +78,12 @@ export default function Snake() {
         Up: "Down",
         Down: "Up",
       };
-      let newDirection = directions[e.keyCode];
+      let newDirection = directionCodesToNames[e.keyCode];
       let currentDirection =
         directionsRef.current[directionsRef.current.length - 1];
 
-      // Is snake trying to move to the opposite direction?
-      if (currentDirection === oppositeDirections[newDirection]) {
+      // We don't let  the snake move to the opposite direction
+      if (newDirection === oppositeDirections[currentDirection]) {
         return;
       }
 
