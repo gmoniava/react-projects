@@ -44,15 +44,13 @@ export default function App() {
     return arr;
   };
 
-  let assignNumbersToCellsNearMines = (board, minesCoordinates) => {
+  let numberMineNeighbors = (board, minesCoordinates) => {
     for (let [row, col] of minesCoordinates) {
-      let neighbors = getNeighbors(row, col, board);
-
-      for (let [nrow, ncol] of neighbors) {
+      getNeighbors(row, col, board).forEach(([nrow, ncol]) => {
         if (board[nrow][ncol].value !== MINE_VALUE) {
           board[nrow][ncol].value = (board[nrow][ncol].value || 0) + 1;
         }
-      }
+      });
     }
   };
 
@@ -83,15 +81,13 @@ export default function App() {
 
     let board = initEmptyBoard();
     let minesCoordinates = createMinesOnBoard(board);
-    assignNumbersToCellsNearMines(board, minesCoordinates);
+    numberMineNeighbors(board, minesCoordinates);
     return board;
   };
 
   let reveal = (row, col, board) => {
     board[row][col].revealed = true;
-    let neighbors = getNeighbors(row, col, board);
-
-    for (let [nrow, ncol] of neighbors) {
+    getNeighbors(row, col, board).forEach(([nrow, ncol]) => {
       if (!board[nrow][ncol].revealed && !board[nrow][ncol].flag) {
         if (board[nrow][ncol].value == null) {
           reveal(nrow, ncol, board);
@@ -99,10 +95,10 @@ export default function App() {
           board[nrow][ncol].revealed = true;
         }
       }
-    }
+    });
   };
 
-  let countPropertyForAllCells = (board, propName) => {
+  let countSomePropertyOnBoard = (board, propName) => {
     let count = 0;
     for (let row of board)
       for (let box of row) {
@@ -116,7 +112,7 @@ export default function App() {
   let [gameOver, setIsGameOver] = React.useState(false);
 
   let userWon =
-    countPropertyForAllCells(board, "revealed") ===
+    countSomePropertyOnBoard(board, "revealed") ===
     BOARD_HEIGHT * BOARD_WIDTH - 10;
 
   let drawBoard = (board) => {
@@ -149,7 +145,7 @@ export default function App() {
                 // Can use maximum 10 flags
                 if (
                   !board[row][col].flag &&
-                  countPropertyForAllCells(board, "flag") === 10
+                  countSomePropertyOnBoard(board, "flag") === 10
                 ) {
                   return;
                 }
@@ -207,7 +203,7 @@ export default function App() {
     <div style={{ padding: 10 }}>
       <h1>Welcome to minesweeper</h1>
       <div style={{ marginBottom: 10 }}>
-        Remaining flags: {10 - countPropertyForAllCells(board, "flag", true)}
+        Remaining flags: {10 - countSomePropertyOnBoard(board, "flag", true)}
       </div>
       <div style={{}}>{drawBoard(board)}</div>
       {userWon && <div style={{ color: "green" }}> You won </div>}
