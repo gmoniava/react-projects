@@ -9,10 +9,11 @@ import Snake from "./Projects/Snake";
 import Minesweeper from "./Projects/Minesweeper";
 import SingleItemSlideShow from "./Projects/SingleItemSlideShow";
 import RippleButton from "./Projects/RippleButton";
+import ResponsiveNavbarWithDropdown from "./Projects/ResponsiveNavbarWithDropdown";
 function App() {
   return (
     <div>
-      <Minesweeper />{" "}
+      <ResponsiveNavbarWithDropdown />{" "}
     </div>
   );
 }

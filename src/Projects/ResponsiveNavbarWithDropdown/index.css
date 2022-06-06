@@ -1,0 +1,33 @@
+.resp-navbar-dropdown .menu-item {
+  padding: 20px;
+  position: relative;
+  background-color: orange;
+  display: flex;
+  cursor: pointer;
+}
+.resp-navbar-dropdown .submenu {
+  background-color: orange;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: none;
+}
+.resp-navbar-dropdown .menu-item:hover {
+  background-color: lightgray;
+}
+.resp-navbar-dropdown .menu-item:hover div {
+  display: block !important;
+}
+
+@media screen and (max-width: 524px) {
+  .resp-navbar-dropdown .submenu {
+    position: static;
+  }
+  .resp-navbar-dropdown .menu-item {
+    flex-direction: column;
+  }
+
+  .resp-navbar-dropdown .submenu .menu-item {
+    background-color: lightgray;
+  }
+}
