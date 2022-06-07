@@ -14,6 +14,12 @@ const CONSTANTS = {
 };
 
 export default function App() {
+  let isCellWithinBounds = (row, col, board) => {
+    return (
+      row >= 0 && col >= 0 && row < board.length && col < board[row].length
+    );
+  };
+
   let getNeighbors = (row, col, board) => {
     let neighborOffsets = [
       [0, 1],
@@ -25,12 +31,6 @@ export default function App() {
       [-1, 0],
       [-1, 1],
     ];
-
-    let isCellWithinBounds = (row, col, board) => {
-      return (
-        row >= 0 && col >= 0 && row < board.length && col < board[row].length
-      );
-    };
 
     return neighborOffsets
       .map(([offsetY, offsetX]) => [row + offsetY, col + offsetX])
@@ -49,18 +49,8 @@ export default function App() {
     return arr;
   };
 
-  let numberMineNeighbors = (board, minesCoordinates) => {
-    for (let [row, col] of minesCoordinates) {
-      getNeighbors(row, col, board).forEach(([nrow, ncol]) => {
-        if (board[nrow][ncol].value !== CONSTANTS.MINE) {
-          board[nrow][ncol].value = (board[nrow][ncol].value || 0) + 1;
-        }
-      });
-    }
-  };
-
-  let createBoard = (width, height) => {
-    let initEmptyBoard = () => {
+  let createGameBoard = (width, height) => {
+    let emptyBoard = () => {
       let board = [];
       for (let row = 0; row < height; row++) {
         board[row] = [];
@@ -88,10 +78,20 @@ export default function App() {
       return mineCoordinates;
     };
 
-    let board = initEmptyBoard();
-    let minesCoordinates = createMinesOnBoard(board);
-    numberMineNeighbors(board, minesCoordinates);
-    return board;
+    let putNumbersAroundMines = (board, minesCoordinates) => {
+      for (let [row, col] of minesCoordinates) {
+        getNeighbors(row, col, board).forEach(([nrow, ncol]) => {
+          if (board[nrow][ncol].value !== CONSTANTS.MINE) {
+            board[nrow][ncol].value = (board[nrow][ncol].value || 0) + 1;
+          }
+        });
+      }
+    };
+
+    let initialBoard = emptyBoard();
+    let minesCoordinates = createMinesOnBoard(initialBoard);
+    putNumbersAroundMines(initialBoard, minesCoordinates);
+    return initialBoard;
   };
 
   let reveal = (row, col, board) => {
@@ -115,13 +115,13 @@ export default function App() {
       }
     return count;
   };
-  let [board, setBoard] = useImmer(() =>
-    createBoard(CONSTANTS.BOARD_WIDTH, CONSTANTS.BOARD_HEIGHT)
+  let [gameBoard, setGameBoard] = useImmer(() =>
+    createGameBoard(CONSTANTS.BOARD_WIDTH, CONSTANTS.BOARD_HEIGHT)
   );
   let [gameOver, setIsGameOver] = React.useState(false);
 
   let userWon =
-    countSomePropertyOnBoard(board, "revealed") ===
+    countSomePropertyOnBoard(gameBoard, "revealed") ===
     CONSTANTS.BOARD_HEIGHT * CONSTANTS.BOARD_WIDTH - CONSTANTS.NR_OF_MINES;
 
   let drawBoard = (board) => {
@@ -142,14 +142,14 @@ export default function App() {
                     // Reveal this one and its empty neighbors too
                     let clone = JSON.parse(JSON.stringify(board));
                     reveal(row, col, clone);
-                    setBoard(clone);
+                    setGameBoard(clone);
                     break;
                   case CONSTANTS.MINE:
                     setIsGameOver(true);
                     break;
                   default:
                     // We hit cell with number, just reveal that one
-                    setBoard((ps) => {
+                    setGameBoard((ps) => {
                       ps[row][col].revealed = true;
                     });
                 }
@@ -167,7 +167,7 @@ export default function App() {
                 ) {
                   return;
                 }
-                setBoard((ps) => {
+                setGameBoard((ps) => {
                   ps[row][col].flag = !ps[row][col].flag;
                 });
               }
@@ -222,9 +222,9 @@ export default function App() {
       <h1>Welcome to minesweeper</h1>
       <div style={{ marginBottom: 10 }}>
         Remaining flags:{" "}
-        {CONSTANTS.NR_OF_FLAGS - countSomePropertyOnBoard(board, "flag")}
+        {CONSTANTS.NR_OF_FLAGS - countSomePropertyOnBoard(gameBoard, "flag")}
       </div>
-      <div style={{}}>{drawBoard(board)}</div>
+      <div style={{}}>{drawBoard(gameBoard)}</div>
       {userWon && <div style={{ color: "green" }}> You won </div>}
       {gameOver && <h3 style={{ color: "red" }}> You lost </h3>}
     </div>
