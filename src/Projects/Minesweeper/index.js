@@ -85,10 +85,10 @@ export default function App() {
       }
     };
 
-    let initialBoard = emptyBoard();
-    let minesCoordinates = createMinesOnBoard(initialBoard);
-    putNumbersAroundMines(initialBoard, minesCoordinates);
-    return initialBoard;
+    let gameBoardLocal = emptyBoard();
+    let minesCoordinates = createMinesOnBoard(gameBoardLocal);
+    putNumbersAroundMines(gameBoardLocal, minesCoordinates);
+    return gameBoardLocal;
   };
 
   let reveal = (row, col, board) => {
