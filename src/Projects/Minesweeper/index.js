@@ -11,14 +11,14 @@ let MINE_VALUE = "Mine";
 export default function App() {
   let getNeighbors = (row, col, board) => {
     let neighbors = [
-      [0, -1],
-      [-1, -1],
-      [-1, 0],
-      [-1, 1],
       [0, 1],
       [1, 1],
       [1, 0],
       [1, -1],
+      [0, -1],
+      [-1, -1],
+      [-1, 0],
+      [-1, 1],
     ];
 
     let isCellWithinBounds = (row, col, board) => {
@@ -26,7 +26,11 @@ export default function App() {
         row >= 0 && col >= 0 && row < board.length && col < board[row].length
       );
     };
-
+    console.log(
+      neighbors
+        .map(([offsetY, offsetX]) => [row + offsetY, col + offsetX])
+        .filter(([row, col]) => isCellWithinBounds(row, col, board))
+    );
     return neighbors
       .map(([offsetY, offsetX]) => [row + offsetY, col + offsetX])
       .filter(([row, col]) => isCellWithinBounds(row, col, board));
@@ -201,11 +205,7 @@ export default function App() {
       );
     });
   };
-  console.log(
-    board,
-    countSomePropertyOnBoard(board, "flag"),
-    countSomePropertyOnBoard(board, "revealed")
-  );
+
   return (
     <div style={{ padding: 10 }}>
       <h1>Welcome to minesweeper</h1>
