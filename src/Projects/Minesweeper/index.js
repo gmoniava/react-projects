@@ -37,19 +37,18 @@ export default function App() {
       .filter(([row, col]) => isCellWithinBounds(row, col, board));
   };
 
-  let generateSomeUniqueNumbers = (howMany, minInclusive, maxInclusive) => {
-    var arr = [];
-    while (arr.length < howMany) {
-      var rand =
-        Math.floor(Math.random() * (maxInclusive - minInclusive + 1)) +
-        minInclusive;
-
-      if (arr.indexOf(rand) === -1) arr.push(rand);
-    }
-    return arr;
-  };
-
   let createGameBoard = (width, height) => {
+    let generateSomeUniqueNumbers = (howMany, minInclusive, maxInclusive) => {
+      var arr = [];
+      while (arr.length < howMany) {
+        var rand =
+          Math.floor(Math.random() * (maxInclusive - minInclusive + 1)) +
+          minInclusive;
+
+        if (arr.indexOf(rand) === -1) arr.push(rand);
+      }
+      return arr;
+    };
     let emptyBoard = () => {
       let board = [];
       for (let row = 0; row < height; row++) {
