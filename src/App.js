@@ -13,7 +13,7 @@ import ResponsiveNavbarWithDropdown from "./Projects/ResponsiveNavbarWithDropdow
 function App() {
   return (
     <div>
-      <ResponsiveNavbarWithDropdown />{" "}
+      <Minesweeper />{" "}
     </div>
   );
 }
