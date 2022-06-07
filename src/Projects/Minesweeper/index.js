@@ -137,20 +137,25 @@ export default function App() {
               if (gameOver || userWon) return;
 
               if (e.type === "click") {
+                // If it is flagged cell, quit early.
                 if (board[row][col].flag) return;
 
-                if (boardItem.value === CONSTANTS.EMPTY) {
-                  // This is empty cell, reveal it and its other empty neighbors
-                  let clone = JSON.parse(JSON.stringify(board));
-                  reveal(row, col, clone);
-                  setBoard(clone);
-                } else if (boardItem.value === CONSTANTS.MINE) {
-                  setIsGameOver(true);
-                } else {
-                  // We hit cell with number, just reveal that one
-                  setBoard((ps) => {
-                    ps[row][col].revealed = true;
-                  });
+                // What kind of cell did we click?
+                switch (boardItem.value) {
+                  case CONSTANTS.EMPTY:
+                    // Reveal this one and its empty neighbors too
+                    let clone = JSON.parse(JSON.stringify(board));
+                    reveal(row, col, clone);
+                    setBoard(clone);
+                    break;
+                  case CONSTANTS.MINE:
+                    setIsGameOver(true);
+                    break;
+                  default:
+                    // We hit cell with number, just reveal that one
+                    setBoard((ps) => {
+                      ps[row][col].revealed = true;
+                    });
                 }
               } else if (e.type === "contextmenu") {
                 e.preventDefault();
@@ -158,6 +163,7 @@ export default function App() {
                 // We can't flag revealed cells
                 if (board[row][col].revealed) return;
 
+                // Did we use all flags?
                 if (
                   !board[row][col].flag &&
                   countSomePropertyOnBoard(board, "flag") ===
