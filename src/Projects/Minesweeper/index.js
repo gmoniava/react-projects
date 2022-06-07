@@ -14,12 +14,6 @@ const CONSTANTS = {
 };
 
 export default function App() {
-  let isCellWithinBounds = (row, col, board) => {
-    return (
-      row >= 0 && col >= 0 && row < board.length && col < board[row].length
-    );
-  };
-
   let getNeighbors = (row, col, board) => {
     let neighborOffsets = [
       [0, 1],
@@ -31,7 +25,11 @@ export default function App() {
       [-1, 0],
       [-1, 1],
     ];
-
+    let isCellWithinBounds = (row, col) => {
+      return (
+        row >= 0 && col >= 0 && row < board.length && col < board[row].length
+      );
+    };
     return neighborOffsets
       .map(([offsetY, offsetX]) => [row + offsetY, col + offsetX])
       .filter(([row, col]) => isCellWithinBounds(row, col, board));
