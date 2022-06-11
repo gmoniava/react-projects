@@ -32,7 +32,7 @@ export default function App() {
     };
     return neighborOffsets
       .map(([offsetY, offsetX]) => [row + offsetY, col + offsetX])
-      .filter(([row, col]) => isCellWithinBounds(row, col, board));
+      .filter(([row, col]) => isCellWithinBounds(row, col));
   };
 
   let createGameBoard = (width, height) => {
