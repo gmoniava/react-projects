@@ -47,7 +47,7 @@ export default function App() {
       }
       return arr;
     };
-    let emptyBoard = () => {
+    let initialBoard = () => {
       let board = [];
       for (let row = 0; row < height; row++) {
         board[row] = [];
@@ -85,7 +85,7 @@ export default function App() {
       }
     };
 
-    let gameBoardLocal = emptyBoard();
+    let gameBoardLocal = initialBoard();
     let minesCoordinates = createMinesOnBoard(gameBoardLocal);
     putNumbersAroundMines(gameBoardLocal, minesCoordinates);
     return gameBoardLocal;
