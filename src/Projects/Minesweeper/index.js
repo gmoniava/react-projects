@@ -62,9 +62,9 @@ export default function App() {
       return board;
     };
 
-    let createMinesOnBoard = (board) => {
+    let createMinesOnBoard = (board, nrOfMines) => {
       let mineCoordinates = generateSomeUniqueNumbers(
-        CONSTANTS.NR_OF_MINES,
+        nrOfMines,
         0,
         height * width - 1
       ).map((number) => [Math.floor(number / 10), number % 10]);
@@ -86,7 +86,10 @@ export default function App() {
     };
 
     let gameBoardLocal = initialBoard();
-    let minesCoordinates = createMinesOnBoard(gameBoardLocal);
+    let minesCoordinates = createMinesOnBoard(
+      gameBoardLocal,
+      CONSTANTS.NR_OF_MINES
+    );
     putNumbersAroundMines(gameBoardLocal, minesCoordinates);
     return gameBoardLocal;
   };
