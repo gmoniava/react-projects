@@ -2,6 +2,13 @@ import React from "react";
 import { useMediaQuery } from "react-responsive";
 import menuIcon from "./menu.svg";
 import "./index.css";
+
+//
+// Responsive navbar with dropdown
+//
+
+// Menu data
+// Supports only one level of nesting
 let menu = [
   { name: "Home", url: "http://www.google.com" },
   {
@@ -16,30 +23,33 @@ let menu = [
   { name: "About", url: "http://www.google.com" },
 ];
 
+let MenuItems = (props) => {
+  return props.data?.map((x) => {
+    if (x.children) {
+      return (
+        <div className="menu-item" key={x.name}>
+          <div>{x.name}</div>
+          {x.children.length && (
+            <div className="submenu">
+              <MenuItems data={x.children} />
+            </div>
+          )}
+        </div>
+      );
+    }
+    return (
+      <div className="menu-item" key={x.name}>
+        <a href={x.url} style={{ color: "black", textDecoration: "none" }}>
+          {x.name}
+        </a>
+      </div>
+    );
+  });
+};
+
 function App() {
   const isMobile = useMediaQuery({ query: "(max-width: 524px)" });
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  let renderMenu = (items) => {
-    return items.map((x) => {
-      if (x.children) {
-        return (
-          <div className="menu-item" key={x.name}>
-            <div>{x.name}</div>
-            {x.children.length && (
-              <div className="submenu">{renderMenu(x.children)}</div>
-            )}
-          </div>
-        );
-      }
-      return (
-        <div className="menu-item" key={x.name}>
-          <a href={x.url} style={{ color: "black", textDecoration: "none" }}>
-            {x.name}
-          </a>
-        </div>
-      );
-    });
-  };
 
   React.useEffect(() => {
     setIsMenuOpen(false);
@@ -62,7 +72,7 @@ function App() {
           }}
         >
           {" "}
-          {renderMenu(menu)}
+          <MenuItems data={menu} />
         </div>
       )}
       {isMobile && (
