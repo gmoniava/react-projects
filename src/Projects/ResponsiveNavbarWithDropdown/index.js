@@ -5,10 +5,10 @@ import "./index.css";
 
 //
 // Responsive navbar with dropdown
+// Supports only one level of nesting
 //
 
 // Menu data
-// Supports only one level of nesting
 let menu = [
   { name: "Home", url: "http://www.google.com" },
   {
