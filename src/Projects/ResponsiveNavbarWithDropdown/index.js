@@ -15,7 +15,10 @@ let menu = [
     name: "Services",
     url: "http://www.facebook.com",
     children: [
-      { name: "Design", url: "http://www.linkedin.com" },
+      {
+        name: "Design",
+        url: "http://www.linkedin.com",
+      },
       { name: "Consultancy", url: "http://www.bing.com" },
     ],
   },
@@ -25,13 +28,15 @@ let menu = [
 
 let MenuItems = (props) => {
   return props.data?.map((x) => {
-    if (x.children) {
+    // We draw children only if we aren't already in a submenu, because
+    // we don't support deeply nested submenus
+    if (x.children && !props.isInsideSubMenu) {
       return (
         <div className="menu-item" key={x.name}>
           <div>{x.name}</div>
           {x.children.length && (
             <div className="submenu">
-              <MenuItems data={x.children} />
+              <MenuItems data={x.children} isInsideSubMenu />
             </div>
           )}
         </div>
@@ -67,6 +72,7 @@ function App() {
         <div
           style={{
             flex: 1,
+            // On mobile the menu items are shown vertically
             flexDirection: isMenuOpen ? "column" : "row",
             display: "flex",
           }}
@@ -75,6 +81,7 @@ function App() {
           <MenuItems data={menu} />
         </div>
       )}
+      {/* We show the menu button only on mobile */}
       {isMobile && (
         <img
           src={menuIcon}

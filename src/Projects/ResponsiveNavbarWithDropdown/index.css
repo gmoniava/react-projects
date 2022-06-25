@@ -10,12 +10,12 @@
   position: absolute;
   top: 100%;
   left: 0;
-  display: none;
+  display: none; 
 }
 .resp-navbar-dropdown .menu-item:hover {
   background-color: lightgray;
 }
-.resp-navbar-dropdown .menu-item:hover div {
+.resp-navbar-dropdown .menu-item:hover .submenu {
   display: block !important;
 }
 
