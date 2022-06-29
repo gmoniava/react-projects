@@ -10,10 +10,11 @@ import Minesweeper from "./Projects/Minesweeper";
 import SingleItemSlideShow from "./Projects/SingleItemSlideShow";
 import RippleButton from "./Projects/RippleButton";
 import ResponsiveNavbarWithDropdown from "./Projects/ResponsiveNavbarWithDropdown";
+import FullScreenMenu from "./Projects/FullScreenMenu";
 function App() {
   return (
     <div>
-      <ResponsiveNavbarWithDropdown />{" "}
+      <FullScreenMenu />{" "}
     </div>
   );
 }

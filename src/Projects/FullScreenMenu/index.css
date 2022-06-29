@@ -1,0 +1,56 @@
+.fullscreen-menu .menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: white;
+}
+
+.fullscreen-menu .fadein-item {
+  transform: translateX(200px);
+  animation-name: fadeIn;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  opacity: 0;
+  padding: 30px;
+}
+
+.fullscreen-menu .menuBtn div {
+  width: 35px;
+  height: 5px;
+  background-color: black;
+}
+
+.fullscreen-menu .menuBtn div:not(:first-child) {
+  margin: 6px 0;
+}
+
+.fullscreen-menu .closeBtn:before,
+.fullscreen-menu .closeBtn:after {
+  position: absolute;
+  left: 15px;
+  top: 5px;
+  content: " ";
+  height: 20px;
+  width: 2px;
+  background-color: white;
+  cursor: pointer;
+}
+.fullscreen-menu .closeBtn:before {
+  transform: rotate(45deg);
+}
+.fullscreen-menu .closeBtn:after {
+  transform: rotate(-45deg);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(200px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
