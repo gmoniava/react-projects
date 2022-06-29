@@ -1,5 +1,6 @@
 import React from "react";
 import "./index.css";
+import city from "./city.png";
 function FullScreenMenu() {
   let [open, setOpen] = React.useState(false);
   return (
@@ -9,7 +10,7 @@ function FullScreenMenu() {
           display: "flex",
           alignItems: "center",
           minHeight: 50,
-          borderBottom: "1px solid gray",
+          borderBottom: "1px solid lightgray",
           justifyContent: "flex-end",
         }}
       >
@@ -70,7 +71,7 @@ function FullScreenMenu() {
             <div style={{ flex: 1 }}>
               <img
                 alt="img"
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Leucanthemum_vulgare_%27Filigran%27_Flower_2200px.jpg/1126px-Leucanthemum_vulgare_%27Filigran%27_Flower_2200px.jpg"
+                src={city}
                 style={{ height: "100%", width: "100%", objectFit: "cover" }}
               ></img>
             </div>
