@@ -58,11 +58,10 @@ let getValidCellCoordinates = () => {
 let VALID_CELL_COORDINATES = getValidCellCoordinates();
 
 export default function Snake() {
-  let [snake, setSnake] = React.useState(generateSnake(0, 0, 10));
+  let [snake, setSnake] = React.useState(generateSnake(0, 0, 5));
   let directionsRef = React.useRef([]);
 
   let gameOverRef = React.useRef(false);
-  let isFirstRender = React.useRef(true);
 
   let [food, setFood] = React.useState();
 
@@ -97,7 +96,7 @@ export default function Snake() {
     document.addEventListener("keydown", storeUserClickedDirections);
   }, []);
 
-  let createFood = () => {
+  let createFood = (newHead) => {
     let { validCoordinatesX, validCoordinatesY } = VALID_CELL_COORDINATES;
 
     let generateRandomFood = () => {
@@ -119,18 +118,20 @@ export default function Snake() {
 
     let food = generateRandomFood();
 
-    while (isCellCollidingWithOtherCells(food, snake)) {
+    // If the newHead was passed, we also need to take it into account for detecting a collision
+    // between the new food item and the snake, because by this time, the snake body
+    // doesn't contain the newHead, hence we may miss a collision between new food item and newHead.
+    while (
+      isCellCollidingWithOtherCells(food, newHead ? [...snake, newHead] : snake)
+    ) {
       food = generateRandomFood();
     }
 
     setFood(food);
   };
   React.useEffect(() => {
-    // Just to protect against double invoking effects in React 18
-    if (isFirstRender.current) {
-      createFood();
-      isFirstRender.current = false;
-    }
+    createFood();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -174,7 +175,7 @@ export default function Snake() {
 
       // Did we maybe eat the food?
       if (newHead.x === food?.x && newHead.y === food?.y) {
-        createFood();
+        createFood(newHead);
         ateFoodDuringCurrentMove = true;
         return [newHead, currentHead];
       }
